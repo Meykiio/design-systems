@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fintech Trust Design System</title>
+<title>Clinical Care Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=Source+Sans+3:wght@300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400..700&family=Public+Sans:wght@300..700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -74,102 +74,88 @@ section[id]{scroll-margin-top:20px}
   html.nav-collapsed .collapse-toggle{width:100%;padding:10px 0}
   html.nav-collapsed .collapse-toggle span{display:none}
 }
-@media(max-width:1023px){
-  .page{margin-left:0}
-  section[id]{scroll-margin-top:14px}
-  .scroll-progress{left:0}
-  .sidebar{width:min(300px,86vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
-  .sidebar.open{transform:translateX(0)}
-  .sidebar-close{display:flex}
-  .mobile-theme-toggle{display:flex;margin-left:auto}
-  .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:190;background:rgba(20,10,5,.45);opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-out-soft),visibility 0s linear var(--dur-med)}
-  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out-soft)}
-  body.nav-locked{overflow:hidden}
-  .sidebar .nav-group{opacity:0;transform:translateX(-14px);transition:opacity .15s,transform .15s}
-  .sidebar.open .nav-group{opacity:1;transform:none;transition:opacity .45s var(--ease-out-soft),transform .45s var(--ease-out-soft);transition-delay:calc(.08s + var(--i,0)*55ms)}
-}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar,.sidebar-backdrop,.nav-indicator,.nav-item{transition:none!important}}
 
 
 /* ═══════════════════════════════════════════
-   FINTECH TRUST DESIGN SYSTEM — AGENT INSTRUCTIONS
-   Design thesis: Money demands calm authority; trust is
-   engineered through restraint, precision, and proof.
-   What it rejects: Playful gradients and bubbly rounded
-   finance apps that feel unserious.
+   CLINICAL CARE DESIGN SYSTEM — AGENT INSTRUCTIONS
+   Design thesis: Clarity is care — information hierarchy
+   that stays readable at 3am under stress.
+   What it rejects: Dark dashboards and decorative accent
+   colors anywhere near patient data.
 
    WHAT TO CHANGE PER PROJECT:
-   1. Find/replace "Fintech Trust" with the real project name.
+   1. Find/replace "Clinical Care" with the real project name.
    2. Recolor --primary/--primary-solid, --secondary, --tertiary,
       --quaternary, --positive in BOTH [data-theme] blocks.
    3. Swap Google Fonts imports + font tokens if needed.
-   4. Replace example balances, transactions, limits, legal copy.
+   4. Replace example vitals, medications, lab values.
    5. Update footer and nav-logo text.
 
    WHAT TO KEEP VERBATIM:
-   - Motion tokens (near-zero system: --dur-* .08/.16/.24s)
+   - Motion tokens (measured: --dur-* .2/.35/.55s)
    - The spacing/radius/elevation SCALE (values, not colors)
    - UX Principles section (archetype-specific rules)
    - Engineering Principles section
    - Component structural CSS (layout, not color)
 
    EXCLUDED FROM REPLICATION:
-   Every element with class "agent-tool" is tooling for reading
-   THIS reference, not a UI pattern.
+   Every element with class "agent-tool" is tooling for
+   reading THIS reference, not a UI pattern.
    ═══════════════════════════════════════════
-   TOKEN SYSTEM — Emerald & Azure
-   Primary:   #047857 Emerald (light) / #34d399 Emerald (dark)
-   Secondary: #0369a1 Azure (links, info)
-   Tertiary:  #a16207 Amber (holds, pending)
-   Quaternary: #6d28d9 Violet (rare)
-   Motion:    NEAR-ZERO — --ease-instant (.16,1,.3,1)
-              .08s · .16s · .24s (fastest of all 10 systems)
-   Density:   Compact — 14px base, 1.35 line-height
+   TOKEN SYSTEM — Medical Cyan & Coral
+   Primary:   #0e7490 Medical Cyan (light) / #22d3ee Cyan (dark)
+   Secondary: #f97316 Coral (alerts needing action)
+   Tertiary:  #a16207 Amber (caution)
+   Quaternary: #8b5cf6 Lavender (informational links)
+   Base:      Cool paper white, zero warmth
+   Motion:    Measured — ease(.4,0,.2,1); .2s .35s .55s
+   Density:   Comfortable — 15px base, 1.6 line-height
    Default:   LIGHT theme (canonical)
    ═══════════════════════════════════════════ */
 :root {
-  --bg:#f7faf9;--bg-dim:#eef4f2;--surface:#ffffff;--surface-mid:#f2f7f5;
-  --surface-high:#e8f0ed;--surface-highest:#dbe6e2;
-  --on-surface:#16211d;--on-surface-muted:#5f6b66;
-  --outline:#dfe8e4;--outline-hi:#aebfb8;
-  --primary:#047857;--primary-solid:#047857;--on-primary:#ffffff;
-  --primary-glow:rgba(4,120,87,0.15);--primary-glow-sm:rgba(4,120,87,0.07);
-  --brand-emerald:#059669;--secondary:#0369a1;--secondary-dim:#075985;--on-secondary:#ffffff;
+  --bg:#f8fbfc;--bg-dim:#eff5f7;--surface:#ffffff;--surface-mid:#f3f8fa;
+  --surface-high:#e5eef1;--surface-highest:#d5e2e7;
+  --on-surface:#14262c;--on-surface-muted:#5d7078;
+  --outline:#dce6ea;--outline-hi:#a9bcc3;
+  --primary:#0e7490;--primary-solid:#0e7490;--on-primary:#ffffff;
+  --primary-glow:rgba(14,116,144,0.15);--primary-glow-sm:rgba(14,116,144,0.07);
+  --brand-cyan:#0e7490;--secondary:#f97316;--secondary-dim:#c2410c;--on-secondary:#ffffff;
   --tertiary:#a16207;--on-tertiary:#ffffff;
-  --quaternary:#6d28d9;--on-quaternary:#ffffff;
-  --positive:#16a34a;--on-positive:#ffffff;--error:#dc2626;
-  --shadow-sm:0 1px 2px rgba(10,30,24,0.08);--shadow-md:0 4px 14px rgba(10,30,24,0.1);
-  --shadow-lg:0 14px 36px rgba(10,30,24,0.14);
-  --nav-bg:#ffffff;--scroll-track:#eef4f2;--scroll-thumb:#cfdedb;--scroll-thumb-hi:#047857;
-  --toggle-bg:rgba(4,120,87,0.06);--toggle-border:rgba(4,120,87,0.2);
-  --table-header-bg:#e8f0ed;--table-header-fg:#065f46;
-  --table-row-bg:#ffffff;--table-row-hover:#f2f7f5;--table-border:#dfe8e4;
-  --section-alt:#eef4f2;
-  --font-display:'Source Serif 4',serif;--font-body:'Source Sans 3',sans-serif;--font-mono:'Fira Code',monospace;
-  --r-xs:2px;--r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:18px;--r-full:9999px;
-  --s-xs:4px;--s-sm:8px;--s-md:14px;--s-lg:20px;--s-xl:28px;--s-2xl:44px;
-  --content-max:1100px;--transition:background .16s,color .16s,border-color .16s,box-shadow .16s;
-  --ease-instant:cubic-bezier(.16,1,.3,1);--ease-out-soft:cubic-bezier(.16,1,.3,1);--ease-back:cubic-bezier(.16,1,.3,1);--ease-glide:cubic-bezier(.16,1,.3,1);
-  --dur-fast:.08s;--dur-med:.16s;--dur-slow:.24s;
+  --quaternary:#8b5cf6;--on-quaternary:#ffffff;
+  --positive:#15803d;--on-positive:#ffffff;--error:#dc2626;
+  --shadow-sm:0 1px 2px rgba(15,40,50,0.08);--shadow-md:0 4px 14px rgba(15,40,50,0.1);
+  --shadow-lg:0 14px 36px rgba(15,40,50,0.14);
+  --nav-bg:#ffffff;--scroll-track:#eff5f7;--scroll-thumb:#cfdde3;--scroll-thumb-hi:#0e7490;
+  --toggle-bg:rgba(14,116,144,0.06);--toggle-border:rgba(14,116,144,0.2);
+  --table-header-bg:#e5eef1;--table-header-fg:#155e75;
+  --table-row-bg:#ffffff;--table-row-hover:#f3f8fa;--table-border:#dce6ea;
+  --section-alt:#eff5f7;
+  --font-display:'Lora',serif;--font-body:'Public Sans',sans-serif;--font-mono:'Roboto Mono',monospace;
+  --r-xs:6px;--r-sm:8px;--r-md:10px;--r-lg:12px;--r-xl:16px;--r-full:9999px;
+  --s-xs:4px;--s-sm:6px;--s-md:12px;--s-lg:18px;--s-xl:24px;--s-2xl:36px;
+  --content-max:1100px;--transition:background .35s,color .35s,border-color .35s,box-shadow .35s;
+  --ease-instant:cubic-bezier(.4,0,.2,1);--ease-out-soft:cubic-bezier(.4,0,.2,1);--ease-back:cubic-bezier(.4,0,.2,1);--ease-glide:cubic-bezier(.4,0,.2,1);
+  --dur-fast:.2s;--dur-med:.35s;--dur-slow:.55s;
 }
 [data-theme="dark"] {
-  --bg:#0b1210;--bg-dim:#070d0b;--surface:#101816;--surface-mid:#15201c;
-  --surface-high:#1b2823;--surface-highest:#243230;
-  --on-surface:#e7f0ec;--on-surface-muted:#8fa39b;
-  --outline:#1b2823;--outline-hi:#3a4b44;
-  --primary:#34d399;--primary-solid:#34d399;--on-primary:#06281d;
-  --primary-glow:rgba(52,211,153,0.18);--primary-glow-sm:rgba(52,211,153,0.09);
-  --brand-emerald:#34d399;--secondary:#38bdf8;--secondary-dim:#0ea5e9;--on-secondary:#082435;
+  --bg:#0c1417;--bg-dim:#080f11;--surface:#121c20;--surface-mid:#172328;
+  --surface-high:#1d2b31;--surface-highest:#273a41;
+  --on-surface:#e6eff3;--on-surface-muted:#8ba3ac;
+  --outline:#1c2b31;--outline-hi:#3d5059;
+  --primary:#22d3ee;--primary-solid:#22d3ee;--on-primary:#06222b;
+  --primary-glow:rgba(34,211,238,0.18);--primary-glow-sm:rgba(34,211,238,0.09);
+  --brand-cyan:#22d3ee;--secondary:#fb923c;--secondary-dim:#f97316;--on-secondary:#431407;
   --tertiary:#fbbf24;--on-tertiary:#422006;
   --quaternary:#a78bfa;--on-quaternary:#2e1065;
   --positive:#4ade80;--on-positive:#052e16;--error:#f87171;
   --shadow-sm:0 1px 2px rgba(0,0,0,0.4);--shadow-md:0 4px 14px rgba(0,0,0,0.45);
   --shadow-lg:0 14px 36px rgba(0,0,0,0.5);
-  --nav-bg:#070d0b;--scroll-track:#101816;--scroll-thumb:#243230;--scroll-thumb-hi:#34d399;
-  --toggle-bg:rgba(52,211,153,0.08);--toggle-border:rgba(52,211,153,0.25);
-  --table-header-bg:#15201c;--table-header-fg:#34d399;
-  --table-row-bg:#0b1210;--table-row-hover:#101816;--table-border:#1b2823;
-  --section-alt:#070d0b;
+  --nav-bg:#080f11;--scroll-track:#121c20;--scroll-thumb:#273a41;--scroll-thumb-hi:#22d3ee;
+  --toggle-bg:rgba(34,211,238,0.08);--toggle-border:rgba(34,211,238,0.25);
+  --table-header-bg:#172328;--table-header-fg:#22d3ee;
+  --table-row-bg:#0c1417;--table-row-hover:#121c20;--table-border:#1c2b31;
+  --section-alt:#080f11;
 }
 section{padding:var(--s-xl) 0;transition:background .3s;background:var(--bg)}
 .section-label{display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--primary);margin-bottom:10px}
@@ -243,7 +229,7 @@ html.nav-collapsed .sidebar-footer-tools{padding:14px 8px}
 .btn-ghost{background:transparent;color:var(--on-surface-muted)}.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
 .btn-pill-primary{background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full)}.btn-pill-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .btn-pill-accent{background:var(--tertiary);color:var(--on-tertiary);border-radius:var(--r-full)}.btn-pill-accent:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
-.btn-outline-pill{background:transparent;color:var(--secondary);border:2px solid var(--secondary)}.btn-outline-pill:hover{background:rgba(225,29,72,0.06);transform:translateY(-2px)}
+.btn-outline-pill{background:transparent;color:var(--secondary-dim);border:2px solid var(--secondary)}.btn-outline-pill:hover{background:rgba(249,115,22,0.08);transform:translateY(-2px)}
 .btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.5}
 .btn-sq{border-radius:var(--r-sm)}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-lg)}
@@ -366,75 +352,78 @@ footer .version{font-family:var(--font-mono);font-size:11px;color:var(--outline-
 .app-card .app-desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45}
 .app-icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--surface-high);border:1px solid var(--outline);display:flex;align-items:center;justify-content:center;color:var(--on-surface-muted);transition:transform .25s,background .25s,border-color .25s,color .25s}
 .app-icon svg{width:18px;height:18px}
-/* ==03 SIGNATURES — fintech-trust ==*/
+/* ==04 SIGNATURES — clinical-care ==*/
 section.hero{background:var(--bg-dim);padding:60px 0;border-bottom:1px solid var(--outline)}
 section.hero .container{position:relative;z-index:1}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid var(--outline);border-radius:var(--r-xs);font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--secondary);background:var(--surface);margin-bottom:var(--s-md);letter-spacing:0.04em}
-.hero-badge::before{content:'';width:6px;height:6px;border-radius:1px;background:var(--secondary);flex-shrink:0}
-section.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,52px);font-weight:600;line-height:1.05;letter-spacing:-0.015em;color:var(--on-surface);margin-bottom:var(--s-md)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border:1px solid var(--outline);border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--primary);background:var(--surface);margin-bottom:var(--s-md);letter-spacing:0.04em}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary-solid);flex-shrink:0}
+section.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,52px);font-weight:600;line-height:1.1;letter-spacing:-0.01em;color:var(--on-surface);margin-bottom:var(--s-md)}
 section.hero h1 .accent{color:var(--primary)}
-section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line-height:1.55;margin-bottom:var(--s-lg)}
+section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:540px;line-height:1.65;margin-bottom:var(--s-lg)}
 .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn-hero-primary{padding:11px 22px;background:var(--primary-solid);color:var(--on-primary);border:none;border-radius:var(--r-xs);font:600 14px/1 var(--font-body);cursor:pointer;transition:opacity var(--dur-fast) var(--ease-instant)}
-.btn-hero-primary:hover{opacity:.9}.btn-hero-primary:active{opacity:.8}
-.btn-hero-secondary{padding:13px 21px;background:transparent;color:var(--on-surface);border:1px solid var(--outline);border-radius:var(--r-xs);font:600 14px/1 var(--font-body);cursor:pointer;transition:border-color var(--dur-fast) var(--ease-instant)}
+.btn-hero-primary{padding:12px 24px;background:var(--primary-solid);color:var(--on-primary);border:none;border-radius:var(--r-sm);font:600 14px/1 var(--font-body);cursor:pointer;transition:opacity var(--dur-fast) var(--ease-out-soft)}
+.btn-hero-primary:hover{opacity:.9}.btn-hero-primary:active{transform:scale(.97)}
+.btn-hero-secondary{padding:12px 24px;background:transparent;color:var(--on-surface);border:1px solid var(--outline);border-radius:var(--r-sm);font:600 14px/1 var(--font-body);cursor:pointer;transition:border-color var(--dur-fast) var(--ease-out-soft)}
 .btn-hero-secondary:hover{border-color:var(--outline-hi)}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
-.form-group{display:flex;flex-direction:column;gap:5px}
-.form-group label{font:600 10.5px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:0.04em;text-transform:uppercase}
-.form-input,.form-select,.form-textarea{padding:9px 11px;border:1px solid var(--outline);border-radius:var(--r-xs);font:13px/1.4 var(--font-body);color:var(--on-surface);background:var(--surface);transition:border-color var(--dur-fast) var(--ease-instant),box-shadow var(--dur-fast) var(--ease-instant);height:36px;outline:none}
-.form-textarea{height:76px;resize:vertical}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font:600 11px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:0.03em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{padding:10px 12px;border:1px solid var(--outline);border-radius:var(--r-xs);font:14px/1.55 var(--font-body);color:var(--on-surface);background:var(--surface);transition:border-color var(--dur-fast) var(--ease-out-soft),box-shadow var(--dur-fast) var(--ease-out-soft);height:40px;outline:none}
+.form-textarea{height:88px;resize:vertical}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
-.form-select{-webkit-appearance:none;appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235f6b66' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 9px center;padding-right:28px}
+.form-select{-webkit-appearance:none;appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235d7078' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 11px center;padding-right:30px}
 @media(max-width:767px){.form-grid{grid-template-columns:1fr}}
-.balances-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
-@media(max-width:1023px){.balances-grid{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
-.balance-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-lg);transition:box-shadow var(--dur-med) var(--ease-instant),border-color var(--dur-fast) var(--ease-instant)}
-.balance-card:hover{box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
-.balance-label{display:flex;align-items:center;justify-content:space-between;font:600 10.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:10px}
-.balance-card .chip-mini{padding:3px 8px;border-radius:var(--r-xs);background:var(--primary-glow-sm);color:var(--primary);font:600 9.5px/1 var(--font-mono);letter-spacing:.04em}
-.balance-value{font-family:var(--font-mono);font-size:30px;font-weight:500;color:var(--on-surface);line-height:1.05;margin-bottom:4px;font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
-.balance-sub{font-size:12px;color:var(--on-surface-muted)}
-.balance-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:var(--s-md);padding-top:var(--s-md);border-top:1px solid var(--outline)}
-.balance-row .lbl{font-size:11px;color:var(--on-surface-muted)}
-.balance-row .val{font-family:var(--font-mono);font-size:12px;color:var(--on-surface);font-variant-numeric:tabular-nums}
-.masked{font-family:var(--font-mono);font-size:15px;color:var(--on-surface);letter-spacing:.18em}
-.txn-feed{border:1px solid var(--outline);border-radius:var(--r-md);background:var(--surface);overflow:hidden}
-.txn-row{display:flex;align-items:center;gap:12px;padding:var(--s-sm) var(--s-md);border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-instant)}
-.txn-row:last-child{border-bottom:none}
-.txn-row:hover{background:var(--table-row-hover)}
-.txn-ico{width:32px;height:32px;border-radius:var(--r-sm);background:var(--surface-high);display:flex;align-items:center;justify-content:center;color:var(--on-surface-muted);flex-shrink:0}
-.txn-ico.in{background:var(--primary-glow-sm);color:var(--primary)}
-.txn-ico svg{width:15px;height:15px}
-.txn-info{flex:1;min-width:0}
-.txn-name{font:500 13px/1.25 var(--font-body);color:var(--on-surface)}
-.txn-meta{font-size:11px;color:var(--on-surface-muted)}
-.txn-amt{font-family:var(--font-mono);font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
-.txn-amt.pos{color:var(--primary)}
-.limit-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg)}
-.limit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.limit-head .t{font:600 11px/1 var(--font-body);letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface-muted)}
-.limit-head .v{font-family:var(--font-mono);font-size:13px;color:var(--on-surface);font-variant-numeric:tabular-nums}
-.limit-head .v b{font-weight:500;color:var(--primary)}
-.limit-bar{height:8px;border-radius:var(--r-full);background:var(--surface-high);overflow:hidden}
-.limit-fill{height:100%;border-radius:var(--r-full);transition:width .24s var(--ease-instant)}
-.limit-fill.ok{background:var(--primary-solid);width:34%}
-.limit-fill.warn{background:var(--tertiary);width:68%}
-.limit-fill.crit{background:var(--error);width:91%}
-.limit-note{font-size:11px;color:var(--on-surface-muted);margin-top:6px}
-.verify-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:640px}
-.vstep{border:1px solid var(--outline);border-radius:var(--r-sm);padding:12px 10px;text-align:center;background:var(--surface)}
-.vstep.done{border-color:var(--primary-solid);background:var(--primary-glow-sm)}
-.vstep.current{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
-.vstep .n{width:22px;height:22px;margin:0 auto 6px;border-radius:var(--r-full);background:var(--surface-high);color:var(--on-surface-muted);font:600 11px/22px var(--font-mono)}
-.vstep.done .n,.vstep.current .n{background:var(--primary-solid);color:var(--on-primary)}
-.vstep .t{font:600 11px/1.3 var(--font-body);color:var(--on-surface)}
-.vstep .s{font-size:10px;color:var(--on-surface-muted);margin-top:2px}
-@media(max-width:640px){.verify-steps{grid-template-columns:1fr 1fr}}
-.badge-row{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center}
-.ins-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border:1px solid var(--outline);border-radius:var(--r-xs);background:var(--surface);font:500 12px/1 var(--font-body);color:var(--on-surface)}
-.ins-badge svg{width:15px;height:15px;color:var(--primary)}
-.ins-badge .sub{font-size:10px;color:var(--on-surface-muted);display:block;margin-top:2px}/* topbar (fintech keeps a top bar on mobile — contrast with commerce/social) */
+/* clinical signatures */
+.vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.vitals-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.vitals-grid{grid-template-columns:1fr}}
+.vital-tile{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-md) var(--s-lg);transition:box-shadow var(--dur-med) var(--ease-out-soft)}
+.vital-tile:hover{box-shadow:var(--shadow-md)}
+.vital-name{font:600 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:8px}
+.vital-value{font-family:var(--font-mono);font-size:27px;font-weight:500;color:var(--on-surface);line-height:1.05;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.vital-tile .vital-unit{font-size:13px;font-weight:400;color:var(--on-surface-muted)}
+.vital-range{font-size:11px;color:var(--on-surface-muted)}
+.vital-state{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:4px 10px;border-radius:var(--r-full);font:600 10.5px/1 var(--font-body)}
+.vital-state.ok{background:rgba(21,128,61,0.1);color:var(--positive)}
+.vital-state.warn{background:rgba(161,98,7,0.1);color:var(--tertiary)}
+.vital-state.crit{background:rgba(220,38,38,0.1);color:var(--error)}
+.med-list{border:1px solid var(--outline);border-radius:var(--r-md);overflow:hidden;background:var(--surface)}
+.med-row{display:flex;align-items:center;gap:12px;padding:12px var(--s-lg);border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-out-soft)}
+.med-row:last-child{border-bottom:none}
+.med-row:hover{background:var(--surface-mid)}
+.med-check{width:22px;height:22px;border-radius:var(--r-sm);border:1.5px solid var(--outline-hi);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex-shrink:0;transition:background var(--dur-fast),border-color var(--dur-fast)}
+.med-check.done{background:var(--primary-solid);border-color:var(--primary-solid)}
+.med-check svg{width:12px;height:12px;display:none}
+.med-check.done svg{display:block}
+.med-info{flex:1;min-width:0}
+.med-name{font:600 14px/1.3 var(--font-body);color:var(--on-surface)}
+.med-meta{font-size:12px;color:var(--on-surface-muted)}
+.med-dose{font-family:var(--font-mono);font-size:12.5px;color:var(--on-surface);font-variant-numeric:tabular-nums;white-space:nowrap}
+.triage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--s-md)}
+.triage-card{background:var(--surface);border:1px solid var(--outline);border-left:4px solid var(--outline-hi);border-radius:var(--r-xs);padding:12px 16px;transition:box-shadow var(--dur-med) var(--ease-out-soft)}
+.triage-card:hover{box-shadow:var(--shadow-md)}
+.triage-card.t-crit{border-left-color:var(--error)}
+.triage-card.t-urgent{border-left-color:var(--secondary)}
+.triage-card.t-routine{border-left-color:var(--positive)}
+.triage-tag{display:inline-block;padding:4px 10px;border-radius:var(--r-full);font:600 10px/1 var(--font-body);letter-spacing:.05em;margin-bottom:6px}
+.triage-tag.t-crit{background:rgba(220,38,38,0.12);color:var(--error)}
+.triage-tag.t-urgent{background:rgba(161,98,7,0.14);color:var(--tertiary)}
+.triage-tag.t-routine{background:rgba(21,128,61,0.12);color:var(--positive)}
+.triage-card .pt{font:600 14px/1.3 var(--font-body);color:var(--on-surface)}
+.triage-card .info{font-size:12px;color:var(--on-surface-muted);margin-top:2px}
+.appt-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-md) var(--s-lg);display:flex;align-items:center;gap:14px;transition:box-shadow var(--dur-med) var(--ease-out-soft)}
+.appt-card:hover{box-shadow:var(--shadow-md)}
+.appt-date{width:56px;height:60px;border-radius:var(--r-md);background:var(--primary-solid);color:#fff;text-align:center;padding-top:8px;flex-shrink:0}
+.appt-date .m{font:600 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.appt-date .d{font-family:var(--font-mono);font-size:20px;font-weight:500;margin-top:3px}
+.appt-info{flex:1;min-width:0}
+.appt-info .t{font:600 14.5px/1.3 var(--font-body);color:var(--on-surface)}
+.appt-info .s{font-size:12px;color:var(--on-surface-muted);margin-top:2px}
+.appt-time{font-family:var(--font-mono);font-size:13px;color:var(--primary);font-variant-numeric:tabular-nums;white-space:nowrap}
+.allergy-banner{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:var(--r-md);background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.25);color:var(--error)}
+.allergy-banner svg{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+.allergy-banner .t{font:700 13.5px/1.4 var(--font-body)}
+.allergy-banner .s{font-size:12.5px;color:var(--on-surface-muted);margin-top:2px;line-height:1.5}/* topbar (fintech keeps a top bar on mobile — contrast with commerce/social) */
 .topbar{display:none}
 .menu-toggle{display:none}
 @media(max-width:1023px){
@@ -457,12 +446,13 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   .sidebar .nav-group{opacity:0;transform:translateX(-12px);transition:none}
   .sidebar.open .nav-group{opacity:1;transform:none;transition:opacity .2s var(--ease-instant),transform .2s var(--ease-instant);transition-delay:calc(.05s + var(--i,0)*40ms)}
 }
+:root{--sidebar-w:264px;--topbar-h:56px}
 </style>
 </head>
 <body>
 <nav class="sidebar" aria-label="Section navigation" id="sidebar">
   <div class="sidebar-header">
-    <span class="nav-logo">Fintech Trust</span>
+    <span class="nav-logo">Clinical Care</span>
     <button class="sidebar-close" aria-label="Close menu" onclick="closeMobileNav()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
@@ -472,41 +462,41 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
     <div class="nav-group" style="--i:0">
       <div class="nav-group-label">Overview</div>
       <a class="nav-item" href="#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Hero</span></a>
-      <a class="nav-item" href="#typography"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg><span>Typography</span></a>
+      <a class="nav-item" href="#accessibility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span>Accessibility</span></a>
       <a class="nav-item" href="#colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg><span>Colors</span></a>
+      <a class="nav-item" href="#typography"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg><span>Typography</span></a>
     </div>
     <div class="nav-group" style="--i:1">
-      <div class="nav-group-label">Trust</div>
-      <a class="nav-item" href="#security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Security First</span></a>
+      <div class="nav-group-label">Foundations</div>
+      <a class="nav-item" href="#spacing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 3v18"/></svg><span>Spacing</span></a>
+      <a class="nav-item" href="#radius"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/></svg><span>Radius</span></a>
+      <a class="nav-item" href="#elevation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l4-4 4 4 4-4 4 4"/></svg><span>Elevation</span></a>
       <a class="nav-item" href="#motion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>Motion</span></a>
-      <a class="nav-item" href="#spacing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg><span>Spacing</span></a>
-      <a class="nav-item" href="#radius"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span>Radius</span></a>
-      <a class="nav-item" href="#elevation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l4-4 4 4 4-4 4 4"/></svg><span>Elevation</span></a>
     </div>
     <div class="nav-group" style="--i:2">
-      <div class="nav-group-label">Banking Components</div>
-      <a class="nav-item" href="#balance-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Balance Card</span></a>
-      <a class="nav-item" href="#transaction-feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Transaction Feed</span></a>
-      <a class="nav-item" href="#limit-progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7h-6M21 7v6"/></svg><span>Limit Progress</span></a>
-      <a class="nav-item" href="#verify-stepper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span>Verify Stepper</span></a>
-      <a class="nav-item" href="#badges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg><span>Insurance Badges</span></a>
+      <div class="nav-group-label">Clinical Components</div>
+      <a class="nav-item" href="#vitals-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Vitals Tiles</span></a>
+      <a class="nav-item" href="#medication-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="3"/></svg><span>Medication Row</span></a>
+      <a class="nav-item" href="#triage-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>Triage Status</span></a>
+      <a class="nav-item" href="#appointment-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Appointment Card</span></a>
+      <a class="nav-item" href="#allergy-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>Allergy Banner</span></a>
     </div>
     <div class="nav-group" style="--i:3">
       <div class="nav-group-label">Patterns</div>
-      <a class="nav-item" href="#buttons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="1"/><path d="M2 12h20"/></svg><span>Buttons</span></a>
+      <a class="nav-item" href="#buttons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="3"/><path d="M2 12h20"/></svg><span>Buttons</span></a>
       <a class="nav-item" href="#chips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg><span>Chips</span></a>
-      <a class="nav-item" href="#forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg><span>Forms</span></a>
-      <a class="nav-item" href="#table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg><span>Ledger</span></a>
-      <a class="nav-item" href="#pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Fee Tiers</span></a>
+      <a class="nav-item" href="#forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 7h10M7 12h10M7 17h6"/></svg><span>Intake Form</span></a>
+      <a class="nav-item" href="#table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M3 15h18M9 3v18"/></svg><span>Lab Results</span></a>
+      <a class="nav-item" href="#pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Care Plans</span></a>
     </div>
     <div class="nav-group" style="--i:4">
       <div class="nav-group-label">Systems</div>
       <a class="nav-item" href="#ux-principles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>UX Principles</span></a>
       <a class="nav-item" href="#engineering"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Engineering</span></a>
-      <a class="nav-item" href="#accessibility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span>Accessibility</span></a>
-      <a class="nav-item" href="#responsive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><span>Responsive</span></a>
+      <a class="nav-item" href="#security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Security</span></a>
+      <a class="nav-item" href="#responsive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/></svg><span>Responsive</span></a>
       <a class="nav-item" href="#touch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v11M10 9.5V4a2 2 0 0 0-4 0v14l-2.5-2.5a2 2 0 0 0-3 3L6 22h12"/></svg><span>Touch</span></a>
-      <a class="nav-item" href="#architecture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="8" y="13" width="8" height="8" rx="1"/></svg><span>Architecture</span></a>
+      <a class="nav-item" href="#architecture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="8" height="8" rx="2"/><rect x="8" y="13" width="8" height="8" rx="2"/></svg><span>Architecture</span></a>
     </div>
   </div>
   <div class="sidebar-footer-tools">
@@ -530,7 +520,7 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
 <div class="scroll-progress agent-tool"><div class="bar" id="scroll-bar"></div></div>
 <header class="topbar">
   <button class="menu-toggle" aria-label="Open menu" onclick="openMobileNav()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-  <span class="nav-logo" style="font-size:15px">Fintech Trust</span>
+  <span class="nav-logo" style="font-size:15px">Clinical Care</span>
   <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
     <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -538,9 +528,9 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
 </header>
 <div class="page"><section class="hero" id="hero">
   <div class="container">
-    <div class="hero-badge">REFERENCE BUILD 03</div>
-    <h1><span class="accent">Fintech Trust</span><br>Design System</h1>
-    <p>Emerald &amp; azure palette, near-zero motion, dense ledgers. Design thesis: money demands calm authority — trust is engineered through restraint, precision, and proof.</p>
+    <div class="hero-badge">REFERENCE BUILD 04</div>
+    <h1><span class="accent">Clinical Care</span><br>Design System</h1>
+    <p>Medical cyan &amp; coral palette, measured motion, generous reading density. Design thesis: clarity is care — information hierarchy that stays readable at 3am under stress.</p>
     <div class="hero-actions">
       <button class="btn-hero-primary" onclick="copyAllAsMarkdown()">Copy All as MD</button>
       <button class="btn-hero-secondary" onclick="toggleTheme()">Toggle Theme</button>
@@ -548,26 +538,23 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   </div>
 </section>
 
-<section id="typography">
+<section id="accessibility">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Typography</div>
-        <h2>Type System</h2>
-        <p>Source Serif 4 for gravitas, Source Sans 3 for UI, Fira Code for every number. 14px base, 1.35 line-height. Account figures are always mono.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Accessibility</div>
+        <h2>Accessibility Leads</h2>
+        <p>In clinical software accessibility is not a feature, it is the product. Everything here starts from the constraint set.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('typography')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('accessibility')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="type-list">
-      <div class="type-row"><div class="meta"><div class="token-name">--font-display</div><div class="spec">'Source Serif 4', serif</div></div><div class="specimen" style="font-family:var(--font-display);font-size:21px;font-weight:600">Your money, accounted for</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">--font-body</div><div class="spec">'Source Sans 3', sans-serif</div></div><div class="specimen" style="font-family:var(--font-body);font-size:14px">Instant transfers land in seconds</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">--font-mono</div><div class="spec">'Fira Code', monospace</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:14px;font-variant-numeric:tabular-nums">$24,618.42</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">fs-xs</div><div class="spec">11px / 1.35 · 600</div></div><div class="specimen" style="font-size:11px;font-weight:600;line-height:1.35">FDIC INSURED UP TO $250,000</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">fs-sm</div><div class="spec">12px / 1.35 · 500</div></div><div class="specimen" style="font-size:12px;font-weight:500;line-height:1.35">Posting &middot; settles Mar 17</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">fs-md</div><div class="spec">14px / 1.35 · 400</div></div><div class="specimen" style="font-size:14px;line-height:1.35">Statement period Feb 1 - Feb 28 &middot; 42 transactions</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">fs-lg</div><div class="spec">15px / 1.35 · 600</div></div><div class="specimen" style="font-size:15px;font-weight:600;line-height:1.35">Total balance across 3 accounts</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">fs-xl</div><div class="spec">20px / 1.3 · 600</div></div><div class="specimen" style="font-family:var(--font-display);font-size:20px;font-weight:600;line-height:1.3">Spending insight: groceries down 8%</div></div>
-      <div class="type-row"><div class="meta"><div class="token-name">fs-2xl</div><div class="spec">26px / 1.2 · 700</div></div><div class="specimen" style="font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.2">Security you can verify</div></div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">Focus Rings</span><span class="rule-text">3px primary glow on every interactive element. Never removed, never dimmed.</span></div>
+      <div class="foundations-card"><span class="rule-name">Color Independence</span><span class="rule-text">Every state pairs color with icon or label. Critical info never relies on hue alone.</span></div>
+      <div class="foundations-card"><span class="rule-name">Contrast Floors</span><span class="rule-text">4.5:1 normal text, 3:1 large text — verified on both themes and all status tints.</span></div>
+      <div class="foundations-card"><span class="rule-name">Touch Sizes</span><span class="rule-text">44x44 minimum. Stressed users mis-tap; generous targets are a safety feature.</span></div>
+      <div class="foundations-card"><span class="rule-name">Reduced Motion</span><span class="rule-text">All transitions become instant when prefers-reduced-motion is set.</span></div>
+      <div class="foundations-card"><span class="rule-name">Reading Load</span><span class="rule-text">Body text 15px/1.6 minimum. Medical copy never uses small or dim text.</span></div>
     </div>
   </div>
 </section>
@@ -576,224 +563,223 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Colors</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Colors</div>
         <h2>Color System</h2>
-        <p>Emerald primary signals growth and safety; azure for interactive. Cool mint-tinted neutrals. Light theme canonical, dark for extended sessions.</p>
+        <p>Medical cyan primary; coral only for actionable alerts; lavender for informational links. Cool paper-white base. Light is canonical.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('colors')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="color-grid">
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#f7faf9" data-name="bg"><div class="color-swatch-fill" style="background:#f7faf9"></div><div class="color-swatch-info"><div class="hex">#f7faf9</div><div class="name">bg</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#f8fbfc" data-name="bg"><div class="color-swatch-fill" style="background:#f8fbfc"></div><div class="color-swatch-info"><div class="hex">#f8fbfc</div><div class="name">bg</div></div></div>
       <div class="color-swatch" onclick="copySwatch(this)" data-hex="#ffffff" data-name="surface"><div class="color-swatch-fill" style="background:#ffffff"></div><div class="color-swatch-info"><div class="hex">#ffffff</div><div class="name">surface</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#e8f0ed" data-name="surface-high"><div class="color-swatch-fill" style="background:#e8f0ed"></div><div class="color-swatch-info"><div class="hex">#e8f0ed</div><div class="name">surface-high</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#dbe6e2" data-name="surface-highest"><div class="color-swatch-fill" style="background:#dbe6e2"></div><div class="color-swatch-info"><div class="hex">#dbe6e2</div><div class="name">surface-highest</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#aebfb8" data-name="outline-hi"><div class="color-swatch-fill" style="background:#aebfb8"></div><div class="color-swatch-info"><div class="hex">#aebfb8</div><div class="name">outline-hi</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#5f6b66" data-name="on-surface-muted"><div class="color-swatch-fill" style="background:#5f6b66"></div><div class="color-swatch-info"><div class="hex">#5f6b66</div><div class="name">on-surface-muted</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#047857" data-name="primary"><div class="color-swatch-fill" style="background:#047857"></div><div class="color-swatch-info"><div class="hex">#047857</div><div class="name">primary</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#059669" data-name="brand-emerald"><div class="color-swatch-fill" style="background:#059669"></div><div class="color-swatch-info"><div class="hex">#059669</div><div class="name">brand-emerald</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#0369a1" data-name="secondary"><div class="color-swatch-fill" style="background:#0369a1"></div><div class="color-swatch-info"><div class="hex">#0369a1</div><div class="name">secondary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#e5eef1" data-name="surface-high"><div class="color-swatch-fill" style="background:#e5eef1"></div><div class="color-swatch-info"><div class="hex">#e5eef1</div><div class="name">surface-high</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#d5e2e7" data-name="surface-highest"><div class="color-swatch-fill" style="background:#d5e2e7"></div><div class="color-swatch-info"><div class="hex">#d5e2e7</div><div class="name">surface-highest</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#a9bcc3" data-name="outline-hi"><div class="color-swatch-fill" style="background:#a9bcc3"></div><div class="color-swatch-info"><div class="hex">#a9bcc3</div><div class="name">outline-hi</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#5d7078" data-name="on-surface-muted"><div class="color-swatch-fill" style="background:#5d7078"></div><div class="color-swatch-info"><div class="hex">#5d7078</div><div class="name">on-surface-muted</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#0e7490" data-name="primary"><div class="color-swatch-fill" style="background:#0e7490"></div><div class="color-swatch-info"><div class="hex">#0e7490</div><div class="name">primary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#f97316" data-name="secondary"><div class="color-swatch-fill" style="background:#f97316"></div><div class="color-swatch-info"><div class="hex">#f97316</div><div class="name">secondary</div></div></div>
       <div class="color-swatch" onclick="copySwatch(this)" data-hex="#a16207" data-name="tertiary"><div class="color-swatch-fill" style="background:#a16207"></div><div class="color-swatch-info"><div class="hex">#a16207</div><div class="name">tertiary</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#6d28d9" data-name="quaternary"><div class="color-swatch-fill" style="background:#6d28d9"></div><div class="color-swatch-info"><div class="hex">#6d28d9</div><div class="name">quaternary</div></div></div>
-      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#16a34a" data-name="positive"><div class="color-swatch-fill" style="background:#16a34a"></div><div class="color-swatch-info"><div class="hex">#16a34a</div><div class="name">positive</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#8b5cf6" data-name="quaternary"><div class="color-swatch-fill" style="background:#8b5cf6"></div><div class="color-swatch-info"><div class="hex">#8b5cf6</div><div class="name">quaternary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#15803d" data-name="positive"><div class="color-swatch-fill" style="background:#15803d"></div><div class="color-swatch-info"><div class="hex">#15803d</div><div class="name">positive</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#dc2626" data-name="error"><div class="color-swatch-fill" style="background:#dc2626"></div><div class="color-swatch-info"><div class="hex">#dc2626</div><div class="name">error</div></div></div>
     </div>
   </div>
-</section>
-
-<section id="security" style="background:var(--section-alt)">
+</section><section id="typography">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Security First</div>
-        <h2>Security &amp; Trust</h2>
-        <p>Trust surfaces early in fintech: insurance proof, verification state, and audit transparency are first-class UI, not footers.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Typography</div>
+        <h2>Type System</h2>
+        <p>Lora for headings, Public Sans for UI, Roboto Mono for dosages and lab values. 15px base, 1.6 line-height. Lab figures always mono.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('security')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('typography')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="security-grid">
-      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="title">FDIC Insurance</div><div class="desc">Deposits insured to $250,000 per depositor. The badge links to the certificate.</div></div>
-      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">256-bit Encryption</div><div class="desc">TLS 1.3 in transit, AES-256 at rest. Keys rotated every 90 days.</div></div>
-      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="title">Real-time Alerts</div><div class="desc">Every transaction notifies within 2 seconds. Anomalies flag automatically.</div></div>
-      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg></div><div class="title">Audit Trail</div><div class="desc">Every account action is logged, immutable, and exportable by the customer.</div></div>
+    <div class="type-list">
+      <div class="type-row"><div class="meta"><div class="token-name">--font-display</div><div class="spec">'Lora', serif</div></div><div class="specimen" style="font-family:var(--font-display);font-size:21px;font-weight:600">Morning Care Round</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-body</div><div class="spec">'Public Sans', sans-serif</div></div><div class="specimen" style="font-family:var(--font-body);font-size:15px">Take with food, twice daily</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-mono</div><div class="spec">'Roboto Mono', monospace</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:14px;font-variant-numeric:tabular-nums">BP 118/76 &middot; HR 72</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xs</div><div class="spec">11px / 1.5 · 600</div></div><div class="specimen" style="font-size:11px;font-weight:600;line-height:1.5">REVIEWED BY DR. OKAFOR AT 06:12</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-sm</div><div class="spec">12px / 1.5 · 500</div></div><div class="specimen" style="font-size:12px;font-weight:500;line-height:1.5">Next dose in 2 hours</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-md</div><div class="spec">15px / 1.6 · 400</div></div><div class="specimen" style="font-size:15px;line-height:1.6">Patient reports improved sleep quality since last visit</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-lg</div><div class="spec">16px / 1.5 · 600</div></div><div class="specimen" style="font-size:16px;font-weight:600;line-height:1.5">Metformin 500mg &middot; with breakfast</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xl</div><div class="spec">20px / 1.3 · 600</div></div><div class="specimen" style="font-family:var(--font-display);font-size:20px;font-weight:600;line-height:1.3">Weekly Care Summary</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-2xl</div><div class="spec">26px / 1.25 · 700</div></div><div class="specimen" style="font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.25">Today's Care Plan</div></div>
     </div>
   </div>
 </section>
 
-<section id="motion">
+<section id="motion" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Motion</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Motion</div>
         <h2>Motion System</h2>
-        <p>Near-zero motion by design: money interfaces must feel instant, never playful. The shortest durations of all 10 systems.</p>
+        <p>Measured, never playful: no bounce near patient data. Standard material-style ease only.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('motion')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="motion-row">
-      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-fast);transition-timing-function:var(--ease-instant)"></div><div class="m-name">instant · .08s</div><div class="m-curve">(.16,1,.3,1)</div></div>
-      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-med);transition-timing-function:var(--ease-instant)"></div><div class="m-name">state · .16s</div><div class="m-curve">(.16,1,.3,1)</div></div>
-      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-slow);transition-timing-function:var(--ease-instant)"></div><div class="m-name">panel · .24s</div><div class="m-curve">(.16,1,.3,1)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-fast);transition-timing-function:var(--ease-out-soft)"></div><div class="m-name">state · .2s</div><div class="m-curve">(.4,0,.2,1)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-med);transition-timing-function:var(--ease-out-soft)"></div><div class="m-name">panel · .35s</div><div class="m-curve">(.4,0,.2,1)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-slow);transition-timing-function:var(--ease-out-soft)"></div><div class="m-name">page · .55s</div><div class="m-curve">(.4,0,.2,1)</div></div>
     </div>
   </div>
 </section>
 
-<section id="spacing" style="background:var(--section-alt)">
+<section id="spacing">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Spacing</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Spacing</div>
         <h2>Spacing Scale</h2>
-        <p>4/6 hybrid rhythm: 4, 8, 14, 20, 28, 44. Tight enough for dense ledgers, roomy enough for trust.</p>
+        <p>Clinical 6-grid: 4, 6, 12, 18, 24, 36. Tight pairs for related vitals, roomy groups for scans.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('spacing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="spacing-ruler">
       <div class="spacing-block" style="flex:1"><span class="lbl">4</span></div>
-      <div class="spacing-block" style="flex:2"><span class="lbl">8</span></div>
-      <div class="spacing-block" style="flex:3.5"><span class="lbl">14</span></div>
-      <div class="spacing-block" style="flex:5"><span class="lbl">20</span></div>
-      <div class="spacing-block" style="flex:7"><span class="lbl">28</span></div>
-      <div class="spacing-block" style="flex:11"><span class="lbl">44</span></div>
+      <div class="spacing-block" style="flex:1.5"><span class="lbl">6</span></div>
+      <div class="spacing-block" style="flex:3"><span class="lbl">12</span></div>
+      <div class="spacing-block" style="flex:4.5"><span class="lbl">18</span></div>
+      <div class="spacing-block" style="flex:6"><span class="lbl">24</span></div>
+      <div class="spacing-block" style="flex:9"><span class="lbl">36</span></div>
     </div>
-    <div class="spacing-labels"><span>xs · 4</span><span>sm · 8</span><span>md · 14</span><span>lg · 20</span><span>xl · 28</span><span>2xl · 44</span></div>
+    <div class="spacing-labels"><span>xs · 4</span><span>sm · 6</span><span>md · 12</span><span>lg · 18</span><span>xl · 24</span><span>2xl · 36</span></div>
   </div>
 </section>
 
-<section id="radius">
+<section id="radius" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Radius</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Radius</div>
         <h2>Radius Scale</h2>
-        <p>Crisp system: 2, 6, 10, 14, 18, 22px. Sharp corners read as precise and engineered.</p>
+        <p>Gentle system: 6, 8, 10, 12, 16, pill. Soft but not bubbly — equipment, not toys.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('radius')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="radius-grid">
-      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xs)"></div><div class="r-name">r-xs</div><div class="r-value">2px</div></div>
-      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-sm)"></div><div class="r-name">r-sm</div><div class="r-value">6px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xs)"></div><div class="r-name">r-xs</div><div class="r-value">6px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-sm)"></div><div class="r-name">r-sm</div><div class="r-value">8px</div></div>
       <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-md)"></div><div class="r-name">r-md</div><div class="r-value">10px</div></div>
-      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-lg)"></div><div class="r-name">r-lg</div><div class="r-value">14px</div></div>
-      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xl)"></div><div class="r-name">r-xl</div><div class="r-value">18px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-lg)"></div><div class="r-name">r-lg</div><div class="r-value">12px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xl)"></div><div class="r-name">r-xl</div><div class="r-value">16px</div></div>
       <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-full)"></div><div class="r-name">r-full</div><div class="r-value">pill</div></div>
     </div>
   </div>
 </section>
 
-<section id="elevation" style="background:var(--section-alt)">
+<section id="elevation">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Elevation</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Elevation</div>
         <h2>Elevation Scale</h2>
-        <p>4 levels, cool green-tinted shadows. Shadows stay subtle: money UIs flatten, not float.</p>
+        <p>4 levels, cool slate-tinted shadows. Cards lift slightly; nothing floats dramatically.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('elevation')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="elevation-grid">
-      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Flat</div><div class="e-sub">Ledgers, tables</div></div>
-      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Raised</div><div class="e-sub">Balance cards</div></div>
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Flat</div><div class="e-sub">Charts, tables</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Raised</div><div class="e-sub">Vital tiles</div></div>
       <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Overlay</div><div class="e-sub">Menus, pickers</div></div>
-      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Modal</div><div class="e-sub">Transfer sheet</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Modal</div><div class="e-sub">Alert dialogs</div></div>
     </div>
   </div>
-</section><section id="balance-card">
+</section><section id="vitals-tile" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Balance Card</div>
-        <h2>Balance Card</h2>
-        <p>Account overview: mono figures, masked numbers, status chip. The primary trust object of the app.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Vitals</div>
+        <h2>Vitals Tiles</h2>
+        <p>Mono value, unit, reference range, state pill. State comes from icon + color, never color alone.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('balance-card')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('vitals-tile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="balances-grid">
-      <div class="balance-card"><div class="balance-label"><span>Everyday Checking</span><span class="chip-mini">ACTIVE</span></div><div class="balance-value">$12,482.90</div><div class="balance-sub">Personal &middot; &bull;&bull;&bull;&bull; 4821</div><div class="balance-row"><span class="lbl">Available now</span><span class="val">$12,300.00</span></div></div>
-      <div class="balance-card"><div class="balance-label"><span>High-Yield Savings</span><span class="chip-mini">4.10% APY</span></div><div class="balance-value">$88,214.13</div><div class="balance-sub">Vault &middot; &bull;&bull;&bull;&bull; 9012</div><div class="balance-row"><span class="lbl">Next interest</span><span class="val">Mar 31</span></div></div>
+    <div class="vitals-grid">
+      <div class="vital-tile"><div class="vital-name">Blood Pressure</div><div class="vital-value">118/76</div><div class="vital-ref">Ref 90-120 / 60-80</div><span class="vital-state ok">IN RANGE</span></div>
+      <div class="vital-tile"><div class="vital-name">Heart Rate</div><div class="vital-value">72<span class="vital-unit"> bpm</span></div><div class="vital-ref">Ref 60-100</div><span class="vital-state ok">IN RANGE</span></div>
+      <div class="vital-tile"><div class="vital-name">Temperature</div><div class="vital-value">37.8<span class="vital-unit">&deg;C</span></div><div class="vital-ref">Ref 36.1-37.2</div><span class="vital-state warn">ELEVATED</span></div>
+      <div class="vital-tile"><div class="vital-name">SpO2</div><div class="vital-value">91<span class="vital-unit">%</span></div><div class="vital-ref">Ref 95-100</div><span class="vital-state crit">LOW &middot; NOTIFY</span></div>
     </div>
   </div>
 </section>
 
-<section id="transaction-feed" style="background:var(--section-alt)">
+<section id="medication-row">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Transaction Feed</div>
-        <h2>Transaction Feed</h2>
-        <p>Category icons in/out, mono amounts, status metas. Rows are dense and scannable.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Medications</div>
+        <h2>Medication Schedule</h2>
+        <p>Checkable rows: name, instruction, mono dosage. Completion state is unambiguous.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('transaction-feed')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('medication-row')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="txn-feed">
-      <div class="txn-row"><div class="txn-ico in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div><div class="txn-info"><div class="txn-name">Payroll - Meridian Labs</div><div class="txn-meta">Mar 15 &middot; Completed</div></div><span class="txn-amt pos">+$4,120.00</span></div>
-      <div class="txn-row"><div class="txn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg></div><div class="txn-info"><div class="txn-name">Whole Foods Market</div><div class="txn-meta">Mar 15 &middot; Groceries</div></div><span class="txn-amt">-$86.40</span></div>
-      <div class="txn-row"><div class="txn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div class="txn-info"><div class="txn-name">Transfer to Savings Vault</div><div class="txn-meta">Mar 14 &middot; Internal</div></div><span class="txn-amt">-$500.00</span></div>
-      <div class="txn-row"><div class="txn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="txn-info"><div class="txn-name">Cloud Hosting</div><div class="txn-meta">Mar 14 &middot; Subscriptions</div></div><span class="txn-amt">-$129.00</span></div>
+    <div class="med-list" style="max-width:520px">
+      <div class="med-row"><button class="med-check done" aria-label="Mark as taken" onclick="medToggle(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></button><div class="med-info"><div class="med-name">Metformin</div><div class="med-meta">With breakfast</div></div><span class="med-dose">500mg</span></div>
+      <div class="med-row"><button class="med-check done" aria-label="Mark as taken" onclick="medToggle(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></button><div class="med-info"><div class="med-name">Lisinopril</div><div class="med-meta">Morning, with water</div></div><span class="med-dose">10mg</span></div>
+      <div class="med-row"><button class="med-check" aria-label="Mark as taken" onclick="medToggle(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></button><div class="med-info"><div class="med-name">Vitamin D3</div><div class="med-meta">Once daily</div></div><span class="med-dose">2000 IU</span></div>
     </div>
   </div>
 </section>
 
-<section id="limit-progress">
+<section id="triage-status" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Limit Progress</div>
-        <h2>Credit Limit Progress</h2>
-        <p>Utilization at three thresholds: ok, warn, critical. Color, never decoration, carries the state.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Triage</div>
+        <h2>Triage Status Cards</h2>
+        <p>Urgency as left border + tag: critical red, urgent coral, routine green. Icon reinforcement in real product.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('limit-progress')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('triage-status')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div style="display:flex;flex-direction:column;gap:var(--s-md);max-width:520px">
-      <div class="limit-card"><div class="limit-head"><span class="t">Utilization</span><span class="v"><b>$1,360</b> / $4,000</span></div><div class="limit-bar"><div class="limit-fill ok"></div></div><div class="limit-note">34% used &middot; healthy range</div></div>
-      <div class="limit-card"><div class="limit-head"><span class="t">Utilization</span><span class="v"><b>$2,720</b> / $4,000</span></div><div class="limit-bar"><div class="limit-fill warn"></div></div><div class="limit-note">Approaching the 30% guideline</div></div>
-      <div class="limit-card"><div class="limit-head"><span class="t">Utilization</span><span class="v"><b>$3,640</b> / $4,000</span></div><div class="limit-bar"><div class="limit-fill crit"></div></div><div class="limit-note">91% used &middot; pay down to protect your score</div></div>
+    <div class="triage-grid">
+      <div class="triage-card t-crit"><span class="triage-tag t-crit">CRITICAL</span><div class="pt">Bed 4 &middot; J. Alvarez</div><div class="info">SpO2 91% &middot; resp distress &middot; notified 2 min ago</div></div>
+      <div class="triage-card t-urgent"><span class="triage-tag t-urgent">URGENT</span><div class="pt">Bed 7 &middot; M. Ito</div><div class="info">Temp 38.1&deg;C &middot; review by 10:00</div></div>
+      <div class="triage-card t-routine"><span class="triage-tag t-routine">ROUTINE</span><div class="pt">Bed 3 &middot; P. Naidoo</div><div class="info">Discharge paperwork &middot; due today</div></div>
     </div>
   </div>
 </section>
 
-<section id="verify-stepper" style="background:var(--section-alt)">
+<section id="appointment-card">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Verify Stepper</div>
-        <h2>Verification Stepper</h2>
-        <p>Identity verification: four steps, persistent state, never restarts on back-navigation.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Appointments</div>
+        <h2>Appointment Card</h2>
+        <p>Date block, clinic name, provider, mono time. The patient's anchor object.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('verify-stepper')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('appointment-card')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="verify-steps">
-      <div class="vstep done"><div class="n">1</div><div class="t">Identity</div><div class="s">Verified</div></div>
-      <div class="vstep done"><div class="n">2</div><div class="t">Address</div><div class="s">Verified</div></div>
-      <div class="vstep current"><div class="n">3</div><div class="t">2FA Phone</div><div class="s">In progress</div></div>
-      <div class="vstep"><div class="n">4</div><div class="t">Review</div><div class="s">Pending</div></div>
+    <div style="display:grid;gap:var(--s-md);max-width:560px">
+      <div class="appt-card"><div class="appt-date"><div class="m">Mar</div><div class="d">21</div></div><div class="appt-info"><div class="t">Cardiology Follow-up</div><div class="s">Dr. Okafor &middot; Riverside Clinic</div></div><span class="appt-time">09:30</span></div>
+      <div class="appt-card"><div class="appt-date"><div class="m">Apr</div><div class="d">02</div></div><div class="appt-info"><div class="t">Lab Work - Fasting</div><div class="s">Northside Lab &middot; bring list</div></div><span class="appt-time">07:45</span></div>
     </div>
   </div>
 </section>
 
-<section id="badges">
+<section id="allergy-banner" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Insurance Badges</div>
-        <h2>Insurance Badge Row</h2>
-        <p>Proof, not decoration: every badge links to its certificate and states the exact coverage.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Safety</div>
+        <h2>Allergy Banner</h2>
+        <p>Persistent, top-of-record alert. Never dismissible by accident; only staff can dismiss.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('badges')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('allergy-banner')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="badge-row">
-      <span class="ins-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>FDIC Insured<span class="sub">Up to $250,000</span></span></span>
-      <span class="ins-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>SOC 2 Type II<span class="sub">Audited annually</span></span></span>
-      <span class="ins-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg><span>SIPC Protected<span class="sub">Securities coverage</span></span></span>
+    <div class="allergy-banner" style="max-width:560px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <div><div class="t">PENICILLIN ALLERGY - SEVERE</div><div class="s">Anaphylaxis documented 2019. Cross-reactivity caution: cephalosporins. Banner persists on every record view and order screen.</div></div>
     </div>
   </div>
-</section>
-
-<section id="buttons">
+</section><section id="buttons">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Buttons</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Buttons</div>
         <h2>Buttons</h2>
-        <p>7 variants, squared by default. Money actions never bounce.</p>
+        <p>7 variants, rounded-soft, 44px heights. Dangerous actions never share color with safe ones.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('buttons')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
@@ -801,30 +787,32 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
       <div class="button-item"><button class="btn btn-primary">Primary</button><div class="btn-label">--primary</div></div>
       <div class="button-item"><button class="btn btn-secondary">Secondary</button><div class="btn-label">outline</div></div>
       <div class="button-item"><button class="btn btn-ghost">Ghost</button><div class="btn-label">transparent</div></div>
-      <div class="button-item"><button class="btn btn-pill-primary">Azure Pill</button><div class="btn-label">--secondary</div></div>
+      <div class="button-item"><button class="btn btn-pill-primary">Coral Pill</button><div class="btn-label">--secondary</div></div>
       <div class="button-item"><button class="btn btn-pill-accent">Amber Pill</button><div class="btn-label">--tertiary</div></div>
-      <div class="button-item"><button class="btn btn-outline-pill">Outline Azure</button><div class="btn-label">--secondary</div></div>
+      <div class="button-item"><button class="btn btn-outline-pill">Outline Coral</button><div class="btn-label">--secondary</div></div>
       <div class="button-item"><button class="btn btn-disabled" disabled>Disabled</button><div class="btn-label">opacity:.5</div></div>
     </div>
   </div>
-</section><section id="chips" style="background:var(--section-alt)">
+</section>
+
+<section id="chips" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Chips</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Chips</div>
         <h2>Chips</h2>
-        <p>Status and filter chips: completed, pending, holds, internal.</p>
+        <p>Status vocabulary: in range, elevated, low, reviewed, pending.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('chips')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="chip-grid">
       <div class="chip">All</div>
-      <div class="chip filled">Checking</div>
-      <div class="chip outline">Savings</div>
-      <div class="chip success-chip">Completed</div>
-      <div class="chip warn-chip">Pending</div>
-      <div class="chip error-chip">Declined</div>
-      <div class="chip accent">Recurring</div>
+      <div class="chip filled">Active</div>
+      <div class="chip outline">Discharged</div>
+      <div class="chip success-chip">In Range</div>
+      <div class="chip warn-chip">Elevated</div>
+      <div class="chip error-chip">Critical</div>
+      <div class="chip accent">Follow-up</div>
     </div>
   </div>
 </section>
@@ -833,18 +821,18 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Forms</div>
-        <h2>Forms</h2>
-        <p>Transfer form: 36px inputs, 3px focus ring, zero decoration near money fields.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Forms</div>
+        <h2>Patient Intake Form</h2>
+        <p>40px inputs, 3px focus rings, plain-language labels. No ambiguity, no jargon.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('forms')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="form-grid">
-      <div class="form-group"><label>Recipient</label><input class="form-input" type="text" placeholder="Name or account number"></div>
-      <div class="form-group"><label>Amount</label><input class="form-input" type="text" inputmode="decimal" placeholder="$0.00"></div>
-      <div class="form-group"><label>From Account</label><select class="form-select"><option>Checking &bull;&bull;&bull;&bull; 4821</option><option>Savings &bull;&bull;&bull;&bull; 9012</option></select></div>
-      <div class="form-group"><label>When</label><select class="form-select"><option>Now</option><option>Schedule</option></select></div>
-      <div class="form-group" style="grid-column:1/-1"><label>Memo</label><textarea class="form-textarea" placeholder="Appears on both statements"></textarea></div>
+      <div class="form-group"><label>Full Name</label><input class="form-input" type="text" placeholder="Jordan Alvarez"></div>
+      <div class="form-group"><label>Date of Birth</label><input class="form-input" type="text" placeholder="MM / DD / YYYY"></div>
+      <div class="form-group"><label>Primary Contact</label><input class="form-input" type="tel" placeholder="(555) 014-8890"></div>
+      <div class="form-group"><label>Insurance Provider</label><select class="form-select"><option>Meridian Health</option><option>Cascade Mutual</option><option>Self-pay</option></select></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Current Symptoms</label><textarea class="form-textarea" placeholder="Describe in your own words - the care team reads this before your visit"></textarea></div>
     </div>
   </div>
 </section>
@@ -853,75 +841,74 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Ledger</div>
-        <h2>Ledger Table</h2>
-        <p>Statement rows: mono amounts and dates, category metas, status dots.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Lab Results</div>
+        <h2>Lab Results Table</h2>
+        <p>Mono values with reference ranges and flags. Flags pair color with text, always.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('table')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="table-wrap">
       <table class="ds-table">
-        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th>Balance</th><th>Status</th></tr></thead>
+        <thead><tr><th>Test</th><th>Result</th><th>Reference</th><th>Collected</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td class="cell-mono">Mar 15</td><td>Payroll - Meridian Labs</td><td>Income</td><td class="cell-mono" style="color:var(--primary)">+$4,120.00</td><td class="cell-mono">$24,618.90</td><td><div class="cell-status s-live">Cleared</div></td></tr>
-          <tr><td class="cell-mono">Mar 15</td><td>Whole Foods Market</td><td>Groceries</td><td class="cell-mono">-$86.40</td><td class="cell-mono">$20,498.90</td><td><div class="cell-status s-live">Cleared</div></td></tr>
-          <tr><td class="cell-mono">Mar 14</td><td>Transfer to Savings</td><td>Internal</td><td class="cell-mono">-$500.00</td><td class="cell-mono">$20,585.30</td><td><div class="cell-status s-live">Cleared</div></td></tr>
-          <tr><td class="cell-mono">Mar 14</td><td>Cloud Hosting</td><td>Subscriptions</td><td class="cell-mono">-$129.00</td><td class="cell-mono">$21,085.30</td><td><div class="cell-status s-draft">Pending</div></td></tr>
-          <tr><td class="cell-mono">Mar 13</td><td>Card Temporary Hold</td><td>Travel</td><td class="cell-mono">-$1.00</td><td class="cell-mono">$21,214.30</td><td><div class="cell-status s-paused">Hold</div></td></tr>
+          <tr><td class="cell-name"><div class="avatar">HB</div><div class="n">Hemoglobin</div></td><td class="cell-mono">13.8 g/dL</td><td class="cell-mono">13.5-17.5</td><td class="cell-mono">Mar 14</td><td><div class="cell-status s-live">Normal</div></td></tr>
+          <tr><td class="cell-name"><div class="avatar">GL</div><div class="n">Glucose (fasting)</div></td><td class="cell-mono">108 mg/dL</td><td class="cell-mono">70-99</td><td class="cell-mono">Mar 15</td><td><div class="cell-status s-draft">Elevated</div></td></tr>
+          <tr><td class="cell-name"><div class="avatar">CR</div><div class="n">Creatinine</div></td><td class="cell-mono">1.02 mg/dL</td><td class="cell-mono">0.74-1.35</td><td class="cell-mono">Mar 15</td><td><div class="cell-status s-live">Normal</div></td></tr>
+          <tr><td class="cell-name"><div class="avatar">PS</div><div class="n">Potassium</div></td><td class="cell-mono">5.6 mmol/L</td><td class="cell-mono">3.5-5.1</td><td class="cell-mono">Mar 15</td><td><div class="cell-status s-paused">High - Review</div></td></tr>
         </tbody>
       </table>
     </div>
   </div>
-</section>
-
-<section id="pricing">
+</section><section id="pricing">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Fee Tiers</div>
-        <h2>Account Tiers</h2>
-        <p>Fees stated plainly. No asterisks, no teaser rates.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Care Plans</div>
+        <h2>Care Plans</h2>
+        <p>Three membership tiers for ongoing care, priced plainly.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('pricing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="pricing-grid">
-      <div class="pricing-card"><div class="tier">Essential</div><div class="price">$0<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>No minimum balance</li><li>2 free ATM withdrawals</li><li>Standard transfers</li><li>FDIC insured</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%">Open Essential</button></div></div>
-      <div class="pricing-card featured"><div class="pricing-badge">Most Chosen</div><div class="tier">Premier</div><div class="price">$12<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Unlimited ATM refunds</li><li>4.10% APY on savings</li><li>Instant transfers</li><li>Fee-free overdraft to $100</li><li>Priority support</li></ul><div class="pricing-cta-margin"><button class="btn btn-primary" style="width:100%">Open Premier</button></div></div>
-      <div class="pricing-card"><div class="tier">Private Client</div><div class="price">$49<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Dedicated advisor</li><li>Wire fees waived</li><li>Multi-user access</li><li>Estate coordination</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%">Talk to Us</button></div></div>
+      <div class="pricing-card"><div class="tier">Essential Care</div><div class="price">$19<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Unlimited messaging</li><li>Same-week visits</li><li>Basic labs included</li><li>Prescription refills</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%">Choose Essential</button></div></div>
+      <div class="pricing-card featured"><div class="pricing-badge">Most Chosen</div><div class="tier">Complete Care</div><div class="price">$49<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Everything in Essential</li><li>Annual deep screening</li><li>Advanced labs</li><li>Specialist referrals fast</li><li>24/7 nurse line</li></ul><div class="pricing-cta-margin"><button class="btn btn-primary" style="width:100%">Choose Complete</button></div></div>
+      <div class="pricing-card"><div class="tier">Family Care</div><div class="price">$79<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Two adults + children</li><li>Pediatric visits</li><li>Shared records</li><li>Care coordinator</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%">Choose Family</button></div></div>
     </div>
   </div>
-</section><section id="ux-principles" style="background:var(--section-alt)">
+</section>
+
+<section id="ux-principles" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; UX Principles</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; UX Principles</div>
         <h2>UX Principles</h2>
-        <p>Fintech-specific laws. Each card flips to reveal a hard rule.</p>
+        <p>Clinical-specific laws. Each card flips to reveal a hard rule.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('ux-principles')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="ux-group">
-      <div class="ux-group-title">Security Perception</div>
+      <div class="ux-group-title">Safety-Critical Display</div>
       <div class="ux-grid">
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Processing Fluency</span><span class="ux-card-def">Familiar, legible patterns read as safe.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Never redesign money conventions: balances read top-down, debits negative, credits positive.</span></div></div></button>
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Signaling Theory</span><span class="ux-card-def">Costly, verifiable signals carry weight.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every trust badge links to a real certificate. Unverifiable claims are banned.</span></div></div></button>
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Fear Arousal</span><span class="ux-card-def">Overly alarming security copy reduces action.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Security language states facts, not fear. "Protected" over "danger".</span></div></div></button>
-      </div>
-    </div>
-    <div class="ux-group">
-      <div class="ux-group-title">Data Display</div>
-      <div class="ux-grid">
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Absolute Judgments</span><span class="ux-card-def">People compare two magnitudes better than judging one.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Percentages always show the base: "34% of $4,000", never a bare percent.</span></div></div></button>
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Serial Position</span><span class="ux-card-def">First and last items are remembered best.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Primary account first, action row last. Middle items never carry critical info.</span></div></div></button>
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Stroop Effect</span><span class="ux-card-def">Conflicting color-meaning pairs slow reading.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Green means credit, red means debit, amber means pending. No exceptions anywhere.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Redundant Coding</span><span class="ux-card-def">Critical info carried by 2+ channels.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every alert pairs color with an icon and text. A colorblind user must never miss a critical flag.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Decimal Rules</span><span class="ux-card-def">Near-boundary values cause the most errors.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Lab values always show the reference range inline. A number alone is never enough.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Stress Reading</span><span class="ux-card-def">Cortisol narrows vision; fine print disappears.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Nothing below 12px and never below muted contrast on anything a patient reads.</span></div></div></button>
       </div>
     </div>
     <div class="ux-group">
       <div class="ux-group-title">Error Prevention</div>
       <div class="ux-grid">
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Confirmation Bias</span><span class="ux-card-def">People confirm without reading, so confirmations must cost attention.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Transfers over $1,000 re-type the amount. No one-click confirmation of large sums.</span></div></div></button>
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Zeigarnik Effect</span><span class="ux-card-def">Interrupted tasks stay in memory.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Verification state persists. Nothing a user completed is ever asked for twice.</span></div></div></button>
-        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Uncanny Numbers</span><span class="ux-card-def">Randomness in money reads as error, not chance.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Balances always show exact cents. Rounding or hiding cents reads as concealment.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Mode Errors</span><span class="ux-card-def">Wrong-mode actions are the top clinical UI bug.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Dangerous actions require typed confirmation. Mode is always visible, never implied.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Interruption Recovery</span><span class="ux-card-def">Clinical work is interrupted constantly.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every form autosaves within 2 seconds. Interruptions never lose work.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Look-Alike Names</span><span class="ux-card-def">Drug names collide in fast reading.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Medication rows use tall-man lettering and never wrap mid-name. Confusable pairs get distinct badges.</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Plain Language</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Jargon Cost</span><span class="ux-card-def">Every term costs comprehension under stress.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Patient-facing screens at an 8th-grade reading level; clinical abbreviations only in staff views.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Numbers First</span><span class="ux-card-def">Patients anchor on numbers, then interpretation.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Result, then range, then meaning - in that visual order, always.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Action Clarity</span><span class="ux-card-def">Every alert must imply its next step.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> No alert without an action button or a named owner. Alerts inform; actions resolve.</span></div></div></button>
       </div>
     </div>
   </div>
@@ -929,7 +916,7 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Engineering</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Engineering</div>
         <h2>Engineering Principles</h2>
         <p>Hard rules for building with this system. Never break these.</p>
       </div>
@@ -937,32 +924,30 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
     </div>
     <div class="app-grid">
       <div class="app-card"><div class="app-tag">Token</div><div class="app-title">CSS Variables Only</div><div class="app-desc">Never hardcode colors, radii, or spacing. Always reference var(--*).</div></div>
-      <div class="app-card"><div class="app-tag">Money</div><div class="app-title">Figures Are Mono</div><div class="app-desc">Every monetary value uses --font-mono with tabular figures.</div></div>
-      <div class="app-card"><div class="app-tag">State</div><div class="app-title">Persistent Sessions</div><div class="app-desc">Verification, drafts, and filters survive refresh and back-navigation.</div></div>
-      <div class="app-card"><div class="app-tag">Motion</div><div class="app-title">Near-Zero Durations</div><div class="app-desc">.08-.24s only. No bounce, no spring, no playful curves.</div></div>
-      <div class="app-card"><div class="app-tag">Accessibility</div><div class="app-title">AA Both Themes</div><div class="app-desc">Contrast verified in light and dark. Focus rings never removed.</div></div>
+      <div class="app-card"><div class="app-tag">Data</div><div class="app-title">Values Are Mono</div><div class="app-desc">Every measurement uses --font-mono with tabular figures.</div></div>
+      <div class="app-card"><div class="app-tag">Safety</div><div class="app-title">Autosave Everything</div><div class="app-desc">Forms persist within 2 seconds. Interruption never loses work.</div></div>
+      <div class="app-card"><div class="app-tag">Motion</div><div class="app-title">Measured Durations</div><div class="app-desc">.2/.35/.55s only. No bounce near patient data.</div></div>
+      <div class="app-card"><div class="app-tag">Accessibility</div><div class="app-title">Redundant Encoding</div><div class="app-desc">Color + icon + text on every state. AA verified both themes.</div></div>
       <div class="app-card"><div class="app-tag">Architecture</div><div class="app-title">Single File</div><div class="app-desc">One self-contained HTML file per system. Zero build step.</div></div>
     </div>
   </div>
 </section>
 
-<section id="accessibility" style="background:var(--section-alt)">
+<section id="security">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Accessibility</div>
-        <h2>Accessibility</h2>
-        <p>Banking must work for everyone. WCAG AA is a floor, not a goal.</p>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Security</div>
+        <h2>Patient Data Security</h2>
+        <p>HIPAA-grade patterns: minimal exposure, full audit, strict access.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('accessibility')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('security')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
-    <div class="foundations-grid">
-      <div class="foundations-card"><span class="rule-name">Focus Ring</span><span class="rule-text">3px primary ring on all interactive elements, both themes.</span></div>
-      <div class="foundations-card"><span class="rule-name">Keyboard First</span><span class="rule-text">Full flows operable by keyboard. Enter submits, Escape cancels.</span></div>
-      <div class="foundations-card"><span class="rule-name">Aria Labels</span><span class="rule-text">Amounts announce with currency. Status changes are live regions.</span></div>
-      <div class="foundations-card"><span class="rule-name">Contrast</span><span class="rule-text">4.5:1 normal, 3:1 large. Verified on mint-tinted and dark surfaces.</span></div>
-      <div class="foundations-card"><span class="rule-name">Color Independence</span><span class="rule-text">Signs and labels carry meaning; color never stands alone.</span></div>
-      <div class="foundations-card"><span class="rule-name">Error Copy</span><span class="rule-text">Errors say what happened, why, and the exact next step.</span></div>
+    <div class="security-grid">
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="title">RLS on Every Table</div><div class="desc">Row-level security scoped per patient and per care team membership.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="title">Access Audit</div><div class="desc">Every record view logs who, when, and why. Patients can export their log.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">Encrypted at Rest</div><div class="desc">AES-256 at rest, TLS 1.3 in transit. Backups encrypted with separate keys.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg></div><div class="title">Break-Glass Protocol</div><div class="desc">Emergency access is allowed, loudly logged, and reviewed within 24 hours.</div></div>
     </div>
   </div>
 </section>
@@ -971,34 +956,34 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Responsive</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Responsive</div>
         <h2>Responsive Design</h2>
-        <p>Breakpoints: 640px, 767px, 1023px. Mobile uses a top app bar (banking contrast with commerce/social systems).</p>
+        <p>Breakpoints: 640px, 767px, 1023px. Same top-bar pattern as fintech for institutional consistency.</p>
       </div>
-      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('responsive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('responsive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="responsive-grid">
-      <div class="responsive-col"><div class="responsive-col-title">Desktop (1024px+)</div><div style="display:flex;gap:8px"><div style="width:150px;min-height:168px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:12px;font-size:11px;color:var(--on-surface-muted)">Accounts nav</div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="height:54px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Balance summary</div><div style="min-height:102px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Ledger table</div></div></div></div>
-      <div class="responsive-col"><div class="responsive-col-title">Mobile (&lt;767px)</div><div style="display:flex;flex-direction:column;gap:8px"><div style="height:42px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Top app bar</div><div style="height:54px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Balance card</div><div style="min-height:76px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Transaction feed (scroll)</div></div></div>
+      <div class="responsive-col"><div class="responsive-col-title">Desktop (1024px+)</div><div style="display:flex;gap:8px"><div style="width:150px;min-height:168px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:12px;font-size:11px;color:var(--on-surface-muted)">Patient nav</div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="height:54px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Allergy banner + vitals row</div><div style="min-height:102px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Lab table</div></div></div></div>
+      <div class="responsive-col"><div class="responsive-col-title">Mobile (&lt;767px)</div><div style="display:flex;flex-direction:column;gap:8px"><div style="height:42px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Top app bar</div><div style="height:54px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Vitals tiles (2-up)</div><div style="min-height:76px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Medication schedule (scroll)</div></div></div>
     </div>
   </div>
 </section>
 
-<section id="touch" style="background:var(--section-alt)">
+<section id="touch">
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Touch</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Touch</div>
         <h2>Touch Targets</h2>
-        <p>Precise, not huge: 36-44px targets, immediate state change, no playful press effects.</p>
+        <p>44x44 minimum, gloves considered: critical buttons reach 48px with strong press states.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('touch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="touch-grid">
       <div class="touch-card"><div class="touch-label">Primary Button</div><div class="touch-val">44px height</div><div class="touch-visual"><div class="touch-target"></div></div></div>
-      <div class="touch-card"><div class="touch-label">Input</div><div class="touch-val">36px height</div><div class="touch-visual"><div class="touch-target" style="width:100%;height:36px"></div></div></div>
-      <div class="touch-card"><div class="touch-label">Nav Item</div><div class="touch-val">36px height</div><div class="touch-visual"><div class="touch-target" style="width:100%;height:36px"></div></div></div>
-      <div class="touch-card"><div class="touch-label">Amount Key</div><div class="touch-val">52px keypad keys</div><div class="touch-visual"><div class="touch-target" style="width:52px;height:52px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Med Check</div><div class="touch-val">22px visual + padding</div><div class="touch-visual"><div class="touch-target" style="width:44px;height:44px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Input</div><div class="touch-val">40px height</div><div class="touch-visual"><div class="touch-target" style="width:100%;height:40px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Banner Dismiss</div><div class="touch-val">44px explicit</div><div class="touch-visual"><div class="touch-target" style="width:44px;height:44px"></div></div></div>
     </div>
   </div>
 </section>
@@ -1007,29 +992,28 @@ section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line
   <div class="container">
     <div class="section-header">
       <div class="section-header-text">
-        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Architecture</div>
+        <div class="section-label"><span class="dot"></span>Reference 04 &middot; Architecture</div>
         <h2>Architecture</h2>
-        <p>Banking stack: ledger-first data model, strong auth, audited actions.</p>
+        <p>Clinical stack: record-anchored views, autosave, audit chain.</p>
       </div>
       <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('architecture')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
     </div>
     <div class="arch-grid">
-      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="title">Ledger Core</div><div class="desc">Append-only, double-entry ledger. Balances are derived, never stored mutable.</div></div>
-      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="8" y="13" width="8" height="8" rx="1"/></svg></div><div class="title">Event Sourcing</div><div class="desc">Every transaction is an immutable event with a full audit chain.</div></div>
-      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">Auth Layers</div><div class="desc">MFA mandatory. Device binding, step-up auth on sensitive actions.</div></div>
-      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="title">Realtime Push</div><div class="desc">Transaction websockets deliver alerts under 2 seconds end-to-end.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></div><div class="title">Record Anchor</div><div class="desc">One patient record object drives all views; vitals, meds, labs read from it.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="title">Autosave Pipeline</div><div class="desc">Debounced 2s persistence with server acknowledgment and offline queue.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="title">Alert Routing</div><div class="desc">Critical alerts fan out to assigned staff within seconds, with ack tracking.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="title">Audit Chain</div><div class="desc">Hash-linked, append-only audit log covering every record touch.</div></div>
     </div>
   </div>
 </section>
 
 <footer class="ds-footer">
   <div class="container">
-    <p>Fintech Trust Design System &middot; Emerald &amp; Azure &middot; Reference Build 03</p>
-    <div class="version">v0.3.0</div>
+    <p>Clinical Care Design System &middot; Medical Cyan &amp; Coral &middot; Reference Build 04</p>
+    <div class="version">v0.4.0</div>
   </div>
 </footer>
-</div>
-<script>
+</div><script>
 function toggleTheme(){
   const h=document.documentElement;const c=h.getAttribute('data-theme')==='dark'?'light':'dark';
   h.setAttribute('data-theme',c);
@@ -1079,13 +1063,33 @@ function getMarkdown(id){
     g.querySelectorAll('.ux-card').forEach(c=>{const n=c.querySelector('.ux-card-name');const d=c.querySelector('.ux-card-def');const r=c.querySelector('.ux-card-rule');
       if(n)md+='- **'+n.textContent.trim()+'** — '+(d?d.textContent.trim():'')+'\n  '+(r?r.textContent.trim():'')+'\n'});
     md+='\n'})}
-  const cards=el.querySelectorAll('.card-demo,.security-card,.balance-card,.pricing-card');
+  const foundations=el.querySelectorAll('.foundations-card');
+  if(foundations.length){handled=true;foundations.forEach(c=>{const n=c.querySelector('.rule-name');const t=c.querySelector('.rule-text');
+    if(n)md+='- **'+n.textContent.trim()+'** — '+(t?t.textContent.trim():'')+'\n'});
+    md+='\n'}
+  const vitals=el.querySelectorAll('.vital-tile');
+  if(vitals.length){handled=true;vitals.forEach(v=>{const n=v.querySelector('.vital-name');const val=v.querySelector('.vital-value');const ref=v.querySelector('.vital-ref');const st=v.querySelector('.vital-state');
+    if(n)md+='- **'+n.textContent.trim()+'**: '+(val?val.textContent.trim():'')+' ('+(ref?ref.textContent.trim():'')+') — '+(st?st.textContent.trim():'')+'\n'});
+    md+='\n'}
+  const meds=el.querySelectorAll('.med-row');
+  if(meds.length){handled=true;meds.forEach(m=>{const n=m.querySelector('.med-name');const meta=m.querySelector('.med-meta');const dose=m.querySelector('.med-dose');
+    if(n)md+='- **'+n.textContent.trim()+'** — '+(dose?dose.textContent.trim():'')+', '+(meta?meta.textContent.trim():'')+'\n'});
+    md+='\n'}
+  const triage=el.querySelectorAll('.triage-card');
+  if(triage.length){handled=true;triage.forEach(t=>{const tag=t.querySelector('.triage-tag');const pt=t.querySelector('.pt');const info=t.querySelector('.info');
+    if(pt)md+='- **['+  (tag?tag.textContent.trim():'')+']** '+pt.textContent.trim()+' — '+(info?info.textContent.trim():'')+'\n'});
+    md+='\n'}
+  const appts=el.querySelectorAll('.appt-card');
+  if(appts.length){handled=true;appts.forEach(a=>{const t=a.querySelector('.appt-info .t');const s=a.querySelector('.appt-info .s');const time=a.querySelector('.appt-time');const date=a.querySelector('.appt-date');
+    if(t)md+='- **'+t.textContent.trim()+'** — '+(s?s.textContent.trim():'')+' ('+(date?date.textContent.trim().replace(/\s+/g,' '):'')+', '+(time?time.textContent.trim():'')+')\n'});
+    md+='\n'}
+  const allergy=el.querySelector('.allergy-banner');
+  if(allergy){handled=true;const t=allergy.querySelector('.t');const s=allergy.querySelector('.s');
+    md+='> **'+(t?t.textContent.trim():'')+'** — '+(s?s.textContent.trim():'')+'\n\n'}
+  const cards=el.querySelectorAll('.pricing-card');
   if(cards.length){handled=true;cards.forEach(c=>{
-    const title=c.querySelector('.card-title,.title,.balance-label,.tier');
-    const tag=c.querySelector('.card-tag');
-    const text=c.querySelector('.card-text,.desc');
-    const price=c.querySelector('.price');
-    if(title)md+='- **'+title.textContent.trim()+'**'+(tag?' ('+tag.textContent.trim()+')':'')+(price?' — '+price.textContent.trim():'')+(text?': '+text.textContent.trim():'')+'\n'});
+    const title=c.querySelector('.tier');const price=c.querySelector('.price');
+    if(title)md+='- **'+title.textContent.trim()+'** — '+(price?price.textContent.trim():'')+'\n'});
     md+='\n'}
   const table=el.querySelector('table');
   if(table){handled=true;const heads=Array.from(table.querySelectorAll('thead th')).map(t=>t.textContent.trim());
@@ -1099,12 +1103,14 @@ function getMarkdown(id){
 }
 function copySectionAsMarkdown(id){const md=getMarkdown(id);if(!md)return;navigator.clipboard.writeText(md).then(()=>{const b=document.querySelector('[onclick*="copySectionAsMarkdown(\''+id+'\'"]');if(b){b.classList.add('copied');const sp=b.querySelector('span');if(sp){const old=sp.textContent;sp.textContent='Copied!';setTimeout(()=>{sp.textContent=old;b.classList.remove('copied')},2000)}}})}
 function copyAllAsMarkdown(){
-  const ids=['hero','typography','colors','security','motion','spacing','radius','elevation','balance-card','transaction-feed','limit-progress','verify-stepper','badges','buttons','chips','forms','table','pricing','ux-principles','engineering','accessibility','responsive','touch','architecture'];
-  let md='# Fintech Trust Design System\n\n> Design thesis: Money demands calm authority; trust is engineered through restraint, precision, and proof.\n\n---\n\n';
+  const ids=Array.from(document.querySelectorAll('section[id]')).map(s=>s.id);
+  let md='# Clinical Care Design System\n\n> Design thesis: Clarity is care: information hierarchy that stays readable at 3am under stress.\n\n---\n\n';
   ids.forEach(id=>{md+=getMarkdown(id)+'\n\n---\n\n'});
   navigator.clipboard.writeText(md.trim()).then(()=>{const b=document.getElementById('copy-all-btn');if(b){b.classList.add('copied');const sp=b.querySelector('span');if(sp){sp.textContent='Copied!';setTimeout(()=>{sp.textContent='Copy All as MD';b.classList.remove('copied')},2000)}}})
 }
 function copySwatch(el){const hex=el.dataset.hex;if(hex)navigator.clipboard.writeText(hex)}
+function medToggle(btn){btn.classList.toggle('done')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMobileNav()}});
 </script>
 </body>
 </html>
