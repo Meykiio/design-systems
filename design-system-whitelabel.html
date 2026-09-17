@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_NAME}} Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   WHITE-LABEL PLATFORM SYSTEM — AGENT INSTRUCTIONS
+   This file is a canonical, project-agnostic reference: visual
+   tokens AND engineering principles for building a full product,
+   not just a screen. Read this block fully before editing anything.
+
+   WHAT TO CHANGE PER PROJECT (do this first, every time):
+   1. Find/replace every {{PROJECT_NAME}} with the real project name.
+   2. Recolor: set --primary/--primary-solid, --secondary, --tertiary,
+      --quaternary, --positive, --brand-blue in BOTH [data-theme] blocks
+      (search "RE-THEME" below for the exact steps).
+   3. Swap the two Google Fonts imports + --font-display/--font-body
+      if the project's typography differs from Sora/DM Sans.
+   4. Replace example copy in Hero/Pricing/Cards/Chips (product names,
+      currency, feature lists) — these are placeholders, not brand facts.
+   5. Update the footer tagline and nav-logo text.
+
+   WHAT TO KEEP VERBATIM (do not touch unless the project explicitly
+   overrides it — these are the parts that stop AI-generated output
+   from reading as generic, not brand decoration):
+   - Motion tokens (--ease-out, --ease-spring, --dur-*)
+   - The spacing/radius/elevation SCALE (values, not colors)
+   - UX Principles section (laws + rules)
+   - Engineering Principles section (architecture/security/scale rules)
+   - Component structural CSS (layout, not color)
+
+   HOW TO USE THIS FILE AS A CODING AGENT:
+   - Before writing any UI: pull the token values + the relevant
+     principle cards for what you're building (a form → Forms +
+     Error Prevention + Data & Security; a list → Touch Targets +
+     Hick's Law + Performance & Scale).
+   - Treat every "Rule:" line as a hard constraint, not a suggestion.
+   - If a request conflicts with a Rule here, flag the conflict
+     instead of silently picking one side.
+
+   EXCLUDED FROM REPLICATION — DO NOT COPY INTO A BUILT WEBSITE:
+   Every element carrying the class "agent-tool" (the per-section
+   "Copy as MD" buttons and the sidebar's "Copy entire doc as MD"
+   button, plus their Markdown-export JS) is tooling for reading
+   THIS reference file — not a UI pattern of the design system.
+   When building a product from this file, skip anything marked
+   .agent-tool entirely: don't add a "copy as markdown" button to
+   generated pages, don't reuse .md-copy-btn/.md-copy-btn-global,
+   and don't port the sectionToMarkdown()/fullDocMarkdown() export
+   logic. If the target product genuinely needs a copy/export
+   feature, design it fresh for that product's own content model.
+═══════════════════════════════════════════
+   {{PROJECT_NAME}} TOKEN SYSTEM (Slate & Indigo-Violet default —
+   modeled on the accent/neutral pairing used by Linear, Vercel, and
+   Radix UI: one functional indigo-violet accent, and a neutral scale
+   faintly tinted toward that same hue rather than flat gray. A
+   genuinely blank starting point, not carried over from any prior
+   project. Replace with the project's real brand colors.)
+   Primary:   #4C47D6 Indigo-Violet (light) · #7C7FFF Indigo-Violet (dark)
+   Brand:     #0284C7 Sky Blue (support)
+   Secondary: #0F8A76 Teal (light) · #5EEAD4 Teal (dark)
+   Tertiary:  #F5A623 Amber · Quaternary: #F472B6 Rose
+   Base:      Indigo-tinted slate (near-black dark / near-white light)
+   Motion:    --ease-out (signature expo) · --ease-spring (soft overshoot)
+              --dur-fast .18s · --dur-med .3s · --dur-slow .55s
+═══════════════════════════════════════════
+   RE-THEME GUIDE (recyclable template)
+   To create a NEW platform's design reference:
+   1. Pick the brand colors → set --primary / --primary-solid,
+      --secondary, --tertiary, --positive, --brand-blue in BOTH themes
+   2. Adjust the surface scale + outlines to the platform's mood
+   3. Keep the motion tokens — they ARE the product's personality
+   Everything in this file is token-driven: no hardcoded colors
+   outside the two theme blocks and the Colors documentation.
+═══════════════════════════════════════════ */
+:root {
+  /* ── DARK MODE (canonical) ── indigo-tinted slate base, violet-indigo accent ──
+     Accent family matches the Linear/Vercel/Radix reference point: a single
+     functional indigo-violet, not a generic "safe" corporate blue. The neutral
+     scale carries a faint cool tint toward that same hue rather than pure gray,
+     so surfaces and accent read as one family (Radix Colors' tinted-gray practice). ── */
+  --bg:               #0c0d14;
+  --bg-dim:           #08090f;
+  --surface:          #121420;
+  --surface-mid:      #171a28;
+  --surface-high:     #1e2233;
+  --surface-highest:  #282d42;
+  --on-surface:       #eef0f9;
+  --on-surface-muted: #9498b0;
+  --outline:          #282d42;
+  --outline-hi:       #3f4664;
+
+  /* Primary — Indigo-Violet (the one accent, constant across both modes) */
+  --primary:          #7c7fff;
+  --primary-solid:    #7c7fff;
+  --on-primary:       #0c0d2e;
+  --primary-glow:     rgba(124,127,255,0.24);
+  --primary-glow-sm:  rgba(124,127,255,0.11);
+
+  /* Brand Blue — support */
+  --brand-blue:       #4fc3f7;
+
+  /* Secondary — Teal, used for supporting UI (less emphasis than primary) */
+  --secondary:        #5eead4;
+  --secondary-dim:    #4bc2ab;
+  --on-secondary:     #06281f;
+
+  /* Tertiary — Amber (warm accent, warnings, real brand color #3) */
+  --tertiary:         #f5a623;
+  --on-tertiary:      #2e1a00;
+
+  /* Quaternary — Rose (highlights, a supporting note distinct from error) */
+  --quaternary:       #f472b6;
+  --on-quaternary:    #2e0a1c;
+
+  /* Positive — Emerald Green */
+  --positive:         #34d399;
+  --on-positive:      #04241a;
+
+  /* Error — independent red, not reused from any accent */
+  --error:            #f87171;
+
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:        0 8px 24px rgba(0,0,0,0.55);
+  --shadow-lg:        0 20px 40px rgba(0,0,0,0.65);
+  --nav-bg:           #08090f;
+  --scroll-track:     #121420;
+  --scroll-thumb:     #2c3148;
+  --scroll-thumb-hi:  #7c7fff;
+  --toggle-bg:        rgba(124,127,255,0.09);
+  --toggle-border:    rgba(124,127,255,0.27);
+  --table-header-bg:  #171a28;
+  --table-header-fg:  #7c7fff;
+  --table-row-bg:     #0c0d14;
+  --table-row-hover:  #121420;
+  --table-border:     #282d42;
+  --section-alt:      #0c0d14;
+
+  /* Type */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* Radius */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   24px;
+  --r-full: 9999px;
+
+  /* Space */
+  --s-xs:   4px;
+  --s-sm:   8px;
+  --s-md:   16px;
+  --s-lg:   24px;
+  --s-xl:   48px;
+  --s-2xl:  80px;
+
+  --content-max: 1100px;
+  --transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+}
+
+[data-theme="light"] {
+  /* ── LIGHT MODE (derived from dark) ── same indigo-tinted slate + violet-indigo accent ── */
+  --bg:               #fbfbfe;
+  --bg-dim:           #f3f3f9;
+  --surface:          #ffffff;
+  --surface-mid:      #f7f7fc;
+  --surface-high:     #eeeef7;
+  --surface-highest:  #dfe0ee;
+  --on-surface:       #14152a;
+  --on-surface-muted: #5c5e78;
+  --outline:          #dfe0ee;
+  --outline-hi:       #a9abc6;
+
+  /* Primary — Indigo-Violet, darkened for AA text contrast on white; fills use full saturation */
+  --primary:          #4c47d6;
+  --primary-solid:    #4c47d6;
+  --on-primary:       #ffffff;
+  --primary-glow:     rgba(76,71,214,0.15);
+  --primary-glow-sm:  rgba(76,71,214,0.08);
+
+  /* Brand Blue — support */
+  --brand-blue:       #0284c7;
+
+  /* Secondary — Teal, darkened for contrast, same hue family as dark mode */
+  --secondary:        #0f8a76;
+  --secondary-dim:    #147a6a;
+  --on-secondary:     #ffffff;
+
+  /* Tertiary — Amber, darkened for contrast */
+  --tertiary:         #b3760f;
+  --on-tertiary:      #ffffff;
+
+  /* Quaternary — Rose, darkened for contrast */
+  --quaternary:       #c2478a;
+  --on-quaternary:    #ffffff;
+
+  /* Positive — Emerald Green */
+  --positive:         #0d9f6e;
+  --on-positive:      #ffffff;
+
+  /* Error — independent red, not reused from any accent */
+  --error:            #d13438;
+
+  --shadow-sm:        0 1px 3px rgba(20,21,42,0.06);
+  --shadow-md:        0 8px 24px rgba(20,21,42,0.08);
+  --shadow-lg:        0 20px 40px rgba(20,21,42,0.11);
+  --nav-bg:           #ffffff;
+  --scroll-track:     #eeeef7;
+  --scroll-thumb:     #dfe0ee;
+  --scroll-thumb-hi:  #4c47d6;
+  --toggle-bg:        rgba(76,71,214,0.07);
+  --toggle-border:    rgba(76,71,214,0.24);
+  --table-header-bg:  #eeeef7;
+  --table-header-fg:  #4c47d6;
+  --table-row-bg:     #ffffff;
+  --table-row-hover:  #f7f7fc;
+  --table-border:     #dfe0ee;
+  --section-alt:      #fbfbfe;
+}
+
+/* ── Light theme overrides: none needed for color identity —
+   --primary/--secondary/--tertiary already carry correct values
+   through the token system above. Kept empty on purpose: if a
+   component-specific override becomes necessary, add it here
+   rather than reintroducing hardcoded hex swaps. ── */
+
+/* ═══════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:16px;line-height:1.5;color:var(--on-surface);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:var(--transition)}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:var(--scroll-track)}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+
+::selection{background:var(--primary-solid);color:var(--on-primary)}
+
+.container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 var(--s-lg)}
+@media(max-width:767px){.container{padding:0 var(--s-md)}}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR NAVIGATION
+═══════════════════════════════════════════ */
+:root{
+  --sidebar-w:280px;--topbar-h:64px;
+  /* ── Motion tokens — the {{PROJECT_NAME}} animation personality ── */
+  --ease-out:    cubic-bezier(.22,1,.36,1);   /* signature expo-out: fast attack, silky settle */
+  --ease-spring: cubic-bezier(.34,1.3,.64,1); /* soft overshoot for micro-UI (bars, toggles) */
+  --dur-fast:    .18s;
+  --dur-med:     .3s;
+  --dur-slow:    .55s;
+}
+
+/* ── Scroll progress ── */
+.scroll-progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:3px;z-index:400;pointer-events:none;transition:left .45s var(--ease-out)}
+.scroll-progress .bar{display:block;height:100%;width:0;background:var(--primary-solid);border-radius:0 var(--r-full) var(--r-full) 0}
+
+/* ── Mobile top bar (hidden on desktop) ── */
+.topbar{display:none}
+.menu-toggle{display:none}
+
+/* ── Sidebar shell ── */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:220;
+  display:flex;flex-direction:column;
+  background:var(--nav-bg);
+  border-right:1px solid var(--outline);
+  transition:transform var(--dur-slow) var(--ease-out),width .45s var(--ease-out),background .3s,border-color .3s;
+}
+.sidebar-header{display:flex;align-items:center;gap:10px;padding:20px 20px 14px}
+.nav-logo{
+  font-family:var(--font-display);font-size:20px;font-weight:800;
+  color:var(--on-surface);letter-spacing:-0.02em;white-space:nowrap;
+  transition:opacity var(--dur-fast) var(--ease-out);
+}
+.nav-logo:hover{opacity:.7}
+.sidebar-close{
+  display:none;margin-left:auto;width:34px;height:34px;flex-shrink:0;
+  align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--outline);border-radius:var(--r-md);
+  color:var(--on-surface-muted);cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.sidebar-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.sidebar-close svg{width:16px;height:16px}
+
+/* ── Nav list ── */
+.sidebar-nav{
+  flex:1;overflow-y:auto;overflow-x:hidden;position:relative;
+  padding:8px 12px 20px;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent;
+}
+.sidebar-nav::-webkit-scrollbar{width:5px}
+.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+.sidebar-nav::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+
+/* Active state: a slim accent bar at the sidebar edge — no tinted pills */
+.nav-indicator{
+  position:absolute;left:0;top:0;width:3px;height:0;opacity:0;z-index:0;
+  background:var(--primary-solid);
+  border-radius:0 var(--r-full) var(--r-full) 0;
+  transition:top .5s var(--ease-spring),height .5s var(--ease-spring),opacity .2s var(--ease-out);
+  pointer-events:none;
+}
+.nav-group{padding-top:16px}
+.nav-indicator+.nav-group{padding-top:6px}
+.nav-group-label{
+  font:600 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--outline-hi);padding:0 12px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:11px;position:relative;z-index:1;
+  padding:9px 12px;margin-bottom:2px;border-radius:var(--r-md);
+  font:600 13.5px/1.3 var(--font-body);color:var(--on-surface-muted);
+  -webkit-tap-highlight-color:transparent;
+  transition:color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.65;transition:opacity var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.nav-item:hover{color:var(--on-surface);transform:translateX(3px)}
+.nav-item:hover svg{opacity:1}
+.nav-item.active{color:var(--primary);transform:translateX(3px)}
+.nav-item.active svg{opacity:1;color:var(--primary)}
+.nav-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px}
+
+/* ── Sidebar footer ── */
+.sidebar-footer{display:flex;align-items:center;gap:10px;padding:14px 16px}
+.collapse-toggle{
+  display:none;flex:1;align-items:center;justify-content:center;gap:8px;
+  padding:11px 18px;
+  background:transparent;color:var(--on-surface-muted);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 13px/1 var(--font-body);cursor:pointer;white-space:nowrap;
+  transition:color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.collapse-toggle:hover{color:var(--primary);border-color:var(--primary-solid)}
+.collapse-toggle:active{transform:scale(.97)}
+.collapse-toggle svg{width:15px;height:15px;transition:transform .4s var(--ease-out)}
+@media(min-width:1024px){.collapse-toggle{display:flex}}
+html.nav-collapsed .collapse-toggle svg{transform:rotate(180deg)}
+.theme-toggle{
+  background:transparent;border:1px solid var(--toggle-border);
+  color:var(--primary);border-radius:var(--r-full);
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  transition:border-color var(--dur-fast) var(--ease-out),transform var(--dur-med) var(--ease-spring);
+}
+.theme-toggle:hover{border-color:var(--primary-solid);transform:scale(1.1) rotate(14deg)}
+.theme-toggle svg{width:16px;height:16px}
+
+/* ── Backdrop (mobile only) ── */
+.sidebar-backdrop{display:none}
+
+/* ── Page offset ── */
+.page{margin-left:var(--sidebar-w);transition:margin-left .45s var(--ease-out)}
+section[id]{scroll-margin-top:24px}
+
+/* ── Floating tooltip for collapsed rail ── */
+.nav-tooltip{
+  position:fixed;z-index:500;pointer-events:none;
+  transform:translateY(-50%) translateX(-6px);opacity:0;
+  background:var(--surface-highest);color:var(--on-surface);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 12px/1 var(--font-body);padding:8px 11px;white-space:nowrap;
+  box-shadow:var(--shadow-md);
+  transition:opacity .18s,transform .18s;
+}
+.nav-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0)}
+
+/* ── Collapsed icon rail (desktop only) ── */
+@media(min-width:1024px){
+  html.nav-collapsed{--sidebar-w:78px}
+  html.nav-collapsed .sidebar-header{flex-direction:column;gap:12px;padding:18px 12px 12px}
+  html.nav-collapsed .nav-logo{font-size:0}
+  html.nav-collapsed .nav-logo::before{content:'p';font-size:22px;font-weight:800;color:var(--on-surface)}
+  html.nav-collapsed .sidebar-nav{padding:8px 10px 20px}
+  html.nav-collapsed .nav-group{padding-top:10px;margin-top:10px;border-top:1px solid var(--outline)}
+  html.nav-collapsed .nav-indicator+.nav-group{padding-top:6px;margin-top:0;border-top:none}
+  html.nav-collapsed .nav-group-label{display:none}
+  html.nav-collapsed .nav-item{justify-content:center;padding:10px 0;gap:0}
+  html.nav-collapsed .nav-item:hover,html.nav-collapsed .nav-item.active{transform:none}
+  html.nav-collapsed .nav-item span{display:none}
+  html.nav-collapsed .nav-item svg{width:18px;height:18px;opacity:.8}
+  html.nav-collapsed .sidebar-footer{flex-direction:column;padding:12px}
+  html.nav-collapsed .collapse-toggle{width:100%;padding:11px 0}
+  html.nav-collapsed .collapse-toggle span{display:none}
+}
+
+/* ── Mobile / tablet: off-canvas drawer ── */
+@media(max-width:1023px){
+  .page{margin-left:0}
+  section[id]{scroll-margin-top:calc(var(--topbar-h) + 16px)}
+  section.hero{padding:calc(var(--topbar-h) + 52px) 0 64px}
+  .scroll-progress{left:0}
+
+  .topbar{
+    display:flex;align-items:center;gap:12px;
+    position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:160;
+    padding:0 16px;
+    background:var(--nav-bg);
+    border-bottom:1px solid var(--outline);
+  }
+  .topbar .theme-toggle{margin-left:auto}
+  .menu-toggle{
+    display:flex;align-items:center;justify-content:center;
+    width:40px;height:40px;border-radius:var(--r-md);
+    background:transparent;border:1px solid var(--toggle-border);
+    color:var(--primary);cursor:pointer;
+    transition:border-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-spring);
+  }
+  .menu-toggle:hover{border-color:var(--primary-solid)}
+  .menu-toggle:active{transform:scale(.9)}
+  .menu-toggle svg{width:20px;height:20px}
+
+  .sidebar{width:min(320px,86vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .sidebar-footer{display:none}
+
+  .sidebar-backdrop{
+    display:block;position:fixed;inset:0;z-index:190;
+    background:rgba(8,4,14,.6);
+    opacity:0;visibility:hidden;
+    transition:opacity var(--dur-med) var(--ease-out),visibility 0s linear var(--dur-med);
+  }
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out)}
+  body.nav-locked{overflow:hidden}
+
+  /* staggered reveal of groups when drawer opens */
+  .sidebar .nav-group{opacity:0;transform:translateX(-18px);transition:opacity .2s,transform .2s}
+  .sidebar.open .nav-group{
+    opacity:1;transform:none;
+    transition:opacity .5s var(--ease-out),transform .5s var(--ease-out);
+    transition-delay:calc(.1s + var(--i,0)*60ms);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .sidebar,.sidebar-backdrop,.nav-indicator,.nav-item,.nav-group{transition:none!important}
+}
+
+/* ═══════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════ */
+section{padding:var(--s-xl) 0;transition:background .3s;background:var(--bg)}
+
+
+.section-label{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--secondary);margin-bottom:10px;
+}
+.section-label .dot{width:6px;height:6px;border-radius:50%;background:var(--secondary);flex-shrink:0}
+.section-header{margin-bottom:var(--s-lg);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-lg)}
+.section-header-text{flex:1;min-width:0}
+
+/* ── Meta/tooling controls (copy-as-markdown) — NOT a product UI pattern.
+   Excluded from anything an agent should replicate when building a
+   website from this system. See AGENT INSTRUCTIONS at the top of
+   this file and the .agent-tool marker used throughout. ── */
+.md-copy-btn{
+  flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;margin-top:2px;
+  background:transparent;color:var(--on-surface-muted);
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  font:600 12px/1 var(--font-body);cursor:pointer;white-space:nowrap;
+  transition:color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-spring);
+}
+.md-copy-btn svg{width:14px;height:14px;flex-shrink:0}
+.md-copy-btn:hover{color:var(--primary);border-color:var(--primary-glow-sm);background:var(--toggle-bg)}
+.md-copy-btn:active{transform:scale(.95)}
+.md-copy-btn.copied{color:var(--positive);border-color:var(--positive)}
+@media(max-width:767px){
+  .section-header{flex-direction:column}
+  .md-copy-btn span{display:none}
+  .md-copy-btn{padding:8px;border-radius:var(--r-md)}
+}
+
+.md-copy-btn-global{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px 14px;
+  background:transparent;color:var(--on-surface-muted);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 13px/1 var(--font-body);cursor:pointer;white-space:nowrap;
+  transition:color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.md-copy-btn-global svg{width:16px;height:16px;flex-shrink:0}
+.md-copy-btn-global:hover{color:var(--primary);border-color:var(--primary-glow-sm)}
+.md-copy-btn-global:active{transform:scale(.97)}
+.md-copy-btn-global.copied{color:var(--positive);border-color:var(--positive)}
+html.nav-collapsed .md-copy-btn-global span{display:none}
+.sidebar-footer-tools{padding:14px 16px;border-top:1px solid var(--outline)}
+html.nav-collapsed .sidebar-footer-tools{padding:14px 10px}
+.section-header h2{
+  font-family:var(--font-display);font-size:32px;font-weight:700;
+  color:var(--primary);letter-spacing:-0.01em;line-height:1.2;
+  margin-bottom:10px;
+}
+.section-header p{font-size:15px;color:var(--on-surface-muted);max-width:580px;line-height:1.6}
+@media(max-width:767px){.section-header h2{font-size:26px}}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+section.hero{
+  background:var(--bg-dim);padding:80px 0;
+  border-bottom:1px solid var(--outline);
+}
+section.hero .container{position:relative;z-index:1}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  font-size:12px;font-weight:600;font-family:var(--font-body);
+  color:var(--tertiary);background:var(--surface);
+  margin-bottom:var(--s-lg);letter-spacing:0.04em;
+}
+.hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--tertiary);flex-shrink:0}
+section.hero h1{
+  font-family:var(--font-display);font-size:clamp(40px,6vw,72px);
+  font-weight:700;line-height:0.96;letter-spacing:-0.02em;
+  color:var(--on-surface);margin-bottom:var(--s-lg);
+}
+section.hero h1 .gradient{color:var(--primary)}
+section.hero p{
+  font-size:17px;color:var(--on-surface-muted);
+  max-width:560px;line-height:1.65;margin-bottom:var(--s-lg);
+}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero-primary{
+  padding:14px 28px;background:var(--primary-solid);color:var(--on-primary);
+  border:none;border-radius:var(--r-sm);font:600 15px/1 var(--font-body);
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-hero-primary:active{transform:scale(.97)}
+.btn-hero-secondary:active{transform:scale(.97)}
+.btn-hero-secondary{
+  padding:14px 28px;background:transparent;
+  color:var(--on-surface);border:1px solid var(--outline);
+  border-radius:var(--r-sm);font:600 15px/1 var(--font-body);
+  cursor:pointer;transition:background .2s,transform .2s,border-color .2s;
+}
+.btn-hero-secondary:hover{background:var(--toggle-bg);transform:translateY(-2px);border-color:var(--outline-hi)}
+
+/* ═══════════════════════════════════════════
+   COLORS
+═══════════════════════════════════════════ */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.color-swatch{
+  position:relative;cursor:pointer;
+  border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--outline);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.color-swatch:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.color-swatch:active{transform:translateY(-2px) scale(.98)}
+.color-swatch-fill{height:72px}
+.color-swatch-info{padding:10px 14px;background:var(--surface)}
+.color-swatch-info .hex{font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--on-surface-muted);margin-bottom:3px;letter-spacing:0.05em}
+.color-swatch-info .name{font-size:12px;color:var(--on-surface)}
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════════ */
+.type-list{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline)}
+.type-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--s-lg) var(--s-lg);gap:var(--s-lg);
+  border-bottom:1px solid var(--outline);
+  box-shadow:inset 0 0 0 0 var(--primary-solid);
+  transition:background var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
+}
+.type-row:last-child{border-bottom:none}
+.type-row:nth-child(even){background:var(--surface-mid)}
+.type-row:nth-child(odd){background:var(--surface)}
+.type-row:hover{background:var(--surface-high);box-shadow:inset 3px 0 0 0 var(--primary-solid)}
+.type-row .meta{flex:0 0 200px}
+.type-row .meta .token-name{font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--secondary);margin-bottom:4px;letter-spacing:0.08em;text-transform:uppercase}
+.type-row .meta .spec{font-size:12px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.type-row .specimen{flex:1;text-align:right;word-break:break-word}
+@media(max-width:767px){
+  .type-row{flex-direction:column;align-items:flex-start}
+  .type-row .meta{flex:unset}
+  .type-row .specimen{text-align:left;margin-top:var(--s-sm)}
+}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════ */
+.button-grid{display:flex;flex-wrap:wrap;gap:var(--s-lg);align-items:flex-end}
+.button-item{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.button-item .btn-label{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font:600 14px/1 var(--font-body);padding:10px 20px;
+  border:none;border-radius:var(--r-sm);cursor:pointer;white-space:nowrap;
+  transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out),opacity var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.btn:active{transform:scale(.96)!important}
+.btn-primary{background:var(--primary-solid);color:var(--on-primary)}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-secondary{background:transparent;color:var(--secondary);border:1.5px solid var(--secondary)}
+.btn-secondary:hover{background:rgba(230,95,92,0.08);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--on-surface-muted)}
+.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
+.btn-pill-primary{background:var(--primary-solid);color:var(--on-primary);border-radius:var(--r-full)}
+.btn-pill-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-pill-accent{background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full)}
+.btn-pill-accent:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-outline-pill{background:transparent;color:var(--primary);border:1.5px solid var(--primary);border-radius:var(--r-full)}
+.btn-outline-pill:hover{background:var(--primary-glow-sm);transform:translateY(-1px)}
+.btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.5}
+
+/* ═══════════════════════════════════════════
+   CARDS (GLASSMORPHIC)
+═══════════════════════════════════════════ */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+.pricing-card{
+  background:var(--surface);
+  border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  display:flex;flex-direction:column;
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+  position:relative;
+}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pricing-card.featured{border-color:var(--primary-solid)}
+.pricing-card.featured:hover{box-shadow:var(--shadow-md);border-color:var(--primary-solid)}
+.pricing-badge{
+  display:inline-block;padding:5px 12px;
+  background:var(--secondary);color:var(--on-secondary);
+  border-radius:var(--r-full);font:600 11px/1 var(--font-body);
+  margin-bottom:var(--s-md);align-self:flex-start;letter-spacing:0.04em;
+}
+.pricing-card .tier{font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--primary);margin-bottom:6px}
+.pricing-card .price{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--on-surface);margin-bottom:var(--s-lg);line-height:1.1}
+.pricing-card.featured .price{color:var(--secondary)}
+.pricing-card .price-sub{font-size:13px;color:var(--on-surface-muted);font-family:var(--font-body);font-weight:400}
+.pricing-features{list-style:none;margin-bottom:var(--s-lg);flex:1}
+.pricing-features li{
+  font-size:14px;padding:8px 0;
+  border-bottom:1px solid var(--outline);
+  display:flex;align-items:center;gap:8px;color:var(--on-surface-muted);
+}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:'✓';color:var(--secondary);font-weight:700;flex-shrink:0;font-size:12px}
+.pricing-cta-margin{margin-top:auto}
+@media(max-width:1023px){
+  .pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .pricing-card.featured{order:-1}
+}
+
+/* ═══════════════════════════════════════════
+   CARD VARIANTS
+═══════════════════════════════════════════ */
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+.card-demo{
+  background:var(--surface);
+  border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.card-demo:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.card-tag{display:inline-block;font:600 10px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);margin-bottom:14px}
+.card-title{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--on-surface);margin-bottom:8px}
+.card-text{font-size:14px;color:var(--on-surface-muted);line-height:1.6}
+.card-link{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;color:var(--primary)}
+.card-link:hover{text-decoration:underline}
+.card-stat-label{font-size:12px;color:var(--on-surface-muted);margin-bottom:6px}
+.card-stat-value{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--on-surface);margin-bottom:12px;line-height:1.1}
+.card-stat-value span{font-size:14px;font-weight:600;color:var(--on-surface-muted)}
+.card-cover{
+  height:110px;border-radius:var(--r-lg);margin-bottom:14px;padding:10px;
+  background:var(--primary-solid);
+  display:flex;align-items:flex-start;justify-content:flex-end;
+}
+.card-product-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.card-price{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--primary)}
+.card-icon{
+  width:44px;height:44px;border-radius:var(--r-md);margin-bottom:14px;
+  background:var(--primary-glow-sm);border:1px solid var(--toggle-border);
+  display:flex;align-items:center;justify-content:center;color:var(--primary);
+}
+.card-icon svg{width:20px;height:20px}
+.card-feature:hover{border-color:var(--primary-solid);box-shadow:var(--shadow-md)}
+@media(max-width:1023px){.cards-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+
+/* ── UX principle cards: same card-demo shell, 3-up grid, grouped ── */
+.ux-group{margin-bottom:var(--s-xl)}
+.ux-group:last-child{margin-bottom:0}
+.ux-group-title{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--s-md)}
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.ux-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ux-grid{grid-template-columns:1fr}}
+.ux-card{
+  background:transparent;border:0;padding:0;text-align:left;cursor:pointer;
+  font-family:inherit;color:inherit;perspective:1200px;
+  min-height:168px;display:block;width:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.ux-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-lg)}
+.ux-card-inner{
+  position:relative;width:100%;height:100%;min-height:168px;
+  transition:transform var(--dur-slow) var(--ease-spring);
+  transform-style:preserve-3d;display:block;
+}
+.ux-card[aria-expanded="true"] .ux-card-inner{transform:rotateY(180deg)}
+.ux-card:hover .ux-card-inner{transform:translateY(-3px)}
+.ux-card[aria-expanded="true"]:hover .ux-card-inner{transform:rotateY(180deg) translateY(-3px)}
+.ux-card-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);
+  padding:var(--s-md) var(--s-lg);display:flex;flex-direction:column;
+  transition:box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.ux-card:hover .ux-card-face{box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.ux-card-face-back{transform:rotateY(180deg);border-color:var(--primary-glow-sm)}
+.ux-card-name{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--on-surface);margin-bottom:6px;display:block}
+.ux-card-def{font-size:13px;color:var(--on-surface-muted);line-height:1.5;display:block;flex:1}
+.ux-card-rule{font-size:13px;color:var(--on-surface);line-height:1.5;padding-top:10px;border-top:1px solid var(--outline);display:block;flex:1}
+.ux-card-rule b{color:var(--primary);font-weight:600}
+.ux-card-flip-hint{
+  font-size:10.5px;font-weight:600;letter-spacing:.03em;color:var(--primary);
+  opacity:0;transition:opacity var(--dur-fast) var(--ease-out);margin-top:10px;
+}
+.ux-card:hover .ux-card-flip-hint,.ux-card:focus-visible .ux-card-flip-hint{opacity:.85}
+@media(hover:none){.ux-card-flip-hint{opacity:.6}}
+
+/* ═══════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════ */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-lg)}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group label{font:600 12px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:0.04em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{
+  padding:11px 14px;border:1px solid var(--outline);
+  border-radius:var(--r-sm);font:14px/1.4 var(--font-body);
+  color:var(--on-surface);background:var(--surface);
+  transition:border-color var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
+  height:44px;outline:none;
+}
+.form-textarea{height:100px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--primary-solid);
+  box-shadow:0 0 0 4px var(--primary-glow-sm);
+}
+.form-input.focused{border-color:var(--primary-solid);box-shadow:0 0 0 4px var(--primary-glow-sm)}
+.form-select{
+  -webkit-appearance:none;appearance:none;
+  background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23958da1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+  padding-right:36px;
+}
+@media(max-width:767px){.form-grid{grid-template-columns:1fr}}
+
+/* ═══════════════════════════════════════════
+   SPACING + RADIUS
+═══════════════════════════════════════════ */
+.spacing-ruler{
+  display:flex;align-items:stretch;gap:4px;height:52px;
+  background:var(--surface-high);border-radius:var(--r-sm);padding:4px;
+}
+.spacing-block{
+  display:flex;align-items:center;justify-content:center;
+  background:var(--primary-solid);border-radius:var(--r-xs);
+  font:600 10px/1 var(--font-body);color:var(--on-primary);
+  transition:flex .45s var(--ease-out);min-width:8px;overflow:hidden;
+}
+.spacing-block .lbl{opacity:0;transition:opacity .2s;white-space:nowrap}
+.spacing-block:hover{flex:3!important}.spacing-block:hover .lbl{opacity:1}
+.spacing-labels{
+  display:flex;justify-content:space-between;margin-top:8px;
+  font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body);
+}
+
+.radius-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.radius-box{
+  background:var(--surface-high);
+  border:2px solid var(--primary-solid);
+  transition:background .3s,transform var(--dur-med) var(--ease-spring);
+}
+.radius-box:hover{transform:scale(1.08) rotate(-2deg)}
+.r-name{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body);font-weight:600}
+.r-value{font-size:11px;color:var(--outline-hi);font-family:var(--font-body)}
+
+/* ═══════════════════════════════════════════
+   ELEVATION
+═══════════════════════════════════════════ */
+.elevation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+.elevation-card{
+  background:var(--surface);border-radius:var(--r-lg);
+  padding:var(--s-lg);text-align:center;
+  border:1px solid var(--outline);
+  transition:transform var(--dur-med) var(--ease-out),background .3s,box-shadow var(--dur-med) var(--ease-out);
+}
+.elevation-card:hover{transform:translateY(-5px)}
+.elevation-card .e-num{
+  width:44px;height:44px;margin:0 auto;
+  border-radius:var(--r-sm);background:var(--surface-high);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:18px;font-weight:700;
+  color:var(--primary);
+}
+.elevation-card .e-label{font-size:12px;color:var(--on-surface-muted);margin-top:12px;font-family:var(--font-body)}
+.elevation-card .e-sub{font-size:11px;color:var(--outline-hi);margin-top:4px;font-family:var(--font-body)}
+.el-0{box-shadow:none}
+.el-1{box-shadow:var(--shadow-sm)}
+.el-2{box-shadow:var(--shadow-md)}
+.el-3{box-shadow:var(--shadow-lg);border-color:var(--primary-solid)}
+@media(max-width:767px){.elevation-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ═══════════════════════════════════════════
+   CHIPS & TAGS
+═══════════════════════════════════════════ */
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--s-md)}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:var(--r-xs);
+  font:600 11px/1 var(--font-body);letter-spacing:0.04em;
+  transition:transform var(--dur-fast) var(--ease-out),opacity var(--dur-fast) var(--ease-out);
+}
+.chip:hover{transform:translateY(-1px)}
+.chip-primary{background:rgba(1,186,239,0.12);color:var(--brand-blue);border:1px solid rgba(1,186,239,0.3)}
+.chip-active{background:rgba(105,220,158,0.12);color:var(--positive);border:1px solid rgba(105,220,158,0.3)}
+.chip-tertiary{background:rgba(255,199,89,0.12);color:var(--tertiary);border:1px solid rgba(255,199,89,0.3)}
+.chip-error{background:rgba(230,95,92,0.12);color:var(--error);border:1px solid rgba(230,95,92,0.3)}
+.chip .dot-xs{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* ═══════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════ */
+.responsive-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline)}
+.responsive-table th,.responsive-table td{padding:14px var(--s-lg);text-align:left;border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-out)}
+.responsive-table th{background:var(--table-header-bg);color:var(--table-header-fg);font:600 11px/1 var(--font-body);text-transform:uppercase;letter-spacing:0.08em}
+.responsive-table td{font-size:14px;background:var(--table-row-bg);color:var(--on-surface)}
+.responsive-table tr:last-child td{border-bottom:none}
+.responsive-table tr:hover td{background:var(--table-row-hover)}
+.responsive-notes{margin-top:var(--s-lg);display:grid;gap:10px}
+.responsive-notes li{
+  font-size:14px;color:var(--on-surface-muted);
+  display:flex;align-items:flex-start;gap:8px;list-style:none;
+}
+.responsive-notes li::before{content:'→';color:var(--secondary);font-weight:700;flex-shrink:0}
+
+/* ═══════════════════════════════════════════
+   TOUCH TARGETS
+═══════════════════════════════════════════ */
+.touch-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.touch-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.touch-target{
+  width:44px;height:44px;background:var(--secondary);border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;color:var(--on-secondary);
+  font:700 10px/1 var(--font-body);position:relative;
+}
+.touch-target::after{content:'';position:absolute;inset:-5px;border:1px dashed var(--secondary);border-radius:calc(var(--r-sm) + 3px);opacity:.35}
+.touch-label{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.touch-input{height:44px;padding:11px 14px;border:1px solid var(--outline);border-radius:var(--r-sm);font:14px/1 var(--font-body);width:220px;outline:none;background:var(--surface);color:var(--on-surface)}
+
+/* ═══════════════════════════════════════════
+   CLOSING + FOOTER
+═══════════════════════════════════════════ */
+section.closing-band{
+  background:var(--bg-dim);padding:96px 0;text-align:center;
+  border-top:1px solid var(--outline);
+}
+section.closing-band h2{
+  font-family:var(--font-display);font-size:clamp(28px,4vw,42px);font-weight:700;
+  color:var(--on-surface);letter-spacing:-0.01em;margin-bottom:var(--s-lg);
+}
+section.closing-band h2 span{color:var(--primary)}
+.site-footer{
+  background:var(--bg-dim);border-top:1px solid var(--outline);
+  padding:var(--s-lg) 0;text-align:center;
+  font-size:13px;color:var(--on-surface-muted);
+}
+.site-footer a{color:var(--secondary);font-weight:600}
+
+/* ═══════════════════════════════════════════
+   LIFE LAYER — reveals, draw accents, micro-UI
+═══════════════════════════════════════════ */
+
+/* ── Scroll reveal (JS-tagged) ── */
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out);transition-delay:var(--d,0s)}
+[data-reveal].revealed{opacity:1;transform:none}
+
+/* ── Hand-drawn accent underline (hero + closing) ── */
+.draw-target{position:relative;display:inline-block}
+.draw-target::after{
+  content:'';position:absolute;left:-2px;right:-2px;bottom:2px;height:4px;
+  background:var(--primary-solid);border-radius:var(--r-full);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .7s var(--ease-out) .4s;
+}
+.draw-target.drawn::after{transform:scaleX(1)}
+
+/* ── Focus visible (keyboard users) ── */
+.btn:focus-visible,.color-swatch:focus-visible{outline:2px solid var(--primary-solid);outline-offset:2px}
+
+/* ── Color swatch copy badge ── */
+.color-swatch::after{
+  content:'Copy';position:absolute;top:8px;right:8px;z-index:2;
+  font:600 10px/1 var(--font-body);letter-spacing:.06em;
+  background:rgba(12,6,20,.55);color:#fff;padding:5px 9px;border-radius:var(--r-full);
+  opacity:0;transform:translateY(-4px);
+  transition:opacity var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+  pointer-events:none;
+}
+.color-swatch:hover::after,.color-swatch:focus-visible::after{opacity:1;transform:none}
+.color-swatch.copied::after{content:'Copied ✓';background:var(--primary-solid);color:var(--on-primary);opacity:1;transform:none}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;z-index:600;
+  transform:translateX(-50%) translateY(16px);
+  display:flex;align-items:center;gap:9px;
+  background:var(--surface-highest);color:var(--on-surface);
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  padding:11px 20px;font:600 13px/1 var(--font-body);
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:opacity var(--dur-med) var(--ease-out),transform var(--dur-med) var(--ease-spring);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast .t-dot{width:7px;height:7px;border-radius:50%;background:var(--positive);flex-shrink:0}
+
+/* ── Dismissible chip ── */
+.chip-x{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;margin-left:2px;border-radius:50%;
+  background:transparent;color:inherit;border:none;
+  font:700 11px/1 var(--font-body);cursor:pointer;opacity:.65;
+  transition:opacity var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out);
+}
+.chip-x:hover{opacity:1;background:rgba(0,0,0,.15)}
+.chip.removing{opacity:0;transform:scale(.85)}
+
+/* ═══════════════════════════════════════════
+   MOTION SECTION
+═══════════════════════════════════════════ */
+.motion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+.motion-card{
+  background:var(--surface);border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.motion-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.motion-track{
+  position:relative;height:36px;margin-bottom:16px;overflow:hidden;
+  background:var(--surface-high);border-radius:var(--r-full);
+}
+.motion-dot{
+  position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;
+  background:var(--primary-solid);
+}
+.dot-ease-out{animation:motion-slide 2.2s var(--ease-out) infinite alternate}
+.dot-ease-spring{animation:motion-slide 2.2s var(--ease-spring) infinite alternate}
+@keyframes motion-slide{to{left:calc(100% - 30px)}}
+.motion-name{font:700 13px/1 var(--font-body);color:var(--primary);margin-bottom:8px}
+.motion-card code{
+  display:inline-block;margin-bottom:12px;
+  font:12px/1.4 ui-monospace,'Cascadia Code',monospace;
+  color:var(--tertiary);background:var(--surface-high);
+  padding:5px 9px;border-radius:6px;border:1px solid var(--outline);
+}
+.motion-card p{font-size:13px;color:var(--on-surface-muted);line-height:1.55}
+.motion-durations{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:36px;margin-bottom:16px}
+@media(max-width:1023px){.motion-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion: reduce){
+  [data-reveal]{opacity:1;transform:none;transition:none}
+  .motion-dot{animation:none}
+  .draw-target::after{transition:none;transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     DOCUMENT MAP (for AI agents — this file's 17 sections in order)
+     colors            → §Color Palette         → CSS vars: --primary,--secondary,--tertiary,--quaternary,--positive,--error,--brand-blue
+     typography        → §Typography Scale      → CSS vars: --font-display,--font-body + type-scale classes
+     spacing           → §Spacing System         → CSS vars: --s-xs..--s-2xl
+     radius            → §Radius Scale           → CSS vars: --r-xs..--r-full
+     elevation         → §Elevation/Shadows      → CSS vars: --shadow-sm/md/lg
+     motion            → §Motion & Easing        → CSS vars: --ease-out,--ease-spring,--dur-fast/med/slow
+     ux-principles     → §UX Principles          → cognitive/interaction laws (Hick's Law, Fitts's Law, etc.) — no CSS, behavioral rules
+     architecture      → §Architecture & Files   → file size limits, naming, schema-first, docs, commits — no CSS, process rules
+     data-security     → §Data & Security        → auth/validation/secrets rules + pre-ship checklist table — no CSS, process rules
+     performance-scale → §Performance & Scale    → pagination/N+1/indexing/caching rules + complexity table — no CSS, process rules
+     components        → §Components             → buttons, inputs — see .btn-*, .input-* classes
+     chips             → §Chips & Tags           → .chip, .chip-primary/.chip-active/.chip-tertiary
+     cards             → §Cards                  → .card-demo, .card-feature, .card-stat-*
+     forms             → §Forms                  → .form-grid, .form-group, labels/inputs/validation states
+     responsive        → §Responsive Behavior    → breakpoint table, layout rules
+     touch              → §Touch Targets          → min 44px tap-target rules
+     pricing           → §Pricing Cards          → .pricing-card, .pricing-grid, .pricing-badge
+
+     Every section supports both a per-section "Copy as MD" button and
+     a global "Copy entire doc as MD" button (sidebar footer) — use
+     these to pull a section's content as structured Markdown instead
+     of re-parsing the HTML. Both are tagged .agent-tool: see the
+     EXCLUDED FROM REPLICATION note in the <style> block above — never
+     copy this export feature into a website built from this file.
+═══════════════════════════════════════════ -->
+
+<!-- ════════════════════ SCROLL PROGRESS ════════════════════ -->
+<div class="scroll-progress"><span class="bar" id="scrollBar"></span></div>
+
+<!-- ════════════════════ MOBILE TOP BAR ════════════════════ -->
+<header class="topbar">
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <a class="nav-logo" href="#hero">{{project_name}}</a>
+  <button class="theme-toggle" aria-label="Toggle theme">
+    <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  </button>
+</header>
+
+<!-- ════════════════════ BACKDROP ════════════════════ -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- ════════════════════ SIDEBAR ════════════════════ -->
+<aside class="sidebar" id="sidebar" aria-label="Design system navigation">
+  <div class="sidebar-header">
+    <a class="nav-logo" href="#hero">{{project_name}}</a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="nav-indicator" id="navIndicator"></div>
+
+    <div class="nav-group" style="--i:0">
+      <div class="nav-group-label">Getting Started</div>
+      <a href="#hero" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:1">
+      <div class="nav-group-label">Foundations</div>
+      <a href="#colors" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+        <span>Colors</span>
+      </a>
+      <a href="#typography" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        <span>Typography</span>
+      </a>
+      <a href="#spacing" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+        <span>Spacing</span>
+      </a>
+      <a href="#radius" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="6"/></svg>
+        <span>Radius</span>
+      </a>
+      <a href="#elevation" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span>Elevation</span>
+      </a>
+      <a href="#motion" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Motion</span>
+      </a>
+      <a href="#ux-principles" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>UX Principles</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:2">
+      <div class="nav-group-label">Engineering</div>
+      <a href="#architecture" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="10" y1="6.5" x2="14" y2="6.5"/><line x1="6.5" y1="10" x2="6.5" y2="14"/></svg>
+        <span>Architecture &amp; Files</span>
+      </a>
+      <a href="#data-security" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Data &amp; Security</span>
+      </a>
+      <a href="#performance-scale" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span>Performance &amp; Scale</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Components</div>
+      <a href="#components" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.04a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>
+        <span>Buttons</span>
+      </a>
+      <a href="#chips" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <span>Chips &amp; Tags</span>
+      </a>
+      <a href="#cards" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Cards</span>
+      </a>
+      <a href="#forms" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Forms</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:4">
+      <div class="nav-group-label">Patterns</div>
+      <a href="#responsive" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span>Responsive</span>
+      </a>
+      <a href="#touch" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+        <span>Touch Targets</span>
+      </a>
+      <a href="#pricing" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+        <span>Pricing</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer-tools">
+    <button class="md-copy-btn-global agent-tool" id="copyAllMd" aria-label="Copy entire design system as Markdown" title="Copy entire document as Markdown">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span>Copy entire doc as MD</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="theme-toggle" aria-label="Toggle theme">
+      <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <button class="collapse-toggle" id="collapseToggle" aria-label="Collapse sidebar" aria-expanded="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Collapse</span>
+    </button>
+  </div>
+</aside>
+
+<main class="page">
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-badge">{{PALETTE_NAME}} · v1.0</div>
+    <h1>The {{PROJECT_NAME}}<br><span class="gradient draw-target">Design System</span></h1>
+    <p>A complete reference for building {{PROJECT_NAME}}: visual tokens, component rules, and the engineering principles that keep the codebase and the interface consistent as the platform grows. This is the single source of truth — for humans and AI agents alike.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary">Get started</button>
+      <button class="btn-hero-secondary">View on GitHub</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ COLORS ════════════════════ -->
+<section id="colors">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Visual Identity</div>
+        <h2>Color Palette</h2>
+        <p>Slate &amp; Indigo-Violet starting palette — the accent/neutral pairing used by Linear, Vercel, and Radix UI. One functional indigo-violet accent throughout; teal is the second brand color, amber and rose round out the supporting set. Swap these for the project's real brand colors — see the Agent Instructions comment at the top of the file.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="colors" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="color-grid">
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#7c7fff"></div><div class="color-swatch-info"><div class="hex">#7c7fff</div><div class="name">Primary · Dark (Indigo-Violet)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#4c47d6"></div><div class="color-swatch-info"><div class="hex">#4c47d6</div><div class="name">Primary · Light (Indigo-Violet, AA-safe)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#5eead4"></div><div class="color-swatch-info"><div class="hex">#5eead4</div><div class="name">Secondary · Dark (Teal)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#0f8a76"></div><div class="color-swatch-info"><div class="hex">#0f8a76</div><div class="name">Secondary · Light (Teal, AA-safe)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#4fc3f7"></div><div class="color-swatch-info"><div class="hex">#4fc3f7</div><div class="name">Brand Blue</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#f5a623"></div><div class="color-swatch-info"><div class="hex">#f5a623</div><div class="name">Tertiary · Dark (Amber)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#b3760f"></div><div class="color-swatch-info"><div class="hex">#b3760f</div><div class="name">Tertiary · Light (Amber)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#f472b6"></div><div class="color-swatch-info"><div class="hex">#f472b6</div><div class="name">Quaternary · Dark (Rose)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#0c0d14"></div><div class="color-swatch-info"><div class="hex">#0c0d14</div><div class="name">Background Dark</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#1e2233"></div><div class="color-swatch-info"><div class="hex">#1e2233</div><div class="name">Surface High Dark</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#eeeef7"></div><div class="color-swatch-info"><div class="hex">#eeeef7</div><div class="name">Surface High Light</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#f87171"></div><div class="color-swatch-info"><div class="hex">#f87171</div><div class="name">Error · Dark</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#d13438"></div><div class="color-swatch-info"><div class="hex">#d13438</div><div class="name">Error · Light</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ TYPOGRAPHY ════════════════════ -->
+<section id="typography">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Language</div>
+        <h2>Typography Scale</h2>
+        <p>Sora for headlines — geometric, futuristic. DM Sans for body — clean precision at any size.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="typography" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="type-list">
+      <div class="type-row">
+        <div class="meta"><div class="token-name">headline-xl</div><div class="spec">Sora · 700 · 48px · -0.02em</div></div>
+        <div class="specimen" style="font-family:'Sora',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:700;line-height:1.1;letter-spacing:-0.02em;color:var(--primary)">The {{PROJECT_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">headline-lg</div><div class="spec">Sora · 600 · 32px · -0.01em</div></div>
+        <div class="specimen" style="font-family:'Sora',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:600;line-height:1.2;letter-spacing:-0.01em;color:var(--primary)">The {{PROJECT_NAME}} System</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">headline-lg-mobile</div><div class="spec">Sora · 600 · 28px</div></div>
+        <div class="specimen" style="font-family:'Sora',sans-serif;font-size:28px;font-weight:600;line-height:1.2;color:var(--primary)">The {{PROJECT_NAME}} Design System</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">body-md</div><div class="spec">DM Sans · 400 · 16px · 1.5lh</div></div>
+        <div class="specimen" style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:400;line-height:1.5;color:var(--on-surface)">Replace this body copy with a sentence describing what the platform actually does for its users.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">body-sm</div><div class="spec">DM Sans · 400 · 14px · 1.43lh</div></div>
+        <div class="specimen" style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;line-height:1.43;color:var(--on-surface-muted)">Replace this body copy with a sentence describing what the platform actually does for its users.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">label-md</div><div class="spec">DM Sans · 600 · 12px · 0.04em ls</div></div>
+        <div class="specimen" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--secondary)">VISUAL IDENTITY · COMPONENTS</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">code</div><div class="spec">DM Sans · 400 · 14px · mono</div></div>
+        <div class="specimen" style="font-family:ui-monospace,'Cascadia Code',monospace;font-size:13px;background:var(--surface-high);padding:8px 12px;border-radius:6px;color:var(--tertiary);border:1px solid var(--outline)">--primary-solid: #7c7fff;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ SPACING ════════════════════ -->
+<section id="spacing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Grid</div>
+        <h2>Spacing Scale</h2>
+        <p>8px base linear scale. Hover any block to expand and see its token name.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="spacing" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="spacing-ruler">
+      <div class="spacing-block" style="flex:4;min-width:4px"><span class="lbl">xs·4</span></div>
+      <div class="spacing-block" style="flex:8;min-width:8px"><span class="lbl">sm·8</span></div>
+      <div class="spacing-block" style="flex:16;min-width:16px"><span class="lbl">md·16</span></div>
+      <div class="spacing-block" style="flex:24;min-width:24px"><span class="lbl">lg·24</span></div>
+      <div class="spacing-block" style="flex:48;min-width:40px"><span class="lbl">xl·48</span></div>
+      <div class="spacing-block" style="flex:80;min-width:56px"><span class="lbl">2xl·80</span></div>
+    </div>
+    <div class="spacing-labels"><span>4px</span><span>8px</span><span>16px</span><span>24px</span><span>48px</span><span>80px</span></div>
+  </div>
+</section>
+
+<!-- ════════════════════ RADIUS ════════════════════ -->
+<section id="radius">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Shape</div>
+        <h2>Border Radius Scale</h2>
+        <p>From sharp 4px tags to fully rounded pills. Primary 2px border on all radius demos.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="radius" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="radius-grid">
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:4px"></div><span class="r-name">r-xs</span><span class="r-value">4px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:8px"></div><span class="r-name">r-sm</span><span class="r-value">8px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:12px"></div><span class="r-name">r-md</span><span class="r-value">12px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:16px"></div><span class="r-name">r-lg</span><span class="r-value">16px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:24px"></div><span class="r-name">r-xl</span><span class="r-value">24px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:9999px"></div><span class="r-name">r-full</span><span class="r-value">9999px</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ ELEVATION ════════════════════ -->
+<section id="elevation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Depth</div>
+        <h2>Elevation &amp; Depth</h2>
+        <p>Four levels of depth. Soft neutral shadows; L3 adds a primary stroke for emphasis.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="elevation" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="elevation-grid">
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Level 0</div><div class="e-sub">Flat · No shadow</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Level 1</div><div class="e-sub">Subtle shadow</div></div>
+      <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Level 2</div><div class="e-sub">Float · Soft shadow</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Level 3</div><div class="e-sub">Overlay · Primary stroke</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ MOTION ════════════════════ -->
+<section id="motion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Animation</div>
+        <h2>Motion &amp; Transitions</h2>
+        <p>The {{PROJECT_NAME}} animation personality — two signature curves and three durations. Apply them verbatim to every interactive element.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="motion" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="motion-grid">
+      <div class="motion-card">
+        <div class="motion-track"><span class="motion-dot dot-ease-out"></span></div>
+        <div class="motion-name">--ease-out</div>
+        <code>cubic-bezier(.22, 1, .36, 1)</code>
+        <p>Signature expo-out — fast attack, silky settle. Entrances, drawers, reveals, hovers.</p>
+      </div>
+      <div class="motion-card">
+        <div class="motion-track"><span class="motion-dot dot-ease-spring"></span></div>
+        <div class="motion-name">--ease-spring</div>
+        <code>cubic-bezier(.34, 1.3, .64, 1)</code>
+        <p>Soft overshoot for micro-UI — the active bar, toggles, and anything that should feel alive.</p>
+      </div>
+      <div class="motion-card">
+        <div class="motion-durations">
+          <span class="chip chip-primary">--dur-fast · .18s</span>
+          <span class="chip chip-primary">--dur-med · .3s</span>
+          <span class="chip chip-primary">--dur-slow · .55s</span>
+        </div>
+        <div class="motion-name">Durations</div>
+        <p>Fast for micro-UI, medium for cards and panels, slow for drawers and page-level moves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ UX PRINCIPLES ════════════════════ -->
+<section id="ux-principles">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Behavior</div>
+        <h2>UX Principles</h2>
+        <p>Tokens control how {{PROJECT_NAME}} looks. This section controls how it behaves — the cognitive/interaction rules that stop AI-generated screens from reading as generic. Feed these verbatim into any build prompt alongside the tokens above.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="ux-principles" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Perception &amp; Visual Hierarchy</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Jakob's Law</span><span class="ux-card-def">Users expect your product to work like every other product they already know.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Jakob's Law</span><span class="ux-card-rule"><b>Rule:</b> don't invent novel patterns for cart, nav, or settings icons. Match convention; save originality for brand moments, not navigation.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Law of Proximity</span><span class="ux-card-def">Items placed close together are perceived as related.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Law of Proximity</span><span class="ux-card-rule"><b>Rule:</b> group related fields/actions with tight spacing (--s-xs/--s-sm), separate unrelated groups with --s-lg or more. Spacing IS the hierarchy.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Law of Similarity</span><span class="ux-card-def">Elements that look alike are read as belonging to the same category.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Law of Similarity</span><span class="ux-card-rule"><b>Rule:</b> one visual style per action-type across the whole app (all destructive actions look alike, all primary CTAs look alike). Never reuse a style for two different meanings.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Law of Prägnanz</span><span class="ux-card-def">People simplify complex shapes into the simplest form they can.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Law of Prägnanz</span><span class="ux-card-rule"><b>Rule:</b> default to the simplest layout that communicates the hierarchy. If a screen needs a legend to explain itself, simplify it instead.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Von Restorff Effect</span><span class="ux-card-def">The one item that looks different is the one people remember and click.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Von Restorff Effect</span><span class="ux-card-rule"><b>Rule:</b> exactly one visually distinct element per screen — the primary CTA. If everything is emphasized, nothing is.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Uniform Connectedness</span><span class="ux-card-def">Elements visually connected (shared border, background, or line) read as one unit.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Uniform Connectedness</span><span class="ux-card-rule"><b>Rule:</b> wrap related inputs/actions in a shared card-demo container rather than relying on spacing alone when the relationship needs to be unmistakable.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Interaction &amp; Motor Effort</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Fitts's Law</span><span class="ux-card-def">Time to reach a target depends on its size and distance from the cursor/thumb.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Fitts's Law</span><span class="ux-card-rule"><b>Rule:</b> primary actions get the largest tap target and sit within thumb reach on mobile (bottom third). Never shrink a frequent action to fit visual balance.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Hick's Law</span><span class="ux-card-def">More choices = longer decision time, non-linearly.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Hick's Law</span><span class="ux-card-rule"><b>Rule:</b> cap visible primary choices at 5-7. Beyond that, group into categories or progressively disclose — don't just list everything flat.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Doherty Threshold</span><span class="ux-card-def">Interfaces feel "instant" below ~400ms response; above it, users disengage.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Doherty Threshold</span><span class="ux-card-rule"><b>Rule:</b> any action over 400ms gets immediate optimistic UI or a skeleton/spinner using --dur-fast, not a frozen screen.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Tesler's Law</span><span class="ux-card-def">Every process has inherent complexity that can't be removed, only relocated.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Tesler's Law</span><span class="ux-card-rule"><b>Rule:</b> when a flow feels complex, the question is who absorbs it — the system (better defaults, smart validation) or the user (more fields). Default to absorbing it yourself.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Postel's Law</span><span class="ux-card-def">Be liberal in what you accept from users, strict in what you output.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Postel's Law</span><span class="ux-card-rule"><b>Rule:</b> forms should accept loose input (phone formats, spacing, casing) and normalize it silently, not reject and blame the user.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Memory &amp; Information Load</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Miller's Law</span><span class="ux-card-def">Working memory holds about 7 (±2) items at once.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Miller's Law</span><span class="ux-card-rule"><b>Rule:</b> chunk long lists/nav into groups of 5-7 with labels (exactly what this file's sidebar already does with nav-group).</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Serial Position Effect</span><span class="ux-card-def">Users remember the first and last items in a list best; the middle gets lost.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Serial Position Effect</span><span class="ux-card-rule"><b>Rule:</b> put the most important nav item or CTA first or last, never buried mid-list.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Peak-End Rule</span><span class="ux-card-def">People judge an experience mainly by its most intense moment and how it ends.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Peak-End Rule</span><span class="ux-card-rule"><b>Rule:</b> invest polish in the single most emotional moment of a flow (checkout success, order placed) and the final screen — not equally everywhere.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Zeigarnik Effect</span><span class="ux-card-def">Unfinished tasks stay top-of-mind more than completed ones.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Zeigarnik Effect</span><span class="ux-card-rule"><b>Rule:</b> show progress indicators (step 2 of 4, % complete) on multi-step flows — the visible incompleteness is what drives completion.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Trust, Errors &amp; Constraints</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Parkinson's Law</span><span class="ux-card-def">A task expands to fill the time/space allotted to it.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Parkinson's Law</span><span class="ux-card-rule"><b>Rule:</b> constrain input fields to the length you actually need (short bio field stays short) — generous space invites bloated, unusable content.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Occam's Razor</span><span class="ux-card-def">The simplest solution that solves the problem is usually the right one.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Occam's Razor</span><span class="ux-card-rule"><b>Rule:</b> before adding a setting, modal, or extra step, ask if removing something gets the same result. Default to fewer screens.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Pareto Principle</span><span class="ux-card-def">Roughly 80% of usage comes from 20% of features.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Pareto Principle</span><span class="ux-card-rule"><b>Rule:</b> that 20% gets the polish, the fast path, and the largest tap targets. Everything else can be one tap deeper.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Error Prevention</span><span class="ux-card-def">A well-designed system stops mistakes before they happen rather than explaining them after.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Error Prevention</span><span class="ux-card-rule"><b>Rule:</b> disable submit until required fields are valid, confirm destructive actions, use --error color the instant a field goes invalid — not only on submit.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Visibility of System Status</span><span class="ux-card-def">Users need to always know what's happening — loading, saved, failed, empty.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Visibility of System Status</span><span class="ux-card-rule"><b>Rule:</b> every async action gets a state for loading, success (use .toast), error, and empty. Never leave a screen ambiguous about what just happened.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">WCAG Contrast</span><span class="ux-card-def">Text needs sufficient contrast against its background to be legible for all users.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">WCAG Contrast</span><span class="ux-card-rule"><b>Rule:</b> body text ≥4.5:1 contrast, large text ≥3:1. --on-surface-muted is already tuned for this in both themes — don't introduce new lighter grays.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ ARCHITECTURE & FILES ════════════════════ -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Engineering</div>
+        <h2>Architecture &amp; Files</h2>
+        <p>Tokens control how {{PROJECT_NAME}} looks. This controls how the codebase stays buildable as it grows — the rules that keep an AI agent (or a team) from producing a tangle. Feed these verbatim into any build prompt alongside the tokens above.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="architecture" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">File &amp; Module Discipline</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Single Responsibility</span><span class="ux-card-def">A file or function that does one thing is easy to test, reuse, and delete.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Single Responsibility</span><span class="ux-card-rule"><b>Rule:</b> one component/route/service per file. If a file mixes UI, data-fetching, and business logic, split it before adding more to it.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">File Size Ceiling</span><span class="ux-card-def">Long files are where bugs hide and where AI context windows lose track of intent.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">File Size Ceiling</span><span class="ux-card-rule"><b>Rule:</b> hard ceiling ~250 lines per file. Approaching it is the signal to extract a module, not to keep scrolling.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Predictable Naming</span><span class="ux-card-def">A name should tell you what a thing is without opening it.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Predictable Naming</span><span class="ux-card-rule"><b>Rule:</b> one casing convention per category (kebab-case files, PascalCase components, camelCase functions, snake_case DB columns) — pick once, apply everywhere, never mix within a category.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Colocation</span><span class="ux-card-def">Code that changes together should live together.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Colocation</span><span class="ux-card-rule"><b>Rule:</b> a feature's component, styles, types, and tests live in one folder — not scattered across parallel global trees by file type.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Schema &amp; State Before Code</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Schema-First</span><span class="ux-card-def">The database shape is the hardest thing to change after real data exists in it.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Schema-First</span><span class="ux-card-rule"><b>Rule:</b> design the full DB schema (tables, relations, constraints) before writing feature code against it. A rushed schema is the #1 cause of a rebuild-from-scratch.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Single Source of Truth</span><span class="ux-card-def">The same fact stored in two places will eventually disagree with itself.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Single Source of Truth</span><span class="ux-card-rule"><b>Rule:</b> derive, don't duplicate. If a value can be computed from other state, compute it — don't store a second copy that can drift.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Server Owns Truth</span><span class="ux-card-def">Client state is a cache of server state, not an independent source.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Server Owns Truth</span><span class="ux-card-rule"><b>Rule:</b> the server/DB is authoritative for anything shared or persisted. Client state holds only UI-local concerns (open/closed, draft input, current tab).</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Boring Technology</span><span class="ux-card-def">Every unfamiliar dependency is a future debugging session with no documentation.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Boring Technology</span><span class="ux-card-rule"><b>Rule:</b> default to the stack's standard, well-documented solution. Reach for something novel only when the standard one has a specific, named limitation.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Process Discipline (agent + human)</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Read Before Write</span><span class="ux-card-def">Changing code you haven't read produces regressions that look unrelated to the change.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Read Before Write</span><span class="ux-card-rule"><b>Rule:</b> read the relevant file(s) in full before editing. Never assume a function's behavior from its name.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Never Break the Build</span><span class="ux-card-def">A working feature is worth more than an unshipped better one.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Never Break the Build</span><span class="ux-card-rule"><b>Rule:</b> don't refactor working code while adding a new feature. Separate commits, separate steps — never both in one unreviewed change.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Ask, Don't Assume</span><span class="ux-card-def">A wrong assumption compounds silently until it's expensive to unwind.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Ask, Don't Assume</span><span class="ux-card-rule"><b>Rule:</b> when a requirement is ambiguous (data shape, edge case, who sees what), ask — don't guess and build on the guess.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">No Unrequested Scope</span><span class="ux-card-def">Every unrequested feature is untested surface area someone now has to maintain.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">No Unrequested Scope</span><span class="ux-card-rule"><b>Rule:</b> build exactly what was asked. Flag good ideas beyond scope as suggestions, don't silently ship them.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Living Docs</span><span class="ux-card-def">Documentation that isn't updated with the code becomes actively misleading.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Living Docs</span><span class="ux-card-rule"><b>Rule:</b> maintain PROJECT_STRUCTURE.md, DATABASE.md, and CHANGELOG.md; update them in the same change that alters what they describe, not later.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Atomic Commits</span><span class="ux-card-def">A commit is the unit future-you (or an agent) uses to understand or revert history.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Atomic Commits</span><span class="ux-card-rule"><b>Rule:</b> one logical change per commit, with a message describing why, not just what. Commit as you go — not once at the end of a long session.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ DATA & SECURITY ════════════════════ -->
+<section id="data-security">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Engineering</div>
+        <h2>Data &amp; Security</h2>
+        <p>Trust nothing the client sends. These rules are the difference between a demo and something safe to put real users' data into.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="data-security" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Trust Boundary</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Never Trust the Client</span><span class="ux-card-def">Anything sent from the browser — form data, headers, IDs in a URL — can be altered before it arrives.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Never Trust the Client</span><span class="ux-card-rule"><b>Rule:</b> validate and authorize every input server-side, even if the client already validated it. Client-side validation is UX, not security.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Row-Level Authorization</span><span class="ux-card-def">A logged-in user is not automatically authorized for every record of that type.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Row-Level Authorization</span><span class="ux-card-rule"><b>Rule:</b> every read/write checks "does this user own or have rights to this specific row," not just "is this user logged in."</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Least Privilege</span><span class="ux-card-def">A credential that can do more than it needs to is a bigger blast radius when it leaks.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Least Privilege</span><span class="ux-card-rule"><b>Rule:</b> API keys, service roles, and tokens get only the scopes the task requires — never the admin/service-role key in client-reachable code.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Secrets Hygiene</span><span class="ux-card-def">A secret committed to git history is compromised forever, even if deleted later.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Secrets Hygiene</span><span class="ux-card-rule"><b>Rule:</b> secrets live in environment variables, never in source, client bundles, or chat/prompt files. Rotate immediately if one leaks.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Input &amp; Output</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Sanitize on the Way In</span><span class="ux-card-def">Unvalidated input is how injection and corrupted-state bugs enter a system.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Sanitize on the Way In</span><span class="ux-card-rule"><b>Rule:</b> validate type, length, and format server-side before it touches the DB or business logic — reuse Postel's Law from UX Principles for the friendly framing, enforce it strictly underneath.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Escape on the Way Out</span><span class="ux-card-def">Rendering user content as raw HTML/SQL/shell is how XSS and injection attacks execute.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Escape on the Way Out</span><span class="ux-card-rule"><b>Rule:</b> use parameterized queries always; never string-concatenate user input into a query, command, or raw HTML render.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Fail Closed</span><span class="ux-card-def">An auth check that fails open (grants access on error) is worse than no check at all.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Fail Closed</span><span class="ux-card-rule"><b>Rule:</b> on any error in an auth/permission check, default to denying access, not allowing it.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Pre-Ship Security Checklist</div>
+      <table class="responsive-table">
+        <thead>
+          <tr><th>Area</th><th>Check</th><th>Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Auth</strong></td><td>Every protected route/endpoint checks identity server-side</td><td>A hidden UI element is not access control</td></tr>
+          <tr><td><strong>Authorization</strong></td><td>Ownership/role checked per-row, not just per-endpoint</td><td>Prevents one user reading/editing another's data</td></tr>
+          <tr><td><strong>Secrets</strong></td><td>No API keys, service roles, or tokens in client bundle or git history</td><td>Leaked keys grant full account access</td></tr>
+          <tr><td><strong>Input</strong></td><td>All user input validated and length-limited server-side</td><td>Blocks injection and malformed-data corruption</td></tr>
+          <tr><td><strong>Transport</strong></td><td>HTTPS enforced, no mixed content</td><td>Prevents interception of tokens/data in transit</td></tr>
+          <tr><td><strong>Rate limiting</strong></td><td>Auth, write, and expensive endpoints are rate-limited</td><td>Stops brute-force and cost-abuse from one bad actor</td></tr>
+          <tr><td><strong>Errors</strong></td><td>Error responses never leak stack traces or internal detail to the client</td><td>Prevents handing attackers a map of the system</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ PERFORMANCE & SCALE ════════════════════ -->
+<section id="performance-scale">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Engineering</div>
+        <h2>Performance &amp; Scale</h2>
+        <p>Most performance problems are architectural, not algorithmic. These are the decisions that determine whether the platform still feels fast at 100x the data — made once, early, rather than patched under pressure later.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="performance-scale" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Data Access Shape</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Paginate, Never Full-Scan</span><span class="ux-card-def">A query with no limit is fast on 50 rows and unusable on 50,000.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Paginate, Never Full-Scan</span><span class="ux-card-rule"><b>Rule:</b> any list endpoint is paginated or cursor-based from day one — O(n) queries that grow with total data size are a scalability bug, not a later optimization.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Avoid N+1</span><span class="ux-card-def">Fetching a list, then querying again per item, turns one page load into hundreds of round trips.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Avoid N+1</span><span class="ux-card-rule"><b>Rule:</b> batch or join related data in one query. If a loop contains a database call, that's the signal to restructure the query.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Index What You Query</span><span class="ux-card-def">A lookup without an index degrades from instant to unusable as a table grows — silently, until it doesn't.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Index What You Query</span><span class="ux-card-rule"><b>Rule:</b> any column used in a WHERE, JOIN, or ORDER BY on a table expected to grow gets an index at schema design time, not after a complaint.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">System Shape</div>
+      <div class="ux-grid">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Stateless Services</span><span class="ux-card-def">A service that holds state in memory can't be restarted, scaled horizontally, or load-balanced safely.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Stateless Services</span><span class="ux-card-rule"><b>Rule:</b> request-handling code stays stateless; session/shared state lives in the DB or a cache layer, not in a server process variable.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Move Slow Work Off the Request</span><span class="ux-card-def">A user shouldn't wait on a request for work that doesn't need to happen synchronously.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Move Slow Work Off the Request</span><span class="ux-card-rule"><b>Rule:</b> anything slow or unreliable (email, image processing, third-party calls) goes to a background job/queue, not inline in the request-response cycle.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Cache Deliberately</span><span class="ux-card-def">Caching fixes a measured problem; added preemptively, it just adds invalidation bugs.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Cache Deliberately</span><span class="ux-card-rule"><b>Rule:</b> add caching when a specific read is proven slow and repeated — not by default, and always with a clear invalidation rule.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Degrade Gracefully</span><span class="ux-card-def">One slow dependency shouldn't take down an entire page or flow.</span><span class="ux-card-flip-hint">Tap for the rule ↴</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Degrade Gracefully</span><span class="ux-card-rule"><b>Rule:</b> a failing third-party call or non-critical query fails in isolation (timeout + fallback), not by throwing the whole request.</span><span class="ux-card-flip-hint">Tap to go back ↺</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Complexity Sanity Check</div>
+      <table class="responsive-table">
+        <thead>
+          <tr><th>Pattern</th><th>Cost as data grows</th><th>Use when</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Indexed lookup</strong></td><td>O(log n) — stays fast</td><td>Any query on a column filtered/sorted often</td></tr>
+          <tr><td><strong>Paginated list</strong></td><td>O(page size) — constant</td><td>Any endpoint returning a collection</td></tr>
+          <tr><td><strong>Full table scan</strong></td><td>O(n) — degrades linearly</td><td>Acceptable only on small, bounded tables (e.g. a config table)</td></tr>
+          <tr><td><strong>Nested loop query (N+1)</strong></td><td>O(n·m) — degrades fast</td><td>Never intentionally — always the sign to batch/join</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ COMPONENTS ════════════════════ -->
+<section id="components">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>UI Elements</div>
+        <h2>Button Variants</h2>
+        <p>Primary solid, secondary outlined, ghost, pill shapes, and disabled state.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="components" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="button-grid">
+      <div class="button-item"><button class="btn btn-primary">Primary</button><span class="btn-label">btn-primary</span></div>
+      <div class="button-item"><button class="btn btn-secondary">Secondary</button><span class="btn-label">btn-secondary</span></div>
+      <div class="button-item"><button class="btn btn-ghost">Ghost</button><span class="btn-label">btn-ghost</span></div>
+      <div class="button-item"><button class="btn btn-pill-primary">Pill Primary</button><span class="btn-label">btn-pill-primary</span></div>
+      <div class="button-item"><button class="btn btn-pill-accent">Pill Accent</button><span class="btn-label">btn-pill-accent</span></div>
+      <div class="button-item"><button class="btn btn-outline-pill">Pill Outline</button><span class="btn-label">btn-outline-pill</span></div>
+      <div class="button-item"><button class="btn btn-disabled" disabled>Disabled</button><span class="btn-label">btn-disabled</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CHIPS ════════════════════ -->
+<section id="chips">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Labels</div>
+        <h2>Chips &amp; Tags</h2>
+        <p>4px radius elements. Teal for active/success, indigo for category, amber for info, error red for alerts.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="chips" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-primary"><span class="dot-xs"></span>Category</span>
+      <span class="chip chip-primary">Feature tag</span>
+      <span class="chip chip-primary">Beta</span>
+      <span class="chip chip-primary">Dismissible<button class="chip-x" aria-label="Remove tag">×</button></span>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-active"><span class="dot-xs"></span>Active</span>
+      <span class="chip chip-active">Success</span>
+      <span class="chip chip-active">Verified</span>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-tertiary"><span class="dot-xs"></span>Info</span>
+      <span class="chip chip-tertiary">New update</span>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-error"><span class="dot-xs"></span>Error</span>
+      <span class="chip chip-error">Out of stock</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CARDS ════════════════════ -->
+<section id="cards">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Layout</div>
+        <h2>Card Examples</h2>
+        <p>Base, stat, product and feature cards — solid surfaces, tonal borders, clean shadows. Hover to lift.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="cards" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="cards-grid">
+      <div class="card-demo">
+        <div class="card-tag">Base</div>
+        <div class="card-title">Base card</div>
+        <p class="card-text">Solid surface with a tonal border and subtle shadow over the canvas background.</p>
+        <a class="card-link" href="#cards">Learn more →</a>
+      </div>
+      <div class="card-demo">
+        <div class="card-tag">Stat</div>
+        <div class="card-stat-label">Monthly revenue</div>
+        <div class="card-stat-value">42.8K <span>USD</span></div>
+        <span class="chip chip-active"><span class="dot-xs"></span>+18.2% vs last month</span>
+      </div>
+      <div class="card-demo">
+        <div class="card-cover"><span class="chip" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)">New</span></div>
+        <div class="card-title">Sample product</div>
+        <div class="card-product-row">
+          <span class="card-price">$24.00</span>
+          <button class="btn btn-primary" style="padding:8px 16px;font-size:12px">Add to cart</button>
+        </div>
+      </div>
+      <div class="card-demo card-feature">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div class="card-title">Fast fulfillment</div>
+        <p class="card-text">Describe the core operational feature that differentiates the platform here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FORMS ════════════════════ -->
+<section id="forms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Inputs</div>
+        <h2>Form Elements</h2>
+        <p>Dark fill inputs with sky blue focus glow. 44px height for WCAG touch compliance.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="forms" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="text-default">Text Input (Default)</label>
+        <input type="text" id="text-default" class="form-input" value="Default state" placeholder="Enter text...">
+      </div>
+      <div class="form-group">
+        <label for="text-focus">Text Input (Focus)</label>
+        <input type="text" id="text-focus" class="form-input focused" value="Focused state" placeholder="Enter text...">
+      </div>
+      <div class="form-group">
+        <label for="select-demo">Select Dropdown</label>
+        <select id="select-demo" class="form-select">
+          <option>Basic Plan</option>
+          <option>Premium Plan</option>
+          <option>Enterprise</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="textarea-demo">Textarea</label>
+        <textarea id="textarea-demo" class="form-textarea" placeholder="Enter your message..."></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ RESPONSIVE ════════════════════ -->
+<section id="responsive">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Adaptability</div>
+        <h2>Responsive Behavior</h2>
+        <p>12-col fluid grid on desktop, 4-col on mobile. 8px base spacing rhythm.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="responsive" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <table class="responsive-table">
+      <thead>
+        <tr><th>Breakpoint</th><th>Width</th><th>Key Behavior</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Wide</strong></td><td>&gt; 1440px</td><td>Full content max; pricing 3-up; max whitespace</td></tr>
+        <tr><td><strong>Desktop</strong></td><td>1024–1440px</td><td>Default layout; 32px side margins; 24px gutters</td></tr>
+        <tr><td><strong>Tablet</strong></td><td>768–1023px</td><td>Pricing collapses 1-up; sidebar becomes a drawer</td></tr>
+        <tr><td><strong>Mobile</strong></td><td>&lt; 768px</td><td>Single column; off-canvas drawer nav; 16px margins</td></tr>
+      </tbody>
+    </table>
+    <ul class="responsive-notes">
+      <li>Display tiers stair-step 48 → 36 → 28px across breakpoints</li>
+      <li>Pricing tiers collapse 3-up → 1-up below 1024px</li>
+      <li>Sidebar collapses to an off-canvas drawer below 1024px</li>
+      <li>Section padding reduces from 48px to 32px on mobile</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════════ TOUCH ════════════════════ -->
+<section id="touch">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Usability</div>
+        <h2>Touch Targets</h2>
+        <p>Minimum 44×44px interactive targets for WCAG AAA compliance.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="touch" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="touch-grid">
+      <div class="touch-item"><div class="touch-target">44</div><span class="touch-label">Min target</span></div>
+      <div class="touch-item"><button class="btn btn-primary" style="min-height:44px">Button</button><span class="touch-label">Primary button</span></div>
+      <div class="touch-item"><input type="text" class="touch-input" placeholder="44px height form field"><span class="touch-label">Form field</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ PRICING ════════════════════ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Plans</div>
+        <h2>Pricing Tiers</h2>
+        <p>Full-width component demo. Choose the plan that fits your business.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" data-copy-section="pricing" aria-label="Copy this section as Markdown" title="Copy section as Markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="tier">Free</div>
+        <div class="price">$0 <span class="price-sub">/ forever</span></div>
+        <ul class="pricing-features">
+          <li>Core feature access</li>
+          <li>Community support</li>
+          <li>Single workspace</li>
+          <li>Usage caps apply</li>
+        </ul>
+        <button class="btn btn-primary pricing-cta-margin">Start for free</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="tier">Pro</div>
+        <div class="price">$20 <span class="price-sub">/ month</span></div>
+        <ul class="pricing-features">
+          <li>Everything in Free</li>
+          <li>Unlimited workspaces</li>
+          <li>Priority support</li>
+          <li>Advanced analytics</li>
+        </ul>
+        <button class="btn btn-pill-accent pricing-cta-margin">Choose Pro</button>
+      </div>
+      <div class="pricing-card">
+        <div class="tier">Enterprise</div>
+        <div class="price">Custom <span class="price-sub">/ contact us</span></div>
+        <ul class="pricing-features">
+          <li>Everything in Pro</li>
+          <li>SSO &amp; audit logs</li>
+          <li>Dedicated support</li>
+          <li>Custom SLA</li>
+        </ul>
+        <button class="btn btn-primary pricing-cta-margin">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CLOSING ════════════════════ -->
+<section class="closing-band">
+  <div class="container">
+    <h2>Ready to build your <span class="draw-target">freedom</span>?</h2>
+    <button class="btn btn-pill-accent" style="font-size:16px;padding:16px 36px">Start with {{PROJECT_NAME}} →</button>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    {{PROJECT_NAME}} Design System · Built with the white-label platform reference
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var html = document.documentElement;
+  var sidebar = document.getElementById('sidebar');
+  var backdrop = document.getElementById('sidebarBackdrop');
+  var menuToggle = document.getElementById('menuToggle');
+  var sidebarClose = document.getElementById('sidebarClose');
+  var collapseToggle = document.getElementById('collapseToggle');
+  var indicator = document.getElementById('navIndicator');
+  var progressBar = document.getElementById('scrollBar');
+  var navItems = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+  var mobileQuery = window.matchMedia('(max-width:1023px)');
+
+  /* ── Drawer (mobile) ── */
+  function openNav(){
+    sidebar.classList.add('open');
+    backdrop.classList.add('show');
+    document.body.classList.add('nav-locked');
+    menuToggle.setAttribute('aria-expanded','true');
+  }
+  function closeNav(){
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('show');
+    document.body.classList.remove('nav-locked');
+    if(menuToggle) menuToggle.setAttribute('aria-expanded','false');
+  }
+  if(menuToggle){
+    menuToggle.addEventListener('click',function(){
+      sidebar.classList.contains('open') ? closeNav() : openNav();
+    });
+  }
+  if(sidebarClose) sidebarClose.addEventListener('click',closeNav);
+  if(backdrop) backdrop.addEventListener('click',closeNav);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') closeNav();
+  });
+  var onBreakpoint = function(e){ if(!e.matches) closeNav(); };
+  if(mobileQuery.addEventListener) mobileQuery.addEventListener('change',onBreakpoint);
+  else if(mobileQuery.addListener) mobileQuery.addListener(onBreakpoint);
+
+  /* ── Collapse (desktop icon rail) ── */
+  var collapseTimer = null;
+  function setCollapsed(c){
+    html.classList.toggle('nav-collapsed',c);
+    try{ localStorage.setItem('pz-nav-collapsed', c ? '1' : '0'); }catch(e){}
+    if(collapseToggle) collapseToggle.setAttribute('aria-expanded',String(!c));
+    clearTimeout(collapseTimer);
+    collapseTimer = setTimeout(function(){ if(currentActive) moveIndicator(currentActive,true); },460);
+  }
+  var savedCollapsed = null;
+  try{ savedCollapsed = localStorage.getItem('pz-nav-collapsed'); }catch(e){}
+  if(savedCollapsed === '1') html.classList.add('nav-collapsed');
+  if(collapseToggle){
+    collapseToggle.setAttribute('aria-expanded',String(!html.classList.contains('nav-collapsed')));
+    collapseToggle.addEventListener('click',function(){
+      setCollapsed(!html.classList.contains('nav-collapsed'));
+    });
+  }
+
+  /* ── Sliding active indicator ── */
+  var currentActive = null;
+  function moveIndicator(link,instant){
+    if(!link){ indicator.style.opacity='0'; currentActive=null; return; }
+    currentActive = link;
+    if(instant) indicator.style.transition = 'none';
+    indicator.style.top = link.offsetTop + 'px';
+    indicator.style.height = link.offsetHeight + 'px';
+    indicator.style.opacity = '1';
+    if(instant){ void indicator.offsetWidth; indicator.style.transition = ''; }
+  }
+  window.addEventListener('resize',function(){ if(currentActive) moveIndicator(currentActive,true); });
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ if(currentActive) moveIndicator(currentActive,true); });
+  }
+
+  /* ── Scroll suppression: stops the indicator from stepping
+        through intermediate sections during click smooth-scroll ── */
+  var scrollSuppress = false, scrollEndTimer = null;
+  function armScrollSuppress(){
+    scrollSuppress = true;
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(function(){ scrollSuppress = false; },1000);
+  }
+  window.addEventListener('scroll',function(){
+    if(scrollSuppress){
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(function(){ scrollSuppress = false; },180);
+    }
+  },{passive:true});
+
+  /* ── Active link on scroll ── */
+  var sections = document.querySelectorAll('section[id]');
+  var byHash = {};
+  navItems.forEach(function(a){ byHash[a.getAttribute('href')] = a; });
+  if(sections.length && navItems.length){
+    var obs = new IntersectionObserver(function(entries){
+      if(scrollSuppress) return;
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var link = byHash['#' + e.target.id];
+          if(!link) return;
+          navItems.forEach(function(a){ a.classList.toggle('active', a===link); });
+          moveIndicator(link);
+        }
+      });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+
+  /* ── Link clicks: indicator lands instantly on the target ── */
+  navItems.forEach(function(a){
+    a.addEventListener('click',function(){
+      navItems.forEach(function(x){ x.classList.remove('active'); });
+      a.classList.add('active');
+      moveIndicator(a,true);
+      armScrollSuppress();
+      if(mobileQuery.matches) closeNav();
+    });
+  });
+
+  /* ── Tooltips for collapsed rail ── */
+  var tip = document.createElement('div');
+  tip.className = 'nav-tooltip';
+  tip.setAttribute('role','tooltip');
+  document.body.appendChild(tip);
+  navItems.forEach(function(a){
+    a.addEventListener('mouseenter',function(){
+      if(!html.classList.contains('nav-collapsed') || mobileQuery.matches) return;
+      var label = a.querySelector('span');
+      if(!label) return;
+      var r = a.getBoundingClientRect();
+      tip.textContent = label.textContent;
+      tip.style.top = (r.top + r.height / 2) + 'px';
+      tip.style.left = (r.right + 12) + 'px';
+      tip.classList.add('show');
+    });
+    a.addEventListener('mouseleave',function(){ tip.classList.remove('show'); });
+  });
+
+  /* ── Scroll progress ── */
+  if(progressBar){
+    var ticking = false;
+    var updateBar = function(){
+      var max = html.scrollHeight - html.clientHeight;
+      progressBar.style.width = (max > 0 ? (html.scrollTop / max) * 100 : 0) + '%';
+      ticking = false;
+    };
+    window.addEventListener('scroll',function(){
+      if(!ticking){ requestAnimationFrame(updateBar); ticking = true; }
+    },{passive:true});
+    updateBar();
+  }
+
+  /* ── Scroll reveal (auto-tagged) ── */
+  (function(){
+    var tags = '.section-header,.color-grid,.type-list,.button-grid,.chips-row,.cards-grid,.pricing-grid,.form-grid,.spacing-ruler,.radius-grid,.elevation-grid,.responsive-table,.responsive-notes,.touch-grid,.motion-grid,.ux-grid,.closing-band .container';
+    var els = Array.prototype.slice.call(document.querySelectorAll(tags));
+    // hero children animate on load with a stagger
+    Array.prototype.slice.call(document.querySelectorAll('.hero .container > *')).forEach(function(el,i){
+      el.setAttribute('data-reveal','');
+      el.style.setProperty('--d',(i * .08) + 's');
+    });
+    els.forEach(function(el){ el.setAttribute('data-reveal',''); });
+    var all = document.querySelectorAll('[data-reveal]');
+    function markDrawn(target){
+      target.querySelectorAll('.draw-target').forEach(function(dt){ dt.classList.add('drawn'); });
+    }
+    if('IntersectionObserver' in window){
+      var ro = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            e.target.classList.add('revealed');
+            markDrawn(e.target);
+            ro.unobserve(e.target);
+          }
+        });
+      },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+      all.forEach(function(el){ ro.observe(el); });
+    } else {
+      all.forEach(function(el){ el.classList.add('revealed'); markDrawn(el); });
+    }
+  })();
+
+  /* ── Toast ── */
+  var toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.setAttribute('role','status');
+  toast.innerHTML = '<span class="t-dot"></span><span class="t-msg"></span>';
+  document.body.appendChild(toast);
+  var toastTimer = null;
+  function showToast(msg){
+    toast.querySelector('.t-msg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); },2200);
+  }
+
+  /* ── Color swatch: click to copy hex ── */
+  function copyText(text, done){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, function(){ legacyCopy(text, done); });
+    } else { legacyCopy(text, done); }
+  }
+  function legacyCopy(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  /* ── Markdown export ── converts each section's actual component
+     structure (swatches, ux-cards, tables, pricing, etc.) into clean
+     structured Markdown, not a raw text dump. This block + its
+     buttons are tooling for the AI agent reading this file — never
+     copy this export feature into a website built from this system. ── */
+  function mdEscape(s){ return (s || '').replace(/\|/g,'\\|').trim(); }
+  function textOf(el){ return el ? el.textContent.replace(/\s+/g,' ').trim() : ''; }
+
+  function sectionToMarkdown(section){
+    var id = section.getAttribute('id') || '';
+    var lines = [];
+    var headerText = section.querySelector('.section-header-text');
+    var label = headerText ? textOf(headerText.querySelector('.section-label')) : '';
+    var h2 = headerText ? textOf(headerText.querySelector('h2')) : textOf(section.querySelector('h2'));
+    var p = headerText ? textOf(headerText.querySelector('p')) : '';
+
+    lines.push('## ' + (h2 || id));
+    if(label) lines.push('*' + label + '*');
+    if(p) lines.push('', p);
+
+    /* Color swatches */
+    section.querySelectorAll('.color-swatch').forEach(function(sw){
+      var hex = textOf(sw.querySelector('.hex'));
+      var name = textOf(sw.querySelector('.name'));
+      if(hex || name) lines.push('- **' + hex + '**' + (name ? ' — ' + name : ''));
+    });
+
+    /* Type specimens */
+    section.querySelectorAll('.type-row').forEach(function(row){
+      var tokenName = textOf(row.querySelector('.token-name'));
+      var spec = textOf(row.querySelector('.spec'));
+      var sample = textOf(row.querySelector('.specimen'));
+      if(tokenName) lines.push('- `' + tokenName + '` — ' + spec + (sample ? ' — "' + sample + '"' : ''));
+    });
+
+    /* ux-card / principle groups (Name / Definition / Rule) */
+    section.querySelectorAll('.ux-group').forEach(function(group){
+      var title = textOf(group.querySelector('.ux-group-title'));
+      if(title) lines.push('', '### ' + title);
+      group.querySelectorAll('.ux-card').forEach(function(card){
+        var name = textOf(card.querySelector('.ux-card-name'));
+        var def = textOf(card.querySelector('.ux-card-def'));
+        var rule = textOf(card.querySelector('.ux-card-rule'));
+        lines.push('', '**' + name + '**  ');
+        if(def) lines.push(def + '  ');
+        if(rule) lines.push(rule);
+      });
+    });
+
+    /* Standalone tables (responsive-table etc.) */
+    section.querySelectorAll('table').forEach(function(table){
+      var headCells = table.querySelectorAll('thead th');
+      if(!headCells.length) return;
+      var head = [], sep = [];
+      headCells.forEach(function(th){ head.push(mdEscape(textOf(th))); sep.push('---'); });
+      lines.push('', '| ' + head.join(' | ') + ' |', '| ' + sep.join(' | ') + ' |');
+      table.querySelectorAll('tbody tr').forEach(function(tr){
+        var cells = [];
+        tr.querySelectorAll('td').forEach(function(td){ cells.push(mdEscape(textOf(td))); });
+        if(cells.length) lines.push('| ' + cells.join(' | ') + ' |');
+      });
+    });
+
+    /* Button variants */
+    section.querySelectorAll('.button-item').forEach(function(item){
+      var btn = item.querySelector('button');
+      var lbl = textOf(item.querySelector('.btn-label'));
+      if(btn) lines.push('- `' + lbl + '` — "' + textOf(btn) + '"');
+    });
+
+    /* Chips */
+    section.querySelectorAll('.chips-row').forEach(function(row){
+      var chips = [];
+      row.querySelectorAll('.chip').forEach(function(c){ chips.push(textOf(c).replace(/×$/,'').trim()); });
+      if(chips.length) lines.push('- Chips: ' + chips.join(', '));
+    });
+
+    /* Cards (generic card-demo) */
+    section.querySelectorAll('.card-demo').forEach(function(card){
+      var title = textOf(card.querySelector('.card-title'));
+      var text = textOf(card.querySelector('.card-text'));
+      var tag = textOf(card.querySelector('.card-tag'));
+      if(title) lines.push('', '**' + title + '**' + (tag ? ' _(' + tag + ')_' : ''));
+      if(text) lines.push(text);
+    });
+
+    /* Pricing cards */
+    section.querySelectorAll('.pricing-card').forEach(function(card){
+      var tier = textOf(card.querySelector('.tier'));
+      var price = textOf(card.querySelector('.price'));
+      lines.push('', '**' + tier + '** — ' + price);
+      card.querySelectorAll('.pricing-features li').forEach(function(li){
+        lines.push('- ' + textOf(li));
+      });
+    });
+
+    /* Forms */
+    section.querySelectorAll('.form-grid .form-group, .form-grid label').forEach(function(el){
+      var t = textOf(el);
+      if(t) lines.push('- ' + t);
+    });
+
+    /* Spacing / radius / elevation / motion / touch grids — token + value pairs */
+    section.querySelectorAll('[class$="-item"]').forEach(function(item){
+      var tLabel = textOf(item.querySelector('[class*="label"]'));
+      if(tLabel && !section.querySelector('.ux-group')) lines.push('- ' + tLabel);
+    });
+
+    return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+  }
+
+  function fullDocMarkdown(){
+    var title = document.querySelector('.nav-logo');
+    var titleText = title ? textOf(title) : 'Design System';
+    var out = ['# ' + titleText + ' — Design System Reference', ''];
+    var sections = document.querySelectorAll('section[id]');
+    out.push('## Contents');
+    sections.forEach(function(sec){
+      var h2 = textOf(sec.querySelector('.section-header-text h2') || sec.querySelector('h2'));
+      out.push('- [' + (h2 || sec.id) + '](#' + sec.id + ')');
+    });
+    out.push('');
+    sections.forEach(function(sec){
+      out.push(sectionToMarkdown(sec), '');
+    });
+    return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+  }
+
+  document.querySelectorAll('.md-copy-btn[data-copy-section]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var sec = document.getElementById(btn.getAttribute('data-copy-section'));
+      if(!sec) return;
+      copyText(sectionToMarkdown(sec), function(){
+        btn.classList.add('copied');
+        showToast('Section copied as Markdown');
+        setTimeout(function(){ btn.classList.remove('copied'); },1400);
+      });
+    });
+  });
+
+  var copyAllBtn = document.getElementById('copyAllMd');
+  if(copyAllBtn){
+    copyAllBtn.addEventListener('click', function(){
+      copyText(fullDocMarkdown(), function(){
+        copyAllBtn.classList.add('copied');
+        showToast('Entire document copied as Markdown');
+        setTimeout(function(){ copyAllBtn.classList.remove('copied'); },1400);
+      });
+    });
+  }
+
+  /* ── UX/Engineering principle cards: click to flip and reveal the Rule.
+     Progressive disclosure — this is Hick's Law and Miller's Law applied
+     to the reference doc itself, not just documented in it. ── */
+  document.querySelectorAll('.ux-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      var open = card.getAttribute('aria-expanded') === 'true';
+      card.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+
+  document.querySelectorAll('.color-swatch').forEach(function(sw){
+    sw.setAttribute('tabindex','0');
+    sw.setAttribute('role','button');
+    var hexEl = sw.querySelector('.hex');
+    if(!hexEl) return;
+    var hex = hexEl.textContent.trim();
+    sw.setAttribute('title','Copy ' + hex);
+    function doCopy(){
+      copyText(hex, function(){
+        sw.classList.add('copied');
+        showToast(hex + ' copied to clipboard');
+        setTimeout(function(){ sw.classList.remove('copied'); },1400);
+      });
+    }
+    sw.addEventListener('click', doCopy);
+    sw.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); doCopy(); }
+    });
+  });
+
+  /* ── Dismissible chips ── */
+  document.querySelectorAll('.chip-x').forEach(function(x){
+    x.addEventListener('click', function(){
+      var chip = x.closest('.chip');
+      if(!chip) return;
+      chip.classList.add('removing');
+      setTimeout(function(){ chip.remove(); },220);
+    });
+  });
+
+  /* ── Theme (supports multiple toggles) ── */
+  var SUN = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  var MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  var themeIcons = document.querySelectorAll('.theme-icon');
+
+  var themeInitialized = false;
+  function setTheme(t){
+    html.setAttribute('data-theme',t);
+    try{ localStorage.setItem('pz-theme',t); }catch(e){}
+    themeIcons.forEach(function(icon){
+      if(!themeInitialized){
+        icon.innerHTML = (t==='dark') ? SUN : MOON;
+        return;
+      }
+      // animated swap: spin out, swap glyph, spring back
+      icon.style.transition = 'transform .18s var(--ease-out),opacity .18s var(--ease-out)';
+      icon.style.transform = 'rotate(-90deg) scale(.5)';
+      icon.style.opacity = '0';
+      setTimeout(function(){
+        icon.innerHTML = (t==='dark') ? SUN : MOON;
+        icon.style.transition = 'transform .4s var(--ease-spring),opacity .25s var(--ease-out)';
+        icon.style.transform = 'none';
+        icon.style.opacity = '1';
+      },180);
+    });
+    themeInitialized = true;
+  }
+
+  var saved = null;
+  try{ saved = localStorage.getItem('pz-theme'); }catch(e){}
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(saved || (prefersDark ? 'dark' : 'light'));
+
+  document.querySelectorAll('.theme-toggle').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      setTheme(html.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+    });
+  });
+})();
+</script>
+</body>
+</html>

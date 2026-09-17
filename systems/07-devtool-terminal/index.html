@@ -1,0 +1,1441 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devtool Terminal Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:13px;line-height:1.45;color:var(--on-surface);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:var(--transition)}
+a{text-decoration:none;color:inherit}img{max-width:100%;display:block}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--scroll-track)}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+::selection{background:var(--primary-solid);color:var(--on-primary)}
+.container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 var(--s-lg)}
+@media(max-width:767px){.container{padding:0 var(--s-md)}}
+
+/* ═══════════════════════════════════════════
+   DEVTOOL TERMINAL DESIGN SYSTEM — AGENT INSTRUCTIONS
+   System 07 — Phosphor Green & Lime
+   Design thesis: Dense, monospace-native, keyboard-first;
+   the IDE is the interface.
+   What it rejects: Marketing gloss inside developer tools.
+
+   WHAT TO CHANGE PER PROJECT:
+   1. Find/replace "Devtool Terminal" with the real project name.
+   2. Recolor --primary/--primary-solid, --secondary, --tertiary,
+      --quaternary, --positive in BOTH theme blocks.
+   3. Swap Google Fonts imports + font tokens if needed.
+   4. Replace example commands, log lines, diff content.
+   5. Update footer and nav-logo text.
+
+   WHAT TO KEEP VERBATIM:
+   - Motion tokens (snap + steps: .1/.2/.3s)
+   - The spacing/radius/elevation SCALE (values, not colors)
+   - UX Principles section (archetype-specific rules)
+   - Engineering Principles section
+   - Component structural CSS (layout, not color)
+
+   EXCLUDED FROM REPLICATION:
+   Every element with class "agent-tool" is tooling for
+   reading THIS reference, not a UI pattern.
+
+   TOKEN SYSTEM — Phosphor Green & Lime
+   Primary:    #22c55e Terminal green (dark) / #16a34a (light)
+   Secondary:  #a3e635 Lime (added lines, highlights)
+   Tertiary:   #fbbf24 Amber (warnings)
+   Quaternary: #67e8f9 Cyan (info values)
+   Base:       Near-black with green whisper (#0a0f0b)
+   Radius:     Sharp — 0, 2, 4, 8, 12, pill
+   Spacing:    Doubling — 4, 8, 16, 32, 64, 96
+   Motion:     Snap + steps — (.19,1,.22,1), steps(4,end), linear
+               .1s .2s .3s
+   Density:    Dense — 13px base, mono-heavy, 1.45 lh
+   Default:    DARK theme (canonical)
+   ═══════════════════════════════════════════ */
+
+:root {
+  --bg:#0a0f0b;--bg-dim:#060a07;--surface:#101711;--surface-mid:#151e16;
+  --surface-high:#1b261c;--surface-highest:#243326;
+  --on-surface:#e8f0e9;--on-surface-muted:#8ba38f;
+  --outline:#1c271d;--outline-hi:#354a38;
+  --primary:#22c55e;--primary-solid:#22c55e;--on-primary:#04150a;
+  --primary-glow:rgba(34,197,94,0.2);--primary-glow-sm:rgba(34,197,94,0.1);
+  --brand-green:#22c55e;--secondary:#a3e635;--secondary-dim:#84cc16;--on-secondary:#1a2e05;
+  --tertiary:#fbbf24;--on-tertiary:#451a03;
+  --quaternary:#67e8f9;--on-quaternary:#083344;
+  --positive:#4ade80;--on-positive:#052e16;--error:#f87171;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.5);--shadow-md:0 6px 18px rgba(0,0,0,0.55);
+  --shadow-lg:0 16px 40px rgba(0,0,0,0.65);
+  --nav-bg:#060a07;--scroll-track:#101711;--scroll-thumb:#243326;--scroll-thumb-hi:#22c55e;
+  --toggle-bg:rgba(34,197,94,0.08);--toggle-border:rgba(34,197,94,0.25);
+  --table-header-bg:#151e16;--table-header-fg:#22c55e;
+  --table-row-bg:#0a0f0b;--table-row-hover:#101711;--table-border:#1c271d;
+  --section-alt:#060a07;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Space Grotesk',sans-serif;
+  --font-mono:'Source Code Pro',monospace;
+  --r-xs:0px;--r-sm:2px;--r-md:4px;--r-lg:8px;--r-xl:12px;--r-full:9999px;
+  --s-xs:4px;--s-sm:8px;--s-md:16px;--s-lg:32px;--s-xl:64px;--s-2xl:96px;
+  --content-max:1100px;
+  --transition:background .2s,color .2s,border-color .2s,box-shadow .2s;
+  /* Motion — snap + steps system */
+  --ease-snap:cubic-bezier(.19,1,.22,1);
+  --ease-out-soft:cubic-bezier(.19,1,.22,1);
+  --ease-steps:steps(4,end);
+  --ease-back:cubic-bezier(.19,1,.22,1);
+  --ease-linear:linear;
+  --dur-fast:.1s;--dur-med:.2s;--dur-slow:.3s;
+  --sidebar-w:264px;--topbar-h:52px;
+}
+
+[data-theme="light"] {
+  --bg:#f9fbf9;--bg-dim:#eff4ef;--surface:#ffffff;--surface-mid:#f4f8f4;
+  --surface-high:#e8f0e8;--surface-highest:#d9e4da;
+  --on-surface:#15211a;--on-surface-muted:#5f7264;
+  --outline:#dce5dc;--outline-hi:#a2b3a4;
+  --primary:#16a34a;--primary-solid:#16a34a;--on-primary:#ffffff;
+  --primary-glow:rgba(22,163,74,0.15);--primary-glow-sm:rgba(22,163,74,0.07);
+  --brand-green:#15803d;--secondary:#65a30d;--secondary-dim:#4d7c0f;--on-secondary:#ffffff;
+  --tertiary:#b45309;--on-tertiary:#ffffff;
+  --quaternary:#0e7490;--on-quaternary:#ffffff;
+  --positive:#16a34a;--on-positive:#ffffff;--error:#dc2626;
+  --shadow-sm:0 1px 2px rgba(21,33,23,0.08);--shadow-md:0 6px 18px rgba(21,33,23,0.1);
+  --shadow-lg:0 16px 40px rgba(21,33,23,0.14);
+  --nav-bg:#ffffff;--scroll-track:#eff4ef;--scroll-thumb:#d2ddd3;--scroll-thumb-hi:#16a34a;
+  --toggle-bg:rgba(22,163,74,0.06);--toggle-border:rgba(22,163,74,0.2);
+  --table-header-bg:#e8f0e8;--table-header-fg:#166534;
+  --table-row-bg:#ffffff;--table-row-hover:#f4f8f4;--table-border:#dce5dc;
+  --section-alt:#eff4ef;
+}
+
+/* ── Chrome ── */
+:root{--sidebar-w:264px}
+.scroll-progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:2px;z-index:400;pointer-events:none}
+.scroll-progress .bar{display:block;height:100%;width:0;background:var(--primary-solid)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:220;display:flex;flex-direction:column;background:var(--nav-bg);border-right:1px solid var(--outline);transition:width var(--dur-slow) var(--ease-snap),background .3s,border-color .3s}
+.sidebar-header{display:flex;align-items:center;gap:8px;padding:18px 18px 12px}
+.nav-logo{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--on-surface);letter-spacing:-0.02em;white-space:nowrap}
+.nav-logo-mono{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--primary);letter-spacing:0.06em}
+.sidebar-close{display:none;margin-left:auto;width:32px;height:32px;flex-shrink:0;align-items:center;justify-content:center;background:transparent;border:1px solid var(--outline);border-radius:var(--r-sm);color:var(--on-surface-muted);cursor:pointer;transition:color var(--dur-fast) var(--ease-snap),border-color var(--dur-fast) var(--ease-snap)}
+.sidebar-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.sidebar-close svg{width:14px;height:14px}
+.sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;padding:4px 10px 16px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+.sidebar-nav::-webkit-scrollbar{width:3px}.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--scroll-thumb)}
+.nav-indicator{position:absolute;left:0;top:0;width:2px;height:0;opacity:0;z-index:0;background:var(--primary-solid);transition:top .2s var(--ease-snap),height .2s var(--ease-snap),opacity .1s;pointer-events:none}
+.nav-group{padding-top:12px}
+.nav-indicator+.nav-group{padding-top:4px}
+.nav-group-label{font:700 9px/1 var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--outline-hi);padding:0 10px 6px}
+.nav-item{display:flex;align-items:center;gap:9px;position:relative;z-index:1;padding:7px 10px;margin-bottom:1px;border-radius:var(--r-sm);font:500 12.5px/1 var(--font-body);color:var(--on-surface-muted);-webkit-tap-highlight-color:transparent;transition:color var(--dur-fast) var(--ease-snap),background var(--dur-fast) var(--ease-snap)}
+.nav-item svg{width:14px;height:14px;flex-shrink:0;opacity:.55;transition:opacity var(--dur-fast) var(--ease-snap)}
+.nav-item:hover{color:var(--on-surface);background:var(--surface)}.nav-item:hover svg{opacity:1}
+.nav-item.active{color:var(--primary);background:var(--surface)}.nav-item.active svg{opacity:1;color:var(--primary)}
+.nav-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px;border-radius:var(--r-sm)}
+.sidebar-footer-tools{padding:12px 14px;border-top:1px solid var(--outline)}
+.sidebar-footer{display:flex;align-items:center;gap:8px;padding:12px 14px;border-top:1px solid var(--outline)}
+.collapse-toggle{display:none;flex:1;align-items:center;justify-content:center;gap:6px;padding:9px 12px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:600 11px/1 var(--font-mono);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-snap),border-color var(--dur-fast) var(--ease-snap)}
+.collapse-toggle:hover{color:var(--primary);border-color:var(--primary-solid)}
+.collapse-toggle svg{width:13px;height:13px;transition:transform var(--dur-slow) var(--ease-snap)}
+@media(min-width:1024px){.collapse-toggle{display:flex}}
+html.nav-collapsed .collapse-toggle svg{transform:rotate(180deg)}
+.theme-toggle{background:transparent;border:1px solid var(--toggle-border);color:var(--primary);border-radius:var(--r-sm);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:border-color var(--dur-fast) var(--ease-snap)}
+.theme-toggle:hover{border-color:var(--primary-solid)}
+.theme-toggle svg{width:14px;height:14px}
+.page{margin-left:var(--sidebar-w);transition:margin-left var(--dur-slow) var(--ease-snap)}
+section[id]{scroll-margin-top:20px;padding:var(--s-xl) 0;transition:background .3s;background:var(--bg)}
+.nav-tooltip{position:fixed;z-index:500;pointer-events:none;transform:translateY(-50%) translateX(-4px);opacity:0;background:var(--surface-highest);color:var(--on-surface);border:1px solid var(--outline);border-radius:var(--r-sm);font:600 11px/1 var(--font-mono);padding:5px 8px;white-space:nowrap;box-shadow:var(--shadow-md);transition:opacity .1s,transform .1s}
+.nav-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0)}
+.sidebar-backdrop{display:none}
+
+/* Collapse state */
+@media(min-width:1024px){
+  html.nav-collapsed{--sidebar-w:60px}
+  html.nav-collapsed .sidebar-header{justify-content:center;padding:14px 8px 10px}
+  html.nav-collapsed .nav-logo{display:none}
+  html.nav-collapsed .nav-logo-mono{display:none}
+  html.nav-collapsed .sidebar-nav{padding:4px 6px 16px}
+  html.nav-collapsed .nav-group{padding-top:6px;margin-top:6px;border-top:1px solid var(--outline)}
+  html.nav-collapsed .nav-indicator+.nav-group{padding-top:2px;margin-top:0;border-top:none}
+  html.nav-collapsed .nav-group-label{display:none}
+  html.nav-collapsed .nav-item{justify-content:center;padding:8px 0}
+  html.nav-collapsed .nav-item span{display:none}
+  html.nav-collapsed .nav-item svg{width:16px;height:16px;opacity:.75}
+  html.nav-collapsed .sidebar-footer{justify-content:center;padding:10px 8px;flex-direction:column;gap:8px}
+  html.nav-collapsed .collapse-toggle{width:100%;padding:9px 0}
+  html.nav-collapsed .collapse-toggle span{display:none}
+  html.nav-collapsed .theme-toggle{width:100%}
+  html.nav-collapsed .md-copy-btn-global span{display:none}
+  html.nav-collapsed .sidebar-footer-tools{padding:12px 8px}
+}
+
+/* Mobile */
+.topbar{display:none}
+.menu-toggle{display:none}
+@media(max-width:1023px){
+  .page{margin-left:0}
+  section[id]{scroll-margin-top:calc(var(--topbar-h) + 12px)}
+  section.hero{padding-top:calc(var(--topbar-h) + 40px)!important}
+  .scroll-progress{left:0}
+  .topbar{display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:160;padding:0 14px;background:var(--nav-bg);border-bottom:1px solid var(--outline)}
+  .topbar .theme-toggle{margin-left:auto}
+  .menu-toggle{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:var(--r-sm);background:transparent;border:1px solid var(--toggle-border);color:var(--primary);cursor:pointer;transition:border-color var(--dur-fast) var(--ease-snap)}
+  .menu-toggle:hover{border-color:var(--primary-solid)}
+  .menu-toggle svg{width:16px;height:16px}
+  .sidebar{width:min(290px,85vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:190;background:rgba(4,12,10,.55);opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-snap),visibility 0s linear var(--dur-med)}
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-snap)}
+  body.nav-locked{overflow:hidden}
+  .sidebar .nav-group{opacity:0;transform:translateX(-10px)}
+  .sidebar.open .nav-group{opacity:1;transform:none;transition:opacity .2s var(--ease-snap),transform .2s var(--ease-snap);transition-delay:calc(.05s + var(--i,0)*40ms)}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .sidebar,.sidebar-backdrop,.nav-indicator,.nav-item{transition:none!important}
+  .motion-box{transition:none!important}
+}
+
+/* ── Hero ── */
+section.hero{background:var(--bg-dim);padding:56px 0 48px;border-bottom:1px solid var(--outline);position:relative;overflow:hidden}
+section.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(34,197,94,0.025) 23px 24px),repeating-linear-gradient(90deg,transparent 0 23px,rgba(34,197,94,0.025) 23px 24px);pointer-events:none}
+section.hero .container{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--outline-hi);border-radius:var(--r-xs);font:700 10px/1 var(--font-mono);color:var(--primary);background:var(--surface);margin-bottom:var(--s-md);letter-spacing:0.1em}
+.hero-badge::before{content:'\276F\0020';color:var(--primary)}
+section.hero h1{font-family:var(--font-display);font-size:clamp(28px,4.5vw,48px);font-weight:700;line-height:1.06;letter-spacing:-0.025em;color:var(--on-surface);margin-bottom:var(--s-md)}
+section.hero h1 .accent{color:var(--primary)}
+section.hero p{font-family:var(--font-mono);font-size:12.5px;color:var(--on-surface-muted);max-width:520px;line-height:1.6;margin-bottom:var(--s-lg)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-hero-primary{padding:10px 20px;background:var(--primary-solid);color:var(--on-primary);border:none;border-radius:var(--r-xs);font:700 12px/1 var(--font-mono);cursor:pointer;transition:opacity var(--dur-fast) var(--ease-snap),transform var(--dur-fast) var(--ease-snap)}
+.btn-hero-primary:hover{opacity:.88}.btn-hero-primary:active{transform:scale(.97)}
+.btn-hero-secondary{padding:10px 20px;background:transparent;color:var(--on-surface);border:1px solid var(--outline-hi);border-radius:var(--r-xs);font:700 12px/1 var(--font-mono);cursor:pointer;transition:border-color var(--dur-fast) var(--ease-snap)}
+.btn-hero-secondary:hover{border-color:var(--primary-solid);color:var(--primary)}
+
+/* ── Sections ── */
+.section-label{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--primary);margin-bottom:10px}
+.section-label .dot{width:4px;height:4px;border-radius:50%;background:var(--primary-solid);flex-shrink:0}
+.section-header{margin-bottom:var(--s-lg);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-lg)}
+.section-header-text{flex:1;min-width:0}
+.section-header h2{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--on-surface);letter-spacing:-0.02em;line-height:1.1;margin-bottom:8px}
+.section-header p{font-size:12.5px;color:var(--on-surface-muted);max-width:520px;line-height:1.55}
+@media(max-width:767px){.section-header h2{font-size:20px}.section-header{flex-direction:column}}
+
+/* ── Agent tooling ── */
+.md-copy-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;margin-top:2px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:600 10.5px/1 var(--font-mono);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-snap),border-color var(--dur-fast) var(--ease-snap),background var(--dur-fast) var(--ease-snap)}
+.md-copy-btn svg{width:11px;height:11px;flex-shrink:0}
+.md-copy-btn:hover{color:var(--primary);border-color:var(--primary-solid);background:var(--toggle-bg)}
+.md-copy-btn:active{transform:scale(.95)}.md-copy-btn.copied{color:var(--positive);border-color:var(--positive)}
+@media(max-width:767px){.md-copy-btn span{display:none}.md-copy-btn{padding:6px}}
+.md-copy-btn-global{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px 12px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:600 11px/1 var(--font-mono);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-snap),border-color var(--dur-fast) var(--ease-snap)}
+.md-copy-btn-global svg{width:13px;height:13px;flex-shrink:0}
+.md-copy-btn-global:hover{color:var(--primary);border-color:var(--primary-solid)}
+.md-copy-btn-global.copied{color:var(--positive);border-color:var(--positive)}
+
+/* ── Colors ── */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:var(--s-sm)}
+.color-swatch{position:relative;cursor:pointer;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--outline);transition:transform var(--dur-med) var(--ease-snap),box-shadow var(--dur-med) var(--ease-snap)}
+.color-swatch:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.color-swatch:active{transform:translateY(-1px) scale(.98)}
+.color-swatch-fill{height:52px}
+.color-swatch-info{padding:8px 10px;background:var(--surface)}
+.color-swatch-info .hex{font-size:10px;font-weight:600;font-family:var(--font-mono);color:var(--on-surface-muted);margin-bottom:2px;letter-spacing:0.04em}
+.color-swatch-info .name{font-size:11px;color:var(--on-surface);font-family:var(--font-mono)}
+
+/* ── Typography ── */
+.type-list{border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--outline)}
+.type-row{display:flex;justify-content:space-between;align-items:center;padding:var(--s-md) var(--s-lg);gap:var(--s-lg);border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-snap)}
+.type-row:last-child{border-bottom:none}.type-row:nth-child(even){background:var(--surface-mid)}.type-row:nth-child(odd){background:var(--surface)}
+.type-row:hover{background:var(--surface-high)}
+.type-row .meta{flex:0 0 190px}
+.type-row .meta .token-name{font-size:9.5px;font-weight:700;font-family:var(--font-mono);color:var(--primary);margin-bottom:3px;letter-spacing:0.08em;text-transform:uppercase}
+.type-row .meta .spec{font-size:10.5px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.type-row .specimen{flex:1;text-align:right;word-break:break-word}
+@media(max-width:767px){.type-row{flex-direction:column;align-items:flex-start}.type-row .meta{flex:unset}.type-row .specimen{text-align:left;margin-top:var(--s-sm)}}
+
+/* ── Spacing ── */
+.spacing-ruler{display:flex;align-items:stretch;gap:2px;height:44px;background:var(--surface-high);border-radius:var(--r-xs);padding:2px}
+.spacing-block{display:flex;align-items:center;justify-content:center;background:var(--primary-solid);border-radius:0;font:700 9px/1 var(--font-mono);color:var(--on-primary);transition:flex .4s var(--ease-snap);min-width:4px;overflow:hidden}
+.spacing-block .lbl{opacity:0;transition:opacity .1s;white-space:nowrap}
+.spacing-block:hover{flex:4!important}.spacing-block:hover .lbl{opacity:1}
+.spacing-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:9.5px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+
+/* ── Radius ── */
+.radius-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:5px}
+.radius-box{background:var(--surface-high);border:2px solid var(--primary-solid);transition:transform var(--dur-med) var(--ease-snap)}
+.radius-box:hover{transform:scale(1.1)}
+.r-name{font-size:9.5px;color:var(--on-surface-muted);font-family:var(--font-mono);font-weight:700}
+.r-value{font-size:9.5px;color:var(--outline-hi);font-family:var(--font-mono)}
+
+/* ── Elevation ── */
+.elevation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+.elevation-card{background:var(--surface);border-radius:var(--r-sm);padding:var(--s-lg);text-align:center;border:1px solid var(--outline);transition:transform var(--dur-med) var(--ease-snap),background .3s}
+.elevation-card:hover{transform:translateY(-3px)}
+.elevation-card .e-num{width:38px;height:38px;margin:0 auto;border-radius:var(--r-xs);background:var(--surface-high);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--primary)}
+.elevation-card .e-label{font-size:11px;color:var(--on-surface-muted);margin-top:10px;font-family:var(--font-mono)}
+.elevation-card .e-sub{font-size:10px;color:var(--outline-hi);margin-top:3px;font-family:var(--font-mono)}
+.el-0{box-shadow:none}.el-1{box-shadow:var(--shadow-sm)}.el-2{box-shadow:var(--shadow-md)}.el-3{box-shadow:var(--shadow-lg);border-color:var(--outline-hi)}
+@media(max-width:767px){.elevation-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Motion ── */
+.motion-row{display:flex;gap:var(--s-xl);flex-wrap:wrap;align-items:flex-start}
+.motion-item{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.motion-track{width:180px;height:38px;background:var(--surface-high);border-radius:var(--r-xs);position:relative;overflow:hidden}
+.motion-box{width:36px;height:34px;margin:2px;border-radius:0;background:var(--primary-solid);transition-property:transform}
+.motion-item:hover .motion-box{transform:translateX(142px)}
+.m-name{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono);font-weight:700}
+.m-curve{font-size:9.5px;color:var(--outline-hi);font-family:var(--font-mono)}
+
+/* ── Signature: Command Palette ── */
+.cmdk{position:relative;max-width:540px;border:1px solid var(--outline-hi);border-radius:var(--r-sm);background:var(--surface);box-shadow:var(--shadow-lg);overflow:hidden}
+.cmdk-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--outline)}
+.cmdk-head svg{width:14px;height:14px;color:var(--primary);flex-shrink:0}
+.cmdk-head input{flex:1;background:transparent;border:none;outline:none;font:500 13px/1.4 var(--font-mono);color:var(--on-surface)}
+.cmdk-head input::placeholder{color:var(--on-surface-muted)}
+.cmdk-kbd{padding:2px 6px;border:1px solid var(--outline-hi);border-radius:var(--r-xs);font:700 9.5px/1.3 var(--font-mono);color:var(--on-surface-muted)}
+.cmdk-list{max-height:240px;overflow-y:auto;padding:4px}
+.cmdk-section{font:700 9px/1 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--outline-hi);padding:8px 10px 4px}
+.cmdk-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-xs);font:500 12.5px/1 var(--font-mono);color:var(--on-surface-muted);cursor:pointer;transition:background var(--dur-fast) var(--ease-snap),color var(--dur-fast) var(--ease-snap)}
+.cmdk-item:hover{background:var(--surface-high);color:var(--on-surface)}
+.cmdk-item.sel{background:var(--primary-glow-sm);color:var(--primary)}
+.cmdk-item .k{margin-left:auto;font-size:9.5px;color:var(--on-surface-muted);border:1px solid var(--outline-hi);border-radius:var(--r-xs);padding:2px 5px;white-space:nowrap}
+.cmdk-item svg{width:13px;height:13px;flex-shrink:0;opacity:.6}
+
+/* ── Signature: Log Stream ── */
+.log-stream{font-family:var(--font-mono);font-size:12px;line-height:1.7;border:1px solid var(--outline);border-radius:var(--r-xs);background:var(--surface);overflow-x:auto;position:relative}
+.log-stream-head{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--outline);font:700 9px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--outline-hi)}
+.log-live-dot{width:6px;height:6px;border-radius:50%;background:var(--positive);display:inline-block;animation:blink var(--dur-slow) steps(4,end) infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.log-live-dot{animation:none}}
+.log-body{padding:8px var(--s-md) 10px}
+.log-line{display:flex;gap:12px;white-space:nowrap}
+.log-line .t{color:var(--outline-hi);flex-shrink:0;min-width:96px}
+.log-line .lv{flex-shrink:0;width:52px;font-weight:700;letter-spacing:.04em}
+.log-line .lv.info{color:var(--quaternary)}
+.log-line .lv.ok{color:var(--primary)}
+.log-line .lv.warn{color:var(--tertiary)}
+.log-line .lv.err{color:var(--error)}
+.log-line .m{color:var(--on-surface)}
+
+/* ── Signature: Code Block ── */
+.codeblock{position:relative;border:1px solid var(--outline);border-radius:var(--r-xs);background:var(--surface);overflow:hidden}
+.code-head{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--outline);font:700 10px/1 var(--font-mono);color:var(--on-surface-muted);letter-spacing:.06em}
+.code-lang{padding:2px 6px;border:1px solid var(--outline);border-radius:var(--r-xs);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.code-copy{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:transparent;border:1px solid var(--outline);border-radius:var(--r-xs);color:var(--on-surface-muted);font:700 9.5px/1 var(--font-mono);cursor:pointer;transition:color var(--dur-fast) var(--ease-snap),border-color var(--dur-fast) var(--ease-snap)}
+.code-copy:hover{color:var(--primary);border-color:var(--primary-solid)}
+.code-body{padding:12px 14px;font:400 12.5px/1.7 var(--font-mono);color:var(--on-surface);overflow-x:auto}
+.c-key{color:var(--secondary)}.c-str{color:var(--quaternary)}.c-com{color:var(--on-surface-muted)}.c-num{color:var(--tertiary)}
+
+/* ── Signature: Keycaps ── */
+.kbd-row{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center;margin-bottom:var(--s-md)}
+.kbd-group{display:flex;align-items:center;gap:4px}
+.kbd{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;min-width:28px;border:1px solid var(--outline-hi);border-bottom-width:3px;border-radius:var(--r-xs);font:700 11px/1 var(--font-mono);color:var(--on-surface);background:var(--surface-high);white-space:nowrap}
+.kbd-plus{color:var(--on-surface-muted);font:700 10px/1 var(--font-mono);padding:0 2px}
+.kbd-action{font:500 11.5px/1 var(--font-body);color:var(--on-surface-muted);padding-left:6px}
+
+/* ── Signature: Diff View ── */
+.diff{font-family:var(--font-mono);font-size:12px;border:1px solid var(--outline);border-radius:var(--r-xs);background:var(--surface);overflow:hidden}
+.diff-head{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--outline);font:700 10px/1.3 var(--font-mono);color:var(--on-surface-muted)}
+.diff-counts{display:flex;gap:8px}
+.diff-counts .adds{color:var(--secondary)}.diff-counts .dels{color:var(--error)}
+.diff-body{padding:6px 0;font-size:12.5px;line-height:1.65;overflow-x:auto}
+.diff-line{display:flex;white-space:nowrap}
+.diff-line .g{flex-shrink:0;width:44px;text-align:right;padding-right:10px;color:var(--outline-hi);user-select:none}
+.diff-line .m{white-space:pre;padding-right:var(--s-lg)}
+.diff-line.add{background:rgba(163,230,53,0.07)}
+.diff-line.add .g{color:var(--secondary);font-weight:700}
+.diff-line.del{background:rgba(248,113,113,0.07)}
+.diff-line.del .g{color:var(--error);font-weight:700}
+.diff-line.ctx .m{color:var(--on-surface-muted)}
+.diff-line.add .m{color:var(--secondary)}
+.diff-line.del .m{color:var(--error)}
+
+/* ── Buttons ── */
+.button-grid{display:flex;flex-wrap:wrap;gap:var(--s-md);align-items:flex-end}
+.button-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.button-item .btn-label{font-size:9.5px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:700 12px/1 var(--font-mono);padding:9px 18px;border:none;border-radius:var(--r-xs);cursor:pointer;white-space:nowrap;transition:transform var(--dur-fast) var(--ease-snap),box-shadow var(--dur-fast) var(--ease-snap),opacity var(--dur-fast) var(--ease-snap),background var(--dur-fast) var(--ease-snap),border-color var(--dur-fast) var(--ease-snap)}
+.btn:focus-visible{outline:2px solid var(--primary-solid);outline-offset:2px}
+.btn:active{transform:scale(.96)!important}
+.btn-primary{background:var(--primary-solid);color:var(--on-primary)}.btn-primary:hover{opacity:.9;box-shadow:0 0 0 3px var(--primary-glow)}
+.btn-secondary{background:transparent;color:var(--primary);border:1px solid var(--primary-solid)}.btn-secondary:hover{background:var(--primary-glow-sm)}
+.btn-ghost{background:transparent;color:var(--on-surface-muted)}.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
+.btn-lime{background:var(--secondary);color:var(--on-secondary)}.btn-lime:hover{opacity:.9}
+.btn-amber{background:var(--tertiary);color:var(--on-tertiary)}.btn-amber:hover{opacity:.9}
+.btn-outline-lime{background:transparent;color:var(--secondary);border:1px solid var(--secondary)}.btn-outline-lime:hover{background:rgba(163,230,53,0.08)}
+.btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.45}
+
+/* ── Chips ── */
+.chip-grid{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:var(--r-full);font:700 10.5px/1 var(--font-mono);border:1px solid var(--outline);color:var(--on-surface-muted);background:transparent;cursor:pointer;white-space:nowrap;transition:border-color var(--dur-fast) var(--ease-snap),color var(--dur-fast) var(--ease-snap),background var(--dur-fast) var(--ease-snap)}
+.chip:hover{border-color:var(--outline-hi);color:var(--on-surface)}
+.chip.filled{background:var(--primary-solid);border-color:var(--primary-solid);color:var(--on-primary)}
+.chip.filled:hover{opacity:.9}
+.chip.accent{background:var(--secondary);border-color:var(--secondary);color:var(--on-secondary)}
+.chip.outline{border-color:var(--primary);color:var(--primary)}.chip.outline:hover{background:var(--primary-glow-sm)}
+.chip.error-chip{border-color:var(--error);color:var(--error)}.chip.error-chip:hover{background:rgba(248,113,113,0.08)}
+.chip.success-chip{border-color:var(--positive);color:var(--positive)}.chip.success-chip:hover{background:rgba(74,222,128,0.08)}
+.chip.warn-chip{border-color:var(--tertiary);color:var(--tertiary)}.chip.warn-chip:hover{background:rgba(251,191,36,0.08)}
+
+/* ── Forms ── */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font:700 9.5px/1 var(--font-mono);color:var(--on-surface-muted);letter-spacing:0.08em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{padding:7px 9px;border:1px solid var(--outline-hi);border-radius:var(--r-xs);font:13px/1.45 var(--font-mono);color:var(--on-surface);background:var(--surface);transition:border-color var(--dur-fast) var(--ease-snap),box-shadow var(--dur-fast) var(--ease-snap);height:32px;outline:none}
+.form-textarea{height:72px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--on-surface-muted);opacity:.6}
+.form-select{-webkit-appearance:none;appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238ba38f' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 9px center;padding-right:26px}
+@media(max-width:767px){.form-grid{grid-template-columns:1fr}}
+
+/* ── Build History Table ── */
+.table-wrap{overflow-x:auto;border:1px solid var(--outline);border-radius:var(--r-sm);background:var(--surface)}
+table.ds-table{width:100%;border-collapse:collapse;font-size:12.5px;color:var(--on-surface)}
+.ds-table thead{background:var(--table-header-bg)}
+.ds-table th{padding:9px 14px;text-align:left;font:700 9.5px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--table-header-fg);border-bottom:1px solid var(--outline);white-space:nowrap}
+.ds-table td{padding:10px 14px;border-bottom:1px solid var(--outline);white-space:nowrap;color:var(--on-surface);background:var(--table-row-bg);transition:background .15s}
+.ds-table tbody tr:hover td{background:var(--table-row-hover)}
+.ds-table tbody tr:last-child td{border-bottom:none}
+.ds-table .cell-mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:12px}
+.ds-table .cell-status{display:inline-flex;align-items:center;gap:5px;font:700 9.5px/1 var(--font-mono);letter-spacing:.06em}
+.ds-table .cell-status::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ds-table .s-live::before{background:var(--positive)}.ds-table .s-live{color:var(--positive)}
+.ds-table .s-draft::before{background:var(--tertiary)}.ds-table .s-draft{color:var(--tertiary)}
+.ds-table .s-paused::before{background:var(--error)}.ds-table .s-paused{color:var(--error)}
+
+/* ── Pricing ── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+.pricing-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-lg);display:flex;flex-direction:column;transition:transform var(--dur-med) var(--ease-snap),box-shadow var(--dur-med) var(--ease-snap);position:relative}
+.pricing-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pricing-card.featured{border-color:var(--primary-solid)}
+.pricing-badge{display:inline-block;padding:3px 9px;background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full);font:700 9px/1 var(--font-mono);margin-bottom:var(--s-md);align-self:flex-start;letter-spacing:0.06em;text-transform:uppercase}
+.pricing-card .tier{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--primary);letter-spacing:.1em;text-transform:uppercase;margin-bottom:var(--s-sm)}
+.pricing-card .price{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--on-surface);margin-bottom:var(--s-lg);line-height:1;letter-spacing:-0.02em}
+.pricing-card .price-sub{font-size:12px;color:var(--on-surface-muted);font-weight:400}
+.pricing-features{list-style:none;margin-bottom:var(--s-lg);flex:1}
+.pricing-features li{font:12.5px/1 var(--font-mono);padding:7px 0;border-bottom:1px solid var(--outline);display:flex;align-items:center;gap:7px;color:var(--on-surface-muted)}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:'\2713';color:var(--primary);font-weight:700;flex-shrink:0;font-size:10px}
+.pricing-cta-margin{margin-top:auto}
+@media(max-width:1023px){.pricing-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}.pricing-card.featured{order:-1}}
+
+/* ── Architecture & Engineering ── */
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--s-md)}
+.arch-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-lg);transition:border-color var(--dur-fast) var(--ease-snap),box-shadow var(--dur-med) var(--ease-snap)}
+.arch-card:hover{box-shadow:var(--shadow-sm);border-color:var(--outline-hi)}
+.arch-card .icon{width:34px;height:34px;border-radius:var(--r-xs);background:var(--primary-glow-sm);border:1px solid var(--outline-hi);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:var(--s-md)}
+.arch-card .icon svg{width:16px;height:16px}
+.arch-card .title{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--on-surface);margin-bottom:5px}
+.arch-card .desc{font-size:11.5px;color:var(--on-surface-muted);line-height:1.5}
+
+/* ── App/Engineering cards ── */
+.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:var(--s-md)}
+.app-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-md);display:flex;flex-direction:column;gap:var(--s-sm);transition:border-color var(--dur-fast) var(--ease-snap)}
+.app-card:hover{border-color:var(--outline-hi)}
+.app-card .app-tag{font:700 9px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--primary)}
+.app-card .app-title{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--on-surface)}
+.app-card .app-desc{font-size:11.5px;color:var(--on-surface-muted);line-height:1.45}
+
+/* ── Security ── */
+.security-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--s-md)}
+.security-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-lg);transition:border-color var(--dur-fast) var(--ease-snap)}
+.security-card:hover{border-color:var(--outline-hi)}
+.security-card .icon{width:34px;height:34px;border-radius:var(--r-xs);background:var(--primary-glow-sm);border:1px solid var(--outline-hi);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:var(--s-md)}
+.security-card .icon svg{width:16px;height:16px}
+.security-card .title{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--on-surface);margin-bottom:5px}
+.security-card .desc{font-size:11.5px;color:var(--on-surface-muted);line-height:1.5}
+
+/* ── UX Principles flip cards ── */
+.ux-group{margin-bottom:var(--s-xl)}.ux-group:last-child{margin-bottom:0}
+.ux-group-title{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--s-md);padding-bottom:var(--s-sm);border-bottom:1px solid var(--outline)}
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.ux-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ux-grid{grid-template-columns:1fr}}
+.ux-card{background:transparent;border:0;padding:0;text-align:left;cursor:pointer;font-family:inherit;color:inherit;perspective:1200px;min-height:148px;display:block;width:100%;-webkit-tap-highlight-color:transparent}
+.ux-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-sm)}
+.ux-card-inner{position:relative;width:100%;height:100%;min-height:148px;transition:transform var(--dur-slow) var(--ease-snap);transform-style:preserve-3d;display:block}
+.ux-card[aria-expanded="true"] .ux-card-inner{transform:rotateY(180deg)}
+.ux-card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-md);display:flex;flex-direction:column;transition:border-color var(--dur-fast) var(--ease-snap)}
+.ux-card:hover .ux-card-face{border-color:var(--outline-hi)}
+.ux-card-face-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface-mid);border:1px solid var(--primary-solid);border-radius:var(--r-sm);padding:var(--s-md);display:flex;flex-direction:column;transform:rotateY(180deg)}
+.ux-card-name{font-family:var(--font-mono);font-size:12.5px;font-weight:700;color:var(--on-surface);margin-bottom:5px;display:block}
+.ux-card-def{font-size:11.5px;color:var(--on-surface-muted);line-height:1.5;display:block;flex:1}
+.ux-card-rule{font-size:11.5px;color:var(--on-surface);line-height:1.5;padding-top:8px;border-top:1px solid var(--outline);display:block;flex:1}
+.ux-card-rule b{color:var(--primary);font-weight:700}
+.ux-card-flip-hint{font:700 9px/1 var(--font-mono);letter-spacing:.06em;color:var(--primary);opacity:0;transition:opacity var(--dur-fast) var(--ease-snap);margin-top:6px;text-transform:uppercase}
+.ux-card:hover .ux-card-flip-hint,.ux-card:focus-visible .ux-card-flip-hint{opacity:.7}
+@media(hover:none){.ux-card-flip-hint{opacity:.5}}
+
+/* ── Accessibility / Foundations cards ── */
+.foundations-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--s-md)}
+.foundations-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-md);transition:border-color var(--dur-fast) var(--ease-snap)}
+.foundations-card:hover{border-color:var(--outline-hi)}
+.foundations-card .rule-name{font-family:var(--font-mono);font-size:12.5px;font-weight:700;color:var(--on-surface);margin-bottom:4px;display:block}
+.foundations-card .rule-text{font-size:11.5px;color:var(--on-surface-muted);line-height:1.45;display:block}
+
+/* ── Performance ── */
+.perf-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md);margin-bottom:var(--s-lg)}
+.perf-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-lg);text-align:center}
+.perf-card .value{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--primary);line-height:1.1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.perf-card .label{font:700 9.5px/1 var(--font-mono);color:var(--on-surface-muted);text-transform:uppercase;letter-spacing:.08em}
+@media(max-width:1023px){.perf-metrics{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Responsive demo ── */
+.responsive-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md);margin-bottom:var(--s-lg)}
+.responsive-col{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-lg)}
+.responsive-col-title{font:700 9.5px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:var(--s-md)}
+@media(max-width:1023px){.responsive-grid{grid-template-columns:1fr}}
+
+/* ── Touch targets ── */
+.touch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:var(--s-md)}
+.touch-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:var(--s-md);text-align:center}
+.touch-label{font:700 11px/1 var(--font-mono);color:var(--on-surface);margin-bottom:3px}
+.touch-val{font-size:10.5px;color:var(--on-surface-muted);font-family:var(--font-mono);margin-bottom:var(--s-sm)}
+.touch-visual{width:100%;height:44px;background:var(--surface-high);border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;position:relative;overflow:visible}
+.touch-target{width:100%;height:44px;border:2px dashed var(--primary);opacity:.5;display:flex;align-items:center;justify-content:center;font:700 9px/1 var(--font-mono);color:var(--primary);letter-spacing:.08em}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:600;display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--surface-highest);border:1px solid var(--outline-hi);border-radius:var(--r-sm);font:600 12px/1 var(--font-mono);color:var(--on-surface);box-shadow:var(--shadow-lg);transform:translateY(calc(100% + 24px));transition:transform var(--dur-med) var(--ease-snap),opacity var(--dur-fast) var(--ease-snap);opacity:0;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.t-dot{width:6px;height:6px;border-radius:50%;background:var(--positive);flex-shrink:0}
+
+/* ── Footer ── */
+footer.ds-footer{background:var(--bg-dim);border-top:1px solid var(--outline);padding:var(--s-xl) 0}
+footer .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-lg);flex-wrap:wrap}
+footer p{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+footer .version{font-family:var(--font-mono);font-size:10px;color:var(--outline-hi)}
+</style>
+</head>
+<body>
+
+<nav class="sidebar" aria-label="Section navigation" id="sidebar">
+  <div class="sidebar-header">
+    <span class="nav-logo">Terminal</span>
+    <button class="sidebar-close" aria-label="Close menu" onclick="closeMobileNav()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav">
+    <div class="nav-indicator" id="nav-indicator"></div>
+    <div class="nav-group" style="--i:0">
+      <div class="nav-group-label">Overview</div>
+      <a class="nav-item" href="#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Hero</span></a>
+      <a class="nav-item" href="#colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg><span>Colors</span></a>
+      <a class="nav-item" href="#typography"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg><span>Typography</span></a>
+      <a class="nav-item" href="#architecture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="8" y="13" width="8" height="8" rx="1"/></svg><span>Architecture</span></a>
+    </div>
+    <div class="nav-group" style="--i:1">
+      <div class="nav-group-label">Foundations</div>
+      <a class="nav-item" href="#spacing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg><span>Spacing</span></a>
+      <a class="nav-item" href="#radius"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/></svg><span>Radius</span></a>
+      <a class="nav-item" href="#elevation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l4-4 4 4 4-4 4 4"/></svg><span>Elevation</span></a>
+      <a class="nav-item" href="#motion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>Motion</span></a>
+    </div>
+    <div class="nav-group" style="--i:2">
+      <div class="nav-group-label">Terminal Components</div>
+      <a class="nav-item" href="#command-palette"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Command Palette</span></a>
+      <a class="nav-item" href="#log-stream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h10M4 18h14"/></svg><span>Log Stream</span></a>
+      <a class="nav-item" href="#code-block"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg><span>Code Block</span></a>
+      <a class="nav-item" href="#kbd-keycap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 15h10"/></svg><span>Keycaps</span></a>
+      <a class="nav-item" href="#diff-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3v18M3 9h12M3 15h12"/></svg><span>Diff View</span></a>
+    </div>
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Patterns</div>
+      <a class="nav-item" href="#buttons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="1"/></svg><span>Buttons</span></a>
+      <a class="nav-item" href="#chips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg><span>Chips</span></a>
+      <a class="nav-item" href="#forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg><span>Forms</span></a>
+      <a class="nav-item" href="#build-history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6M3 15h6"/></svg><span>Build History</span></a>
+      <a class="nav-item" href="#pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Pricing</span></a>
+    </div>
+    <div class="nav-group" style="--i:4">
+      <div class="nav-group-label">Systems</div>
+      <a class="nav-item" href="#ux-principles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>UX Principles</span></a>
+      <a class="nav-item" href="#engineering"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Engineering</span></a>
+      <a class="nav-item" href="#accessibility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span>Accessibility</span></a>
+      <a class="nav-item" href="#security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Security</span></a>
+      <a class="nav-item" href="#performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>Performance</span></a>
+      <a class="nav-item" href="#responsive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><span>Responsive</span></a>
+      <a class="nav-item" href="#touch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v11M10 9.5V4a2 2 0 0 0-4 0v14l-2.5-2.5a2 2 0 0 0-3 3L6 22h12"/></svg><span>Touch</span></a>
+    </div>
+  </div>
+  <div class="sidebar-footer-tools">
+    <button class="md-copy-btn-global agent-tool" id="copy-all-btn" onclick="copyAllAsMarkdown()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span>Copy All as MD</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="collapse-toggle" id="collapse-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar width">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>
+      <span>Collapse</span>
+    </button>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeMobileNav()"></div>
+<div class="scroll-progress agent-tool"><div class="bar" id="scroll-bar"></div></div>
+
+<header class="topbar">
+  <button class="menu-toggle" aria-label="Open menu" onclick="openMobileNav()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--on-surface);letter-spacing:0.04em">&gt;_ Terminal</span>
+  <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</header>
+
+<div class="page">
+
+<!-- 01 HERO -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-badge">REFERENCE BUILD 07</div>
+    <h1><span class="accent">&gt;_</span> Devtool Terminal<br>Design System</h1>
+    <p>Phosphor green on near-black. Monospace-native density. Keyboard-first patterns throughout. Dense, precise, zero decoration.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary" onclick="copyAllAsMarkdown()">Copy All as MD</button>
+      <button class="btn-hero-secondary" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+  </div>
+</section>
+
+<!-- 02 COLORS -->
+<section id="colors" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Colors</div>
+        <h2>Color System</h2>
+        <p>Phosphor green primary, lime for additions, amber for warnings, cyan for values. Log levels own their colors: info cyan, ok green, warn amber, error red. Color always pairs with a word.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('colors')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="color-grid">
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#0a0f0b" data-name="bg"><div class="color-swatch-fill" style="background:#0a0f0b"></div><div class="color-swatch-info"><div class="hex">#0a0f0b</div><div class="name">--bg</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#101711" data-name="surface"><div class="color-swatch-fill" style="background:#101711"></div><div class="color-swatch-info"><div class="hex">#101711</div><div class="name">--surface</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#1b261c" data-name="surface-high"><div class="color-swatch-fill" style="background:#1b261c"></div><div class="color-swatch-info"><div class="hex">#1b261c</div><div class="name">--surface-high</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#243326" data-name="surface-highest"><div class="color-swatch-fill" style="background:#243326"></div><div class="color-swatch-info"><div class="hex">#243326</div><div class="name">--surface-highest</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#354a38" data-name="outline-hi"><div class="color-swatch-fill" style="background:#354a38"></div><div class="color-swatch-info"><div class="hex">#354a38</div><div class="name">--outline-hi</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#8ba38f" data-name="on-surface-muted"><div class="color-swatch-fill" style="background:#8ba38f"></div><div class="color-swatch-info"><div class="hex">#8ba38f</div><div class="name">--on-surface-muted</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#22c55e" data-name="primary"><div class="color-swatch-fill" style="background:#22c55e"></div><div class="color-swatch-info"><div class="hex">#22c55e</div><div class="name">--primary (OK)</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#a3e635" data-name="secondary"><div class="color-swatch-fill" style="background:#a3e635"></div><div class="color-swatch-info"><div class="hex">#a3e635</div><div class="name">--secondary (adds)</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#fbbf24" data-name="tertiary"><div class="color-swatch-fill" style="background:#fbbf24"></div><div class="color-swatch-info"><div class="hex">#fbbf24</div><div class="name">--tertiary (WARN)</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#67e8f9" data-name="quaternary"><div class="color-swatch-fill" style="background:#67e8f9"></div><div class="color-swatch-info"><div class="hex">#67e8f9</div><div class="name">--quaternary (INFO)</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#4ade80" data-name="positive"><div class="color-swatch-fill" style="background:#4ade80"></div><div class="color-swatch-info"><div class="hex">#4ade80</div><div class="name">--positive</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" title="Click to copy" data-hex="#f87171" data-name="error"><div class="color-swatch-fill" style="background:#f87171"></div><div class="color-swatch-info"><div class="hex">#f87171</div><div class="name">--error (ERR)</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 TYPOGRAPHY -->
+<section id="typography">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Typography</div>
+        <h2>Type System</h2>
+        <p>Space Grotesk for UI chrome, Source Code Pro everywhere data lives. 13px base, 1.45 lh. Handles, commit hashes, and durations are always mono with tabular figures.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('typography')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="type-list">
+      <div class="type-row"><div class="meta"><div class="token-name">--font-display</div><div class="spec">'Space Grotesk', sans-serif</div></div><div class="specimen" style="font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.02em">Ship. Observe. Repeat.</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-body</div><div class="spec">'Space Grotesk', 13px/1.45</div></div><div class="specimen" style="font-family:var(--font-body);font-size:13px">Every deploy is auditable by design</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-mono</div><div class="spec">'Source Code Pro', monospace</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:12.5px;font-variant-numeric:tabular-nums">$ deploy --env prod --canary 5%</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xs · label</div><div class="spec">9.5px / 1 · 700 · mono</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">BUILD PASSED · 214 TESTS · 0 FLAKY</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-sm · log</div><div class="spec">12px / 1.65 · 400 · mono</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:12px;line-height:1.65">retry=3 backoff=exponential upstream=slow</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-md · base</div><div class="spec">13px / 1.45 · 400 · mono</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:13px;line-height:1.45">[08:12:04] cache warm 4/6 shards in 874ms</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-lg · heading</div><div class="spec">14px / 1.4 · 700 · mono</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:14px;font-weight:700;line-height:1.4">postmortem: gateway timeout cascade</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xl · section</div><div class="spec">20px / 1.1 · 700 · grotesk</div></div><div class="specimen" style="font-family:var(--font-display);font-size:20px;font-weight:700;line-height:1.1;letter-spacing:-0.02em">Keyboard is the Interface</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-2xl · hero</div><div class="spec">28px / 1.05 · 700 · grotesk</div></div><div class="specimen" style="font-family:var(--font-display);font-size:28px;font-weight:700;line-height:1.05;letter-spacing:-0.025em">Zero-Drama Deploys</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 ARCHITECTURE -->
+<section id="architecture" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Architecture</div>
+        <h2>Architecture</h2>
+        <p>Event-sourced builds, replayable logs, typed pipelines. Every decision is auditable.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('architecture')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="arch-grid">
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="title">Event-Sourced Builds</div><div class="desc">Every build is a stream of typed events, replayable step by step. No black boxes.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h10M4 18h14"/></svg></div><div class="title">Replayable Logs</div><div class="desc">Structured lines with timestamps, levels, and shard metadata. Filter by time or level.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="title">Typed Pipelines</div><div class="desc">Stages declare input/output types. Mismatches fail at parse, not at runtime.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">Scoped Tokens</div><div class="desc">CI tokens scoped per pipeline stage. Every use lands in the audit log.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg></div><div class="title">Signed Artifacts</div><div class="desc">Every output signed and verifiable end to end. Same inputs → byte-identical output.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div class="title">SLA Targets</div><div class="desc">p50 under 4 min, p99 under 10 min. Exceeded targets page on-call immediately.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 SPACING -->
+<section id="spacing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Spacing</div>
+        <h2>Spacing Scale</h2>
+        <p>Doubling rhythm: 4, 8, 16, 32, 64, 96. Binary steps for a binary craft. Hover each block to expand it.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('spacing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="spacing-ruler">
+      <div class="spacing-block" style="flex:1"><span class="lbl">4</span></div>
+      <div class="spacing-block" style="flex:2"><span class="lbl">8</span></div>
+      <div class="spacing-block" style="flex:4"><span class="lbl">16</span></div>
+      <div class="spacing-block" style="flex:8"><span class="lbl">32</span></div>
+      <div class="spacing-block" style="flex:16"><span class="lbl">64</span></div>
+      <div class="spacing-block" style="flex:24"><span class="lbl">96</span></div>
+    </div>
+    <div class="spacing-labels"><span>xs · 4px</span><span>sm · 8px</span><span>md · 16px</span><span>lg · 32px</span><span>xl · 64px</span><span>2xl · 96px</span></div>
+  </div>
+</section>
+
+<!-- 06 RADIUS -->
+<section id="radius" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Radius</div>
+        <h2>Radius Scale</h2>
+        <p>Sharp system: 0, 2, 4, 8, 12px plus pill. Square edges read as engineering intent, not consumer softness.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('radius')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="radius-grid">
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xs)"></div><div class="r-name">r-xs</div><div class="r-value">0px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-sm)"></div><div class="r-name">r-sm</div><div class="r-value">2px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-md)"></div><div class="r-name">r-md</div><div class="r-value">4px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-lg)"></div><div class="r-name">r-lg</div><div class="r-value">8px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xl)"></div><div class="r-name">r-xl</div><div class="r-value">12px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-full)"></div><div class="r-name">r-full</div><div class="r-value">pill</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 ELEVATION -->
+<section id="elevation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Elevation</div>
+        <h2>Elevation Scale</h2>
+        <p>4 levels, black-only shadows. Terminal chrome never decorates itself with colored glows.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('elevation')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="elevation-grid">
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Flat</div><div class="e-sub">Logs, rows</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Raised</div><div class="e-sub">Cards, panels</div></div>
+      <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Overlay</div><div class="e-sub">Dropdowns</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Modal</div><div class="e-sub">Command palette</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 MOTION -->
+<section id="motion" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Motion</div>
+        <h2>Motion System</h2>
+        <p>Snap + steps: state flips snap, blinks step in 4, log reveals stream. Hover each track to preview.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('motion')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="motion-row">
+      <div class="motion-item">
+        <div class="motion-track"><div class="motion-box" style="transition-duration:var(--dur-fast);transition-timing-function:var(--ease-snap)"></div></div>
+        <div class="m-name">snap · .1s</div>
+        <div class="m-curve">cubic-bezier(.19,1,.22,1)</div>
+        <div class="m-curve" style="color:var(--on-surface-muted);margin-top:2px">button press, icon swap</div>
+      </div>
+      <div class="motion-item">
+        <div class="motion-track"><div class="motion-box" style="transition-duration:var(--dur-med);transition-timing-function:var(--ease-snap)"></div></div>
+        <div class="m-name">glide · .2s</div>
+        <div class="m-curve">cubic-bezier(.19,1,.22,1)</div>
+        <div class="m-curve" style="color:var(--on-surface-muted);margin-top:2px">panel open, sidebar</div>
+      </div>
+      <div class="motion-item">
+        <div class="motion-track"><div class="motion-box" style="transition-duration:var(--dur-slow);transition-timing-function:steps(4,end)"></div></div>
+        <div class="m-name">steps · .3s</div>
+        <div class="m-curve">steps(4,end)</div>
+        <div class="m-curve" style="color:var(--on-surface-muted);margin-top:2px">cursor blink, live dot</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 COMMAND PALETTE -->
+<section id="command-palette">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Command Palette</div>
+        <h2>Command Palette</h2>
+        <p>Keyboard-first launcher. Type a verb, arrow to select, Enter to run. Every command has a keybinding twin.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('command-palette')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="cmdk">
+      <div class="cmdk-head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Type a command or search..." value="depl" aria-label="Command search">
+        <span class="cmdk-kbd">Esc</span>
+      </div>
+      <div class="cmdk-list" role="listbox" aria-label="Commands">
+        <div class="cmdk-section">Deploy</div>
+        <div class="cmdk-item sel" role="option" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span>deploy prod</span><span class="k">⇧⌘D</span>
+        </div>
+        <div class="cmdk-item" role="option">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m0 0V11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v10m0 0h3a1 1 0 0 0 1-1V10m-9 11h4"/></svg>
+          <span>deploy rollback</span><span class="k">R</span>
+        </div>
+        <div class="cmdk-item" role="option">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>deploy canary 5%</span><span class="k">C</span>
+        </div>
+        <div class="cmdk-section">Logs</div>
+        <div class="cmdk-item" role="option">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h10M4 18h14"/></svg>
+          <span>logs tail --follow</span><span class="k">L</span>
+        </div>
+        <div class="cmdk-item" role="option">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+          <span>open diff</span><span class="k">⌘O</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 LOG STREAM -->
+<section id="log-stream" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Log Stream</div>
+        <h2>Log Stream</h2>
+        <p>Timestamped, level-coded, monospaced. Levels carry a word AND a color — never color alone.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('log-stream')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="log-stream" role="log" aria-live="polite" aria-label="Build log">
+      <div class="log-stream-head">
+        <span>build #4821 · main · f3a82c1</span>
+        <span style="display:flex;align-items:center;gap:6px"><span class="log-live-dot"></span>live</span>
+      </div>
+      <div class="log-body">
+        <div class="log-line"><span class="t">08:12:04.112</span><span class="lv info">INFO</span><span class="m">gateway listening on :8080 (pid 4821)</span></div>
+        <div class="log-line"><span class="t">08:12:04.987</span><span class="lv ok">OK</span><span class="m">cache warm 4/6 shards completed in 874ms</span></div>
+        <div class="log-line"><span class="t">08:12:07.441</span><span class="lv warn">WARN</span><span class="m">retry=1/3 backoff=exponential upstream slow 1.2s</span></div>
+        <div class="log-line"><span class="t">08:12:09.120</span><span class="lv err">ERROR</span><span class="m">upstream timeout after 5s; failing over to eu-west</span></div>
+        <div class="log-line"><span class="t">08:12:09.866</span><span class="lv ok">OK</span><span class="m">failover complete; p99 recovered to 380ms</span></div>
+        <div class="log-line"><span class="t">08:12:14.021</span><span class="lv info">INFO</span><span class="m">test runner: 214/214 passed, 0 flaky, 0 skipped</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 CODE BLOCK -->
+<section id="code-block">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Code</div>
+        <h2>Code Block</h2>
+        <p>Copy affordance in the header bar, mono syntax colors, zero decoration. Language label in the header, never inline.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('code-block')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="codeblock">
+      <div class="code-head">
+        <span>deploy.config.ts</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="code-lang">typescript</span>
+          <button class="code-copy" onclick="copyCode(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>copy
+          </button>
+        </div>
+      </div>
+      <div class="code-body"><span class="c-key">export const</span> config = {<br>&nbsp;&nbsp;canary: <span class="c-str">"5%"</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-com">// ramped per stage</span><br>&nbsp;&nbsp;regions: [<span class="c-str">"eu-west"</span>, <span class="c-str">"us-east"</span>],<br>&nbsp;&nbsp;timeout: <span class="c-num">30_000</span>,&nbsp;&nbsp;&nbsp;<span class="c-com">// ms</span><br>&nbsp;&nbsp;retries: <span class="c-num">3</span>,<br>}</div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 KEYCAPS -->
+<section id="kbd-keycap" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Keycaps</div>
+        <h2>Keycap Keycaps</h2>
+        <p>Every shortcut shown as a physical keycap with a real bottom edge. Muscle memory, not tooltips.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('kbd-keycap')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="kbd-row">
+      <div class="kbd-group"><span class="kbd">⌘</span><span class="kbd-plus">+</span><span class="kbd">K</span></div><span class="kbd-action">Command palette</span>
+    </div>
+    <div class="kbd-row">
+      <div class="kbd-group"><span class="kbd">G</span><span class="kbd-plus">then</span><span class="kbd">D</span></div><span class="kbd-action">Go to deploys</span>
+    </div>
+    <div class="kbd-row">
+      <div class="kbd-group"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">Enter</span></div><span class="kbd-action">Force run</span>
+    </div>
+    <div class="kbd-row">
+      <div class="kbd-group"><span class="kbd">⌘</span><span class="kbd-plus">+</span><span class="kbd">[</span></div><span class="kbd-action">Previous build</span>
+    </div>
+    <div class="kbd-row">
+      <div class="kbd-group"><span class="kbd">?</span></div><span class="kbd-action">Show all shortcuts</span>
+    </div>
+  </div>
+</section>
+
+<!-- 13 DIFF VIEW -->
+<section id="diff-view">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Diff</div>
+        <h2>Diff View</h2>
+        <p>Added lines lime, removed lines red, context lines dim. Counts explicit in the header. Line colors AND prefixes — never color alone.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('diff-view')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="diff">
+      <div class="diff-head">
+        <span>config/regions.ts</span>
+        <div class="diff-counts"><span class="adds">+2</span><span class="dels">−1</span></div>
+      </div>
+      <div class="diff-body">
+        <div class="diff-line ctx"><span class="g">40</span><span class="m">export const regions = [</span></div>
+        <div class="diff-line del"><span class="g">-41</span><span class="m">  "eu-central",</span></div>
+        <div class="diff-line add"><span class="g">+41</span><span class="m">  "eu-west",</span></div>
+        <div class="diff-line add"><span class="g">+42</span><span class="m">  "eu-north",</span></div>
+        <div class="diff-line ctx"><span class="g">43</span><span class="m">];</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 BUTTONS -->
+<section id="buttons" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Buttons</div>
+        <h2>Buttons</h2>
+        <p>7 variants, square edges, mono font weight. No pill shapes on primary actions — pills are for status chips only.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('buttons')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="button-grid">
+      <div class="button-item"><button class="btn btn-primary">Deploy Prod</button><div class="btn-label">btn-primary</div></div>
+      <div class="button-item"><button class="btn btn-secondary">Rollback</button><div class="btn-label">btn-secondary</div></div>
+      <div class="button-item"><button class="btn btn-ghost">Cancel</button><div class="btn-label">btn-ghost</div></div>
+      <div class="button-item"><button class="btn btn-lime">Open Diff</button><div class="btn-label">btn-lime · --secondary</div></div>
+      <div class="button-item"><button class="btn btn-amber">Warn Action</button><div class="btn-label">btn-amber · --tertiary</div></div>
+      <div class="button-item"><button class="btn btn-outline-lime">Export Logs</button><div class="btn-label">btn-outline-lime</div></div>
+      <div class="button-item"><button class="btn btn-disabled" disabled>Running…</button><div class="btn-label">btn-disabled</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 CHIPS -->
+<section id="chips">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Chips</div>
+        <h2>Chips & Status Tags</h2>
+        <p>Log-level vocabulary as filter chips. Level names uppercase, never lowercase — they map 1:1 to log output.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('chips')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="chip-grid">
+      <div class="chip">All</div>
+      <div class="chip error-chip">ERROR</div>
+      <div class="chip warn-chip">WARN</div>
+      <div class="chip success-chip">OK</div>
+      <div class="chip outline">INFO</div>
+      <div class="chip accent">DEBUG</div>
+      <div class="chip filled">PASSED</div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 FORMS -->
+<section id="forms" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Forms</div>
+        <h2>Form Elements</h2>
+        <p>32px mono inputs, 3px focus rings, square select. Labels uppercase mono at 9.5px.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('forms')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Namespace</label><input class="form-input" type="text" placeholder="acme/checkout"></div>
+      <div class="form-group"><label>Environment</label><select class="form-select"><option>production</option><option>staging</option><option>preview</option></select></div>
+      <div class="form-group"><label>Region</label><select class="form-select"><option>eu-west-1</option><option>us-east-1</option><option>eu-north-1</option></select></div>
+      <div class="form-group"><label>Canary %</label><input class="form-input" type="text" inputmode="numeric" placeholder="5"></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Release Notes</label><textarea class="form-textarea" placeholder="What changed in this release..."></textarea></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 BUILD HISTORY TABLE -->
+<section id="build-history">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Build History</div>
+        <h2>Build History Table</h2>
+        <p>Mono durations with exact milliseconds, status chips map 1:1 to log levels, dense rows at 10px padding.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('build-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="table-wrap">
+      <table class="ds-table">
+        <thead><tr><th>Build</th><th>Branch</th><th>Commit</th><th>Duration</th><th>Tests</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="cell-mono">#4821</td><td>main</td><td class="cell-mono">f3a82c1</td><td class="cell-mono">4m 12.4s</td><td class="cell-mono">214/214</td><td><div class="cell-status s-live">PASSED</div></td></tr>
+          <tr><td class="cell-mono">#4820</td><td>main</td><td class="cell-mono">9b17de4</td><td class="cell-mono">3m 58.1s</td><td class="cell-mono">212/214</td><td><div class="cell-status s-live">PASSED</div></td></tr>
+          <tr><td class="cell-mono">#4819</td><td>feat/cache</td><td class="cell-mono">c77aa02</td><td class="cell-mono">7m 03.8s</td><td class="cell-mono">198/214</td><td><div class="cell-status s-draft">FLAKY</div></td></tr>
+          <tr><td class="cell-mono">#4818</td><td>fix/timeouts</td><td class="cell-mono">aa03f11</td><td class="cell-mono">1m 47.2s</td><td class="cell-mono">87/214</td><td><div class="cell-status s-paused">FAILED</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 18 PRICING -->
+<section id="pricing" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Pricing</div>
+        <h2>Pricing Tiers</h2>
+        <p>Usage denominated in build minutes — the metric engineers actually understand.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('pricing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card"><div class="tier">Hobby</div><div class="price">Free<span class="price-sub"> · 2,000 min/mo</span></div><ul class="pricing-features"><li>10 concurrent builds</li><li>7-day log retention</li><li>Community support</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%;border-radius:var(--r-xs)">Start Free</button></div></div>
+      <div class="pricing-card featured"><div class="pricing-badge">Most Chosen</div><div class="tier">Pro</div><div class="price">$29<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>50 concurrent builds</li><li>90-day log retention</li><li>Replayable history</li><li>Priority runners</li><li>Email support</li></ul><div class="pricing-cta-margin"><button class="btn btn-primary" style="width:100%;border-radius:var(--r-xs)">Start Pro</button></div></div>
+      <div class="pricing-card"><div class="tier">Scale</div><div class="price">$99<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Unlimited concurrency</li><li>1-year log retention</li><li>Audit log exports</li><li>99.9% SLA</li><li>Dedicated support</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%;border-radius:var(--r-xs)">Contact Sales</button></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 UX PRINCIPLES -->
+<section id="ux-principles">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · UX Principles</div>
+        <h2>UX Principles</h2>
+        <p>Devtool laws. Each card flips to reveal a hard rule. Tap or click to flip.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('ux-principles')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Keyboard First</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Keybinding Gravity</span><span class="ux-card-def">Hands stay on home row. Mice slow experts down.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every action has a keyboard path. Two-letter sequences follow muscle memory, not novelty.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Copyable Everything</span><span class="ux-card-def">IDs, paths, commands: one click to clipboard.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every identifier copies with visible feedback. Never make an expert retype a commit hash.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Stream First Line Fast</span><span class="ux-card-def">Waiting for full output wastes expert time.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Logs stream line by line. First output visible under 100ms. Nothing buffers a full run.</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Signal Density</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Signal per Pixel</span><span class="ux-card-def">Density is respect for expertise.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every panel holds data or control. No decorative emptiness inside a terminal surface.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Redundant Levels</span><span class="ux-card-def">Severity must survive color-blindness.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Levels carry width and word: INFO, OK, WARN, ERROR. Color reinforces; it never carries alone.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Exact Durations</span><span class="ux-card-def">Rounding reads as marketing, not measurement.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Show durations to the millisecond. No approximations inside a terminal surface.</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Debug Flow</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">One Surface</span><span class="ux-card-def">Context switching breaks flow.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Logs, diffs, and history share one view. The tool never sends users elsewhere to understand itself.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Reproduce First</span><span class="ux-card-def">Diagnosis starts with replay, not guesses.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every failure surfaces its exact replay command in the header of the failure panel.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Safe Defaults</span><span class="ux-card-def">One wrong flag can end a career.</span><span class="ux-card-flip-hint">Flip for rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Destructive commands require typed confirmation and state their blast radius before running.</span></div></div></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 ENGINEERING PRINCIPLES -->
+<section id="engineering" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Engineering</div>
+        <h2>Engineering Principles</h2>
+        <p>Hard rules for building with this system. Non-negotiable.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('engineering')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="app-grid">
+      <div class="app-card"><div class="app-tag">Tokens</div><div class="app-title">CSS Variables Only</div><div class="app-desc">Never hardcode colors, radii, or spacing. Always reference var(--*).</div></div>
+      <div class="app-card"><div class="app-tag">Data</div><div class="app-title">Values Are Mono</div><div class="app-desc">IDs, commits, durations: always mono, tabular-nums, exact to the ms.</div></div>
+      <div class="app-card"><div class="app-tag">Logs</div><div class="app-title">Stream Line One</div><div class="app-desc">First line renders under 100ms. Never batch-wait a full run before rendering.</div></div>
+      <div class="app-card"><div class="app-tag">Motion</div><div class="app-title">Snap + Steps Only</div><div class="app-desc">.1/.2/.3s durations. State flips snap; blinks and cursors use steps(4).</div></div>
+      <div class="app-card"><div class="app-tag">a11y</div><div class="app-title">AA on Near-Black</div><div class="app-desc">Contrast verified on #0a0f0b. Focus rings never dim below 2px solid primary.</div></div>
+      <div class="app-card"><div class="app-tag">Format</div><div class="app-title">Single File</div><div class="app-desc">One self-contained HTML per system. No build step. Opens by double-click.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 ACCESSIBILITY -->
+<section id="accessibility">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Accessibility</div>
+        <h2>Accessibility</h2>
+        <p>AA floors hold even on near-black surfaces. Keyboard-only is a first-class use case, not an afterthought.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('accessibility')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">Focus Ring</span><span class="rule-text">2px solid primary, 2px offset. Visible on near-black at 4.5:1 minimum.</span></div>
+      <div class="foundations-card"><span class="rule-name">Keyboard Nav</span><span class="rule-text">Every action keyboard-operable. Esc closes all overlays. Tab order logical.</span></div>
+      <div class="foundations-card"><span class="rule-name">ARIA Labels</span><span class="rule-text">Log levels announce their word. Copy buttons announce state changes.</span></div>
+      <div class="foundations-card"><span class="rule-name">Contrast</span><span class="rule-text">4.5:1 normal text floor on dark surfaces. Muted text (#8ba38f) passes on bg.</span></div>
+      <div class="foundations-card"><span class="rule-name">Live Regions</span><span class="rule-text">Log lines announce politely as they stream. Role="log" with aria-live="polite".</span></div>
+      <div class="foundations-card"><span class="rule-name">Reduced Motion</span><span class="rule-text">Blinks and steps disable. Flip cards don't flip. Slide transitions cut to instant.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 SECURITY -->
+<section id="security" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Security</div>
+        <h2>Build Security</h2>
+        <p>Signed artifacts, scoped tokens, reproducible outputs. The UI surfaces every security event.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('security')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="security-grid">
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="title">Signed Artifacts</div><div class="desc">Every build output signed and verifiable end to end. Verification shown in the build header.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">Scoped CI Tokens</div><div class="desc">Tokens scoped per stage; every use lands in the audit log with timestamp and actor.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg></div><div class="title">Supply Chain</div><div class="desc">Provenance tracked per dependency. Drift fails the build before it runs.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="title">Reproducible Builds</div><div class="desc">Same inputs produce byte-identical artifacts. Bit-for-bit reproducibility enforced.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 PERFORMANCE -->
+<section id="performance">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Performance</div>
+        <h2>Performance Targets</h2>
+        <p>Hard numbers, not aspirations. These ship with every release and page on-call when missed.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('performance')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="perf-metrics">
+      <div class="perf-card"><div class="value">&lt;100ms</div><div class="label">First Log Line</div></div>
+      <div class="perf-card"><div class="value">4m p50</div><div class="label">Build Duration</div></div>
+      <div class="perf-card"><div class="value">99.9%</div><div class="label">Runner Uptime</div></div>
+      <div class="perf-card"><div class="value">&lt;50ms</div><div class="label">Command Palette</div></div>
+    </div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">No Buffering</span><span class="rule-text">Log output streams as produced. No accumulation before render.</span></div>
+      <div class="foundations-card"><span class="rule-name">Cache First</span><span class="rule-text">Dependencies cached by lockfile hash. Cold = exception, not default.</span></div>
+      <div class="foundations-card"><span class="rule-name">Parallel Stages</span><span class="rule-text">Independent stages run concurrently by default. Sequential is opt-in.</span></div>
+      <div class="foundations-card"><span class="rule-name">Fail Fast</span><span class="rule-text">Type errors and lint fail before test runs. No wasted runner minutes.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 24 RESPONSIVE -->
+<section id="responsive" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Responsive</div>
+        <h2>Responsive Layout</h2>
+        <p>Breakpoints: 767px, 1023px. Fixed topbar on mobile, collapsible sidebar on desktop. No bottom tab bar — this is not a consumer app.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('responsive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="responsive-grid">
+      <div class="responsive-col">
+        <div class="responsive-col-title">Desktop (1024px+)</div>
+        <div style="display:flex;gap:6px">
+          <div style="width:140px;min-height:160px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)">Sidebar 264px</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+            <div style="height:48px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:9px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)">Log stream</div>
+            <div style="min-height:100px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:9px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)">Build history table</div>
+          </div>
+        </div>
+      </div>
+      <div class="responsive-col">
+        <div class="responsive-col-title">Mobile (&lt;1024px)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="height:38px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:9px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)">Topbar (fixed)</div>
+          <div style="height:48px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:9px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)">Logs (scroll)</div>
+          <div style="min-height:72px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:9px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)">Build rows (stacked)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 TOUCH TARGETS -->
+<section id="touch">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 07 · Touch</div>
+        <h2>Touch Targets</h2>
+        <p>44×44px minimum across all interactive elements. Visual size can differ; tap target never shrinks below 44px.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('touch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="touch-grid">
+      <div class="touch-card"><div class="touch-label">Command Row</div><div class="touch-val">32px visual · 44px target</div><div class="touch-visual"><div class="touch-target">44×44</div></div></div>
+      <div class="touch-card"><div class="touch-label">Keycap</div><div class="touch-val">28px + padding · 44px target</div><div class="touch-visual"><div class="touch-target" style="width:44px">44×44</div></div></div>
+      <div class="touch-card"><div class="touch-label">Copy Button</div><div class="touch-val">24px visual · 44px target</div><div class="touch-visual"><div class="touch-target">44×44</div></div></div>
+      <div class="touch-card"><div class="touch-label">Diff Gutter</div><div class="touch-val">44px column minimum</div><div class="touch-visual"><div class="touch-target" style="width:44px">44×44</div></div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="ds-footer">
+  <div class="container">
+    <p>Devtool Terminal Design System · Phosphor Green & Lime · Reference Build 07</p>
+    <div class="version">v0.7.1</div>
+  </div>
+</footer>
+
+</div><!-- .page -->
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="t-dot"></span>
+  <span id="toast-msg">Copied to clipboard</span>
+</div>
+
+<script>
+// ── Theme & persistence ──
+(function(){
+  const saved = localStorage.getItem('pz-theme');
+  const sys = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  const theme = saved || sys;
+  if(theme === 'light') document.documentElement.setAttribute('data-theme','light');
+  updateThemeIcons(theme);
+})();
+
+function updateThemeIcons(theme){
+  document.querySelectorAll('.theme-toggle').forEach(t=>{
+    const sun = t.querySelector('.sun');
+    const moon = t.querySelector('.moon');
+    if(sun) sun.style.display = theme==='dark' ? 'block' : 'none';
+    if(moon) moon.style.display = theme==='light' ? 'block' : 'none';
+  });
+}
+
+function toggleTheme(){
+  const h = document.documentElement;
+  const cur = h.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  h.setAttribute('data-theme', next);
+  localStorage.setItem('pz-theme', next);
+  updateThemeIcons(next);
+}
+
+// ── Sidebar ──
+function toggleSidebar(){
+  const collapsed = document.documentElement.classList.toggle('nav-collapsed');
+  localStorage.setItem('pz-nav-collapsed', collapsed ? '1' : '');
+}
+(function(){
+  if(localStorage.getItem('pz-nav-collapsed')) document.documentElement.classList.add('nav-collapsed');
+})();
+
+function openMobileNav(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-backdrop').classList.add('show');
+  document.body.classList.add('nav-locked');
+}
+function closeMobileNav(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('show');
+  document.body.classList.remove('nav-locked');
+}
+
+// ── Scroll spy ──
+function updateScrollSpy(){
+  const s = document.querySelector('.sidebar-nav');
+  const ind = document.getElementById('nav-indicator');
+  if(!s || !ind) return;
+  let cur = null;
+  const st = window.scrollY + 100;
+  document.querySelectorAll('section[id]').forEach(sec=>{
+    if(st >= sec.offsetTop && st < sec.offsetTop + sec.offsetHeight) cur = sec.id;
+  });
+  s.querySelectorAll('.nav-item').forEach(item=>{
+    const href = item.getAttribute('href');
+    if(href && href === '#'+cur){ item.classList.add('active'); }
+    else { item.classList.remove('active'); }
+  });
+  const active = s.querySelector('.nav-item.active');
+  if(active){
+    ind.style.top = active.offsetTop + 'px';
+    ind.style.height = active.offsetHeight + 'px';
+    ind.style.opacity = '1';
+  } else {
+    ind.style.opacity = '0';
+  }
+}
+
+// ── Scroll progress ──
+function updateScrollProgress(){
+  const b = document.getElementById('scroll-bar');
+  if(!b) return;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  b.style.width = max > 0 ? ((window.scrollY / max) * 100) + '%' : '0%';
+}
+
+window.addEventListener('scroll', ()=>{ requestAnimationFrame(()=>{ updateScrollSpy(); updateScrollProgress(); }); }, {passive:true});
+window.addEventListener('resize', ()=>{ updateScrollSpy(); if(window.innerWidth >= 1024) closeMobileNav(); });
+window.addEventListener('DOMContentLoaded', ()=>{ updateScrollSpy(); updateScrollProgress(); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeMobileNav(); });
+
+// ── Flip cards ──
+function toggleFlip(btn){
+  const e = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!e));
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  if(!t) return;
+  if(m) m.textContent = msg || 'Copied to clipboard';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 2000);
+}
+
+// ── Copy utilities ──
+function copySwatch(el){
+  const hex = el.dataset.hex;
+  if(!hex) return;
+  navigator.clipboard.writeText(hex).then(()=>showToast('Copied ' + hex));
+}
+
+function copyCode(btn){
+  const block = btn.closest('.codeblock');
+  if(!block) return;
+  const body = block.querySelector('.code-body');
+  if(!body) return;
+  navigator.clipboard.writeText(body.innerText).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'copied!';
+    setTimeout(()=>{ btn.textContent = old; }, 1800);
+    showToast('Code copied');
+  });
+}
+
+// ── Markdown export ──
+function getMarkdown(id){
+  const sec = document.getElementById(id);
+  if(!sec) return '';
+  const el = sec.cloneNode(true);
+  el.querySelectorAll('.agent-tool').forEach(e=>e.remove());
+  let md = '';
+  const h = el.querySelector('h2');
+  if(h) md += '## ' + h.textContent.trim() + '\n\n';
+  const p = el.querySelector('.section-header-text p');
+  if(p) md += p.textContent.trim() + '\n\n';
+  const rows = el.querySelectorAll('.type-row');
+  if(rows.length){
+    md += '| Token | Spec | Specimen |\n|---|---|---|\n';
+    rows.forEach(r=>{
+      const m = r.querySelector('.meta');
+      const sp = r.querySelector('.specimen');
+      if(m && sp){
+        const tn = m.querySelector('.token-name');
+        const s = m.querySelector('.spec');
+        if(tn && s) md += '| ' + tn.textContent.trim() + ' | ' + s.textContent.trim() + ' | ' + sp.textContent.trim() + ' |\n';
+      }
+    });
+    md += '\n';
+  }
+  const swatches = el.querySelectorAll('.color-swatch');
+  if(swatches.length){
+    md += '| Token | Hex |\n|---|---|\n';
+    swatches.forEach(s=>{ md += '| ' + (s.dataset.name||'') + ' | `' + (s.dataset.hex||'') + '` |\n'; });
+    md += '\n';
+  }
+  if(!rows.length && !swatches.length){
+    el.querySelectorAll('p').forEach(p=>{ md += p.textContent.trim() + '\n\n'; });
+  }
+  return md.trim() + '\n';
+}
+
+function copySectionAsMarkdown(id){
+  const md = getMarkdown(id);
+  if(!md) return;
+  navigator.clipboard.writeText(md).then(()=>{
+    const b = document.querySelector('[onclick*="copySectionAsMarkdown(\'' + id + '\')"]');
+    if(b){
+      b.classList.add('copied');
+      const sp = b.querySelector('span');
+      if(sp){ const old = sp.textContent; sp.textContent = 'Copied!'; setTimeout(()=>{ sp.textContent = old; b.classList.remove('copied'); }, 2000); }
+    }
+    showToast('Section copied as Markdown');
+  });
+}
+
+function copyAllAsMarkdown(){
+  const ids = Array.from(document.querySelectorAll('section[id]')).map(s=>s.id);
+  let md = '# Devtool Terminal Design System\n\n> Design thesis: Dense, monospace-native, keyboard-first — the IDE is the interface.\n\n---\n\n';
+  ids.forEach(id=>{ md += getMarkdown(id) + '\n\n---\n\n'; });
+  navigator.clipboard.writeText(md.trim()).then(()=>{
+    const b = document.getElementById('copy-all-btn');
+    if(b){
+      b.classList.add('copied');
+      const sp = b.querySelector('span');
+      if(sp){ sp.textContent = 'Copied!'; setTimeout(()=>{ sp.textContent = 'Copy All as MD'; b.classList.remove('copied'); }, 2000); }
+    }
+    showToast('Full system copied as Markdown');
+  });
+}
+</script>
+</body>
+</html>

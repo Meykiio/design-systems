@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commerce Storefront Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Outfit:wght@300..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   COMMERCE STOREFRONT DESIGN SYSTEM — AGENT INSTRUCTIONS
+   Design thesis: Product photography sells; every pixel of
+   chrome must yield to the image.
+   What it rejects: Text-heavy product cards that bury imagery.
+
+   WHAT TO CHANGE PER PROJECT:
+   1. Find/replace "Commerce Storefront" with the real project name.
+   2. Recolor --primary/--primary-solid, --secondary, --tertiary,
+      --quaternary, --positive in BOTH [data-theme] blocks.
+   3. Swap Google Fonts imports + font tokens if needed.
+   4. Replace example products, prices, ratings, promo copy.
+   5. Update footer and nav-logo text.
+
+   WHAT TO KEEP VERBATIM:
+   - Motion tokens (--ease-out-soft, --ease-back, --ease-glide, --dur-*)
+   - The spacing/radius/elevation SCALE (values, not colors)
+   - UX Principles section (archetype-specific rules)
+   - Engineering Principles section
+   - Component structural CSS (layout, not color)
+
+   EXCLUDED FROM REPLICATION:
+   Every element with class "agent-tool" (Copy as MD buttons,
+   scroll progress bar, their JS) is tooling for reading THIS
+   reference, not a UI pattern.
+   ═══════════════════════════════════════════
+   TOKEN SYSTEM — Burnt Orange & Berry
+   Primary:   #d9480f Orange (light) / #fb923c Orange (dark)
+   Secondary: #e11d48 Berry (light) / #fb7185 Berry (dark)
+   Tertiary:  #b45309 Amber (star ratings)
+   Quaternary: #0d9488 Teal (rare accents)
+   Base:      Warm cream, low-chroma
+   Motion:    --ease-out-soft · --ease-back · --ease-glide
+              --dur-fast .15s · --dur-med .3s · --dur-slow .5s
+   Density:   Airy — 15px base, 1.5 line-height
+   Default:   LIGHT theme (canonical)
+   ═══════════════════════════════════════════ */
+:root {
+  --bg:#faf7f4;--bg-dim:#f3efeb;--surface:#ffffff;--surface-mid:#faf7f4;
+  --surface-high:#f0ebe6;--surface-highest:#e6dfd7;
+  --on-surface:#1c1917;--on-surface-muted:#78716c;
+  --outline:#e7e0d8;--outline-hi:#c9beb2;
+  --primary:#d9480f;--primary-solid:#d9480f;--on-primary:#ffffff;
+  --primary-glow:rgba(217,72,15,0.18);--primary-glow-sm:rgba(217,72,15,0.08);
+  --brand-orange:#ea580c;--secondary:#e11d48;--secondary-dim:#be123c;--on-secondary:#ffffff;
+  --tertiary:#b45309;--on-tertiary:#ffffff;
+  --quaternary:#0d9488;--on-quaternary:#ffffff;
+  --positive:#15803d;--on-positive:#ffffff;--error:#dc2626;
+  --shadow-sm:0 1px 3px rgba(60,30,10,0.08);--shadow-md:0 6px 16px rgba(60,30,10,0.1);
+  --shadow-lg:0 16px 40px rgba(60,30,10,0.14);
+  --nav-bg:#ffffff;--scroll-track:#f3efeb;--scroll-thumb:#ddd3c7;--scroll-thumb-hi:#d9480f;
+  --toggle-bg:rgba(217,72,15,0.06);--toggle-border:rgba(217,72,15,0.22);
+  --table-header-bg:#f0ebe6;--table-header-fg:#9a3412;
+  --table-row-bg:#ffffff;--table-row-hover:#faf7f4;--table-border:#e7e0d8;
+  --section-alt:#f3efeb;
+  --font-display:'Fraunces',serif;--font-body:'Outfit',sans-serif;--font-mono:'IBM Plex Mono',monospace;
+  --r-xs:4px;--r-sm:10px;--r-md:16px;--r-lg:24px;--r-xl:32px;--r-full:9999px;
+  --s-xs:4px;--s-sm:8px;--s-md:16px;--s-lg:24px;--s-xl:40px;--s-2xl:64px;
+  --content-max:1100px;--transition:background .3s,color .3s,border-color .3s,box-shadow .3s;
+}
+[data-theme="dark"] {
+  --bg:#16110c;--bg-dim:#100c08;--surface:#1d1712;--surface-mid:#241d16;
+  --surface-high:#2b231b;--surface-highest:#352b21;
+  --on-surface:#f2ece5;--on-surface-muted:#a8a29e;
+  --outline:#332a21;--outline-hi:#4a3e31;
+  --primary:#fb923c;--primary-solid:#fb923c;--on-primary:#271204;
+  --primary-glow:rgba(251,146,60,0.2);--primary-glow-sm:rgba(251,146,60,0.1);
+  --brand-orange:#fb923c;--secondary:#fb7185;--secondary-dim:#f43f5e;--on-secondary:#2a050e;
+  --tertiary:#fbbf24;--on-tertiary:#422006;
+  --quaternary:#2dd4bf;--on-quaternary:#042f2e;
+  --positive:#4ade80;--on-positive:#052e16;--error:#f87171;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.4);--shadow-md:0 6px 20px rgba(0,0,0,0.45);
+  --shadow-lg:0 16px 44px rgba(0,0,0,0.5);
+  --nav-bg:#100c08;--scroll-track:#1d1712;--scroll-thumb:#352b21;--scroll-thumb-hi:#fb923c;
+  --toggle-bg:rgba(251,146,60,0.08);--toggle-border:rgba(251,146,60,0.25);
+  --table-header-bg:#241d16;--table-header-fg:#fb923c;
+  --table-row-bg:#16110c;--table-row-hover:#1d1712;--table-border:#332a21;
+  --section-alt:#100c08;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:15px;line-height:1.5;color:var(--on-surface);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:var(--transition)}
+a{text-decoration:none;color:inherit}img{max-width:100%;display:block}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--scroll-track)}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+::selection{background:var(--primary-solid);color:var(--on-primary)}
+.container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 var(--s-lg)}
+@media(max-width:767px){.container{padding:0 var(--s-md)}}
+
+:root{--sidebar-w:264px;
+  --ease-out-soft:cubic-bezier(.22,1,.36,1);--ease-back:cubic-bezier(.68,-.4,.32,1.4);
+  --ease-glide:cubic-bezier(.65,0,.35,1);--dur-fast:.15s;--dur-med:.3s;--dur-slow:.5s}
+
+.scroll-progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:3px;z-index:400;pointer-events:none}
+.scroll-progress .bar{display:block;height:100%;width:0;background:var(--primary-solid);border-radius:0 var(--r-full) var(--r-full) 0}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:220;display:flex;flex-direction:column;background:var(--nav-bg);border-right:1px solid var(--outline);transition:transform var(--dur-slow) var(--ease-out-soft),background .3s,border-color .3s}
+.sidebar-header{display:flex;align-items:center;gap:8px;padding:20px 20px 14px}
+.nav-logo{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--on-surface);letter-spacing:-0.01em;white-space:nowrap}
+.nav-logo:hover{opacity:.75}
+.sidebar-close{display:none;margin-left:auto;width:34px;height:34px;flex-shrink:0;align-items:center;justify-content:center;background:transparent;border:1px solid var(--outline);border-radius:var(--r-sm);color:var(--on-surface-muted);cursor:pointer;transition:color .15s,border-color .15s}
+.sidebar-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.sidebar-close svg{width:15px;height:15px}
+.sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;padding:6px 12px 18px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+.sidebar-nav::-webkit-scrollbar{width:4px}.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+.nav-indicator{position:absolute;left:0;top:0;width:3px;height:0;opacity:0;z-index:0;background:var(--primary-solid);border-radius:0 var(--r-full) var(--r-full) 0;transition:top .4s var(--ease-back),height .4s var(--ease-back),opacity .15s var(--ease-out-soft);pointer-events:none}
+.nav-group{padding-top:14px}.nav-indicator+.nav-group{padding-top:4px}
+.nav-group-label{font:600 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--outline-hi);padding:0 10px 7px}
+.nav-item{display:flex;align-items:center;gap:10px;position:relative;z-index:1;padding:8px 10px;margin-bottom:2px;border-radius:var(--r-sm);font:500 13.5px/1.2 var(--font-body);color:var(--on-surface-muted);-webkit-tap-highlight-color:transparent;transition:color var(--dur-fast) var(--ease-out-soft),transform var(--dur-fast) var(--ease-out-soft)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.6;transition:opacity var(--dur-fast) var(--ease-out-soft),color var(--dur-fast) var(--ease-out-soft)}
+.nav-item:hover{color:var(--on-surface);transform:translateX(2px)}.nav-item:hover svg{opacity:1}
+.nav-item.active{color:var(--primary);transform:translateX(2px)}.nav-item.active svg{opacity:1;color:var(--primary)}
+.nav-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px;border-radius:var(--r-sm)}
+.sidebar-footer{display:flex;align-items:center;gap:8px;padding:14px 16px}
+.collapse-toggle{display:none;flex:1;align-items:center;justify-content:center;gap:6px;padding:10px 14px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:500 12px/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.collapse-toggle:hover{color:var(--primary);border-color:var(--primary-solid)}
+.collapse-toggle:active{transform:scale(.97)}
+.collapse-toggle svg{width:14px;height:14px;transition:transform .4s var(--ease-out-soft)}
+@media(min-width:1024px){.collapse-toggle{display:flex}}
+html.nav-collapsed .collapse-toggle svg{transform:rotate(180deg)}
+.theme-toggle{background:transparent;border:1px solid var(--toggle-border);color:var(--primary);border-radius:var(--r-full);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:border-color var(--dur-fast) var(--ease-out-soft),transform var(--dur-med) var(--ease-back)}
+.theme-toggle:hover{border-color:var(--primary-solid);transform:scale(1.12) rotate(15deg)}
+.theme-toggle svg{width:15px;height:15px}
+.mobile-theme-toggle{display:none}
+.sidebar-backdrop{display:none}
+.page{margin-left:var(--sidebar-w);transition:margin-left .4s var(--ease-out-soft)}
+section[id]{scroll-margin-top:20px}
+.nav-tooltip{position:fixed;z-index:500;pointer-events:none;transform:translateY(-50%) translateX(-4px);opacity:0;background:var(--surface-highest);color:var(--on-surface);border:1px solid var(--outline);border-radius:var(--r-sm);font:500 11px/1 var(--font-body);padding:6px 9px;white-space:nowrap;box-shadow:var(--shadow-md);transition:opacity .15s,transform .15s}
+.nav-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0)}
+@media(min-width:1024px){
+  html.nav-collapsed{--sidebar-w:70px}
+  html.nav-collapsed .sidebar-header{flex-direction:column;gap:12px;padding:16px 10px 10px}
+  html.nav-collapsed .nav-logo{font-size:0}
+  html.nav-collapsed .nav-logo::before{content:'C';font-size:20px;font-weight:700;color:var(--on-surface)}
+  html.nav-collapsed .sidebar-nav{padding:6px 9px 18px}
+  html.nav-collapsed .nav-group{padding-top:8px;margin-top:8px;border-top:1px solid var(--outline)}
+  html.nav-collapsed .nav-indicator+.nav-group{padding-top:4px;margin-top:0;border-top:none}
+  html.nav-collapsed .nav-group-label{display:none}
+  html.nav-collapsed .nav-item{justify-content:center;padding:8px 0;gap:0}
+  html.nav-collapsed .nav-item:hover,html.nav-collapsed .nav-item.active{transform:none}
+  html.nav-collapsed .nav-item span{display:none}
+  html.nav-collapsed .nav-item svg{width:17px;height:17px;opacity:.85}
+  html.nav-collapsed .sidebar-footer{flex-direction:column;padding:10px}
+  html.nav-collapsed .collapse-toggle{width:100%;padding:10px 0}
+  html.nav-collapsed .collapse-toggle span{display:none}
+}
+@media(max-width:1023px){
+  .page{margin-left:0;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+  section[id]{scroll-margin-top:14px}
+  .scroll-progress{left:0}
+  .sidebar{width:min(300px,86vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .mobile-theme-toggle{display:flex;margin-left:auto}
+  .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:190;background:rgba(20,10,5,.45);opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-out-soft),visibility 0s linear var(--dur-med)}
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out-soft)}
+  body.nav-locked{overflow:hidden}
+  .sidebar .nav-group{opacity:0;transform:translateX(-14px);transition:opacity .15s,transform .15s}
+  .sidebar.open .nav-group{opacity:1;transform:none;transition:opacity .45s var(--ease-out-soft),transform .45s var(--ease-out-soft);transition-delay:calc(.08s + var(--i,0)*55ms)}
+  /* PHONE FEEL: fixed bottom tab bar replaces top navigation */
+  .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:210;display:flex;justify-content:space-around;align-items:stretch;background:var(--nav-bg);border-top:1px solid var(--outline);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(60,30,10,0.08)}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;background:transparent;border:none;border-radius:var(--r-sm);font:500 10px/1 var(--font-body);color:var(--on-surface-muted);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color var(--dur-fast) var(--ease-out-soft),transform var(--dur-fast) var(--ease-back)}
+  .bn-item svg{width:21px;height:21px;flex-shrink:0}
+  .bn-item:active{transform:scale(.9)}
+  .bn-item.active{color:var(--primary)}
+  .bn-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px}
+  .bn-badge{position:absolute;top:2px;right:calc(50% - 18px);min-width:16px;height:16px;border-radius:var(--r-full);background:var(--secondary);color:var(--on-secondary);font:600 9px/16px var(--font-mono);text-align:center;padding:0 4px}
+}
+@media(min-width:1024px){.bottom-nav{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar,.sidebar-backdrop,.nav-indicator,.nav-item,.bn-item{transition:none!important}}
+/* ==GEN-CSS-START== */
+section{padding:var(--s-xl) 0;transition:background .3s;background:var(--bg)}
+.section-label{display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--primary);margin-bottom:10px}
+.section-label .dot{width:5px;height:5px;border-radius:50%;background:var(--primary-solid);flex-shrink:0}
+.section-header{margin-bottom:var(--s-lg);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-lg)}
+.section-header-text{flex:1;min-width:0}
+.md-copy-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:7px 14px;margin-top:2px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-full);font:500 11px/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft),background var(--dur-fast) var(--ease-out-soft),transform var(--dur-fast) var(--ease-back)}
+.md-copy-btn svg{width:12px;height:12px;flex-shrink:0}
+.md-copy-btn:hover{color:var(--primary);border-color:var(--primary-glow-sm);background:var(--toggle-bg)}
+.md-copy-btn:active{transform:scale(.95)}.md-copy-btn.copied{color:var(--positive);border-color:var(--positive)}
+@media(max-width:767px){.section-header{flex-direction:column}.md-copy-btn span{display:none}.md-copy-btn{padding:7px;border-radius:var(--r-sm)}}
+.md-copy-btn-global{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px 12px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:500 12px/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.md-copy-btn-global svg{width:14px;height:14px;flex-shrink:0}
+.md-copy-btn-global:hover{color:var(--primary);border-color:var(--primary-glow-sm)}
+.md-copy-btn-global:active{transform:scale(.97)}.md-copy-btn-global.copied{color:var(--positive);border-color:var(--positive)}
+html.nav-collapsed .md-copy-btn-global span{display:none}
+.sidebar-footer-tools{padding:14px 16px;border-top:1px solid var(--outline)}
+html.nav-collapsed .sidebar-footer-tools{padding:14px 8px}
+.section-header h2{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--on-surface);letter-spacing:-0.01em;line-height:1.15;margin-bottom:10px}
+.section-header p{font-size:13.5px;color:var(--on-surface-muted);max-width:520px;line-height:1.55}
+@media(max-width:767px){.section-header h2{font-size:21px}}
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s-md)}
+.color-swatch{position:relative;cursor:pointer;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--outline);transition:transform var(--dur-med) var(--ease-out-soft),box-shadow var(--dur-med) var(--ease-out-soft)}
+.color-swatch:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.color-swatch:active{transform:translateY(-1px) scale(.98)}
+.color-swatch-fill{height:60px}
+.color-swatch-info{padding:9px 12px;background:var(--surface)}
+.color-swatch-info .hex{font-size:10px;font-weight:600;font-family:var(--font-mono);color:var(--on-surface-muted);margin-bottom:2px;letter-spacing:0.03em}
+.color-swatch-info .name{font-size:11.5px;color:var(--on-surface)}
+.type-list{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--outline)}
+.type-row{display:flex;justify-content:space-between;align-items:center;padding:var(--s-md) var(--s-lg);gap:var(--s-lg);border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-out-soft)}
+.type-row:last-child{border-bottom:none}.type-row:nth-child(even){background:var(--surface-mid)}.type-row:nth-child(odd){background:var(--surface)}
+.type-row:hover{background:var(--surface-high)}
+.type-row .meta{flex:0 0 180px}
+.type-row .meta .token-name{font-size:10px;font-weight:600;font-family:var(--font-mono);color:var(--primary);margin-bottom:3px;letter-spacing:0.06em;text-transform:uppercase}
+.type-row .meta .spec{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.type-row .specimen{flex:1;text-align:right;word-break:break-word}
+@media(max-width:767px){.type-row{flex-direction:column;align-items:flex-start}.type-row .meta{flex:unset}.type-row .specimen{text-align:left;margin-top:var(--s-sm)}}
+.spacing-ruler{display:flex;align-items:stretch;gap:3px;height:48px;background:var(--surface-high);border-radius:var(--r-sm);padding:3px}
+.spacing-block{display:flex;align-items:center;justify-content:center;background:var(--primary-solid);border-radius:var(--r-xs);font:600 9px/1 var(--font-body);color:var(--on-primary);transition:flex .45s var(--ease-out-soft);min-width:6px;overflow:hidden}
+.spacing-block .lbl{opacity:0;transition:opacity .15s;white-space:nowrap}
+.spacing-block:hover{flex:3!important}.spacing-block:hover .lbl{opacity:1}
+.spacing-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.radius-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:6px}
+.radius-box{background:var(--surface-high);border:2px solid var(--primary-solid);transition:background .3s,transform var(--dur-med) var(--ease-back)}
+.radius-box:hover{transform:scale(1.08) rotate(-2deg)}
+.r-name{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono);font-weight:600}
+.r-value{font-size:10px;color:var(--outline-hi);font-family:var(--font-mono)}
+.elevation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+.elevation-card{background:var(--surface);border-radius:var(--r-md);padding:var(--s-lg);text-align:center;border:1px solid var(--outline);transition:transform var(--dur-med) var(--ease-out-soft),background .3s,box-shadow var(--dur-med) var(--ease-out-soft)}
+.elevation-card:hover{transform:translateY(-4px)}
+.elevation-card .e-num{width:40px;height:40px;margin:0 auto;border-radius:var(--r-sm);background:var(--surface-high);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--primary)}
+.elevation-card .e-label{font-size:11.5px;color:var(--on-surface-muted);margin-top:10px;font-family:var(--font-body)}
+.elevation-card .e-sub{font-size:10px;color:var(--outline-hi);margin-top:3px;font-family:var(--font-body)}
+.el-0{box-shadow:none}.el-1{box-shadow:var(--shadow-sm)}.el-2{box-shadow:var(--shadow-md)}.el-3{box-shadow:var(--shadow-lg);border-color:var(--primary-solid)}
+@media(max-width:767px){.elevation-grid{grid-template-columns:repeat(2,1fr)}}
+.motion-row{display:flex;gap:var(--s-lg);flex-wrap:wrap}
+.motion-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.motion-box{width:50px;height:50px;border-radius:var(--r-sm);background:var(--primary-solid);transition-property:transform}
+.motion-item:hover .motion-box{transform:translateX(44px)}
+.m-name{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono);font-weight:600}
+.m-curve{font-size:9px;color:var(--outline-hi);font-family:var(--font-mono)}
+.button-grid{display:flex;flex-wrap:wrap;gap:var(--s-md);align-items:flex-end}
+.button-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.button-item .btn-label{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:600 14px/1 var(--font-body);padding:11px 22px;border:none;border-radius:var(--r-full);cursor:pointer;white-space:nowrap;transition:transform var(--dur-fast) var(--ease-out-soft),box-shadow var(--dur-fast) var(--ease-out-soft),opacity var(--dur-fast) var(--ease-out-soft),background var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.btn:active{transform:scale(.96)!important}
+.btn-primary{background:var(--primary-solid);color:var(--on-primary)}.btn-primary:hover{opacity:.92;transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-secondary{background:transparent;color:var(--primary);border:2px solid var(--primary-solid)}.btn-secondary:hover{background:var(--primary-glow-sm);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--on-surface-muted)}.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
+.btn-pill-primary{background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full)}.btn-pill-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-pill-accent{background:var(--tertiary);color:var(--on-tertiary);border-radius:var(--r-full)}.btn-pill-accent:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-outline-pill{background:transparent;color:var(--secondary);border:2px solid var(--secondary)}.btn-outline-pill:hover{background:rgba(225,29,72,0.06);transform:translateY(-2px)}
+.btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.5}
+.btn-sq{border-radius:var(--r-sm)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-lg)}
+.pricing-card{background:var(--surface);border:2px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-lg);display:flex;flex-direction:column;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft);position:relative}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pricing-card.featured{border-color:var(--primary-solid)}
+.pricing-badge{display:inline-block;padding:5px 12px;background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full);font:600 10px/1 var(--font-body);margin-bottom:var(--s-md);align-self:flex-start;letter-spacing:0.03em}
+.pricing-card .tier{font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--on-surface);margin-bottom:4px}
+.pricing-card .price{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--on-surface);margin-bottom:var(--s-lg);line-height:1.1}
+.pricing-card.featured .price{color:var(--primary)}
+.pricing-card .price-sub{font-size:13px;color:var(--on-surface-muted);font-weight:400}
+.pricing-features{list-style:none;margin-bottom:var(--s-lg);flex:1}
+.pricing-features li{font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--outline);display:flex;align-items:center;gap:8px;color:var(--on-surface-muted)}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:'\2713';color:var(--primary);font-weight:700;flex-shrink:0;font-size:11px}
+.pricing-cta-margin{margin-top:auto}
+@media(max-width:1023px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}.pricing-card.featured{order:-1}}
+.chip-grid{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-full);font:500 13px/1 var(--font-body);border:1px solid var(--outline);color:var(--on-surface-muted);background:transparent;transition:transform var(--dur-fast) var(--ease-back),box-shadow var(--dur-fast) var(--ease-out-soft),background var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft),color var(--dur-fast) var(--ease-out-soft);cursor:pointer;white-space:nowrap}
+.chip:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--outline-hi);color:var(--on-surface)}
+.chip.filled{background:var(--primary-solid);border-color:var(--primary-solid);color:var(--on-primary)}.chip.filled:hover{opacity:.92}
+.chip.accent{background:var(--secondary);border-color:var(--secondary);color:var(--on-secondary)}.chip.accent:hover{transform:translateY(-2px)}
+.chip.outline{border-color:var(--primary);color:var(--primary)}.chip.outline:hover{background:var(--primary-glow-sm)}
+.chip .check{width:14px;height:14px}
+.chip.error-chip{border-color:var(--error);color:var(--error)}
+.chip.success-chip{border-color:var(--positive);color:var(--positive)}
+.chip.warn-chip{border-color:var(--tertiary);color:var(--tertiary)}
+.table-wrap{overflow-x:auto;border:1px solid var(--outline);border-radius:var(--r-md);background:var(--surface)}
+table.ds-table{width:100%;border-collapse:collapse;font-size:13.5px;color:var(--on-surface)}
+.ds-table thead{background:var(--table-header-bg)}
+.ds-table th{padding:12px 16px;text-align:left;font:600 11px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;color:var(--table-header-fg);border-bottom:1px solid var(--outline);white-space:nowrap}
+.ds-table td{padding:12px 16px;border-bottom:1px solid var(--outline);white-space:nowrap;color:var(--on-surface);background:var(--table-row-bg);transition:background .3s}
+.ds-table tbody tr{transition:background .15s}
+.ds-table tbody tr:hover td{background:var(--table-row-hover)}
+.ds-table tbody tr:last-child td{border-bottom:none}
+.ds-table .cell-name{display:flex;align-items:center;gap:9px}
+.ds-table .cell-name .avatar{width:28px;height:28px;border-radius:var(--r-full);background:var(--surface-high);display:flex;align-items:center;justify-content:center;font:600 11px/1 var(--font-body);color:var(--primary);flex-shrink:0}
+.ds-table .cell-name .n{font-weight:500}
+.ds-table .cell-status{display:inline-flex;align-items:center;gap:5px;font-size:12.5px}
+.ds-table .cell-status::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ds-table .cell-status.s-live::before{background:var(--positive)}.ds-table .cell-status.s-live{color:var(--positive)}
+.ds-table .cell-status.s-draft::before{background:var(--tertiary)}.ds-table .cell-status.s-draft{color:var(--tertiary)}
+.ds-table .cell-status.s-paused::before{background:var(--error)}.ds-table .cell-status.s-paused{color:var(--error)}
+.ds-table .cell-mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.responsive-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md);margin-bottom:var(--s-lg)}
+.responsive-col{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg)}
+.responsive-col-title{font:600 10px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:var(--s-md)}
+@media(max-width:1023px){.responsive-grid{grid-template-columns:1fr}}
+.touch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--s-md)}
+.touch-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);text-align:center;transition:transform var(--dur-fast) var(--ease-out-soft),box-shadow var(--dur-med) var(--ease-out-soft)}
+.touch-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.touch-label{font-size:11.5px;font-weight:600;color:var(--on-surface);margin-bottom:4px}
+.touch-val{font-size:12px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.touch-visual{width:100%;height:44px;background:var(--surface-high);border-radius:var(--r-sm);margin-top:var(--s-sm);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.touch-target{position:absolute;width:48px;height:48px;border:2px dashed var(--primary);border-radius:var(--r-sm);opacity:.7}
+footer.ds-footer{background:var(--bg-dim);border-top:1px solid var(--outline);padding:var(--s-xl) 0}
+footer .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-lg);flex-wrap:wrap}
+footer p{font-size:12.5px;color:var(--on-surface-muted)}
+footer .version{font-family:var(--font-mono);font-size:11px;color:var(--outline-hi)}
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--s-md)}
+.arch-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.arch-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.arch-card .icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--primary-glow-sm);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:var(--s-md);transition:transform .25s,border-color .25s,border:1px solid var(--toggle-border)}
+.arch-card:hover .icon{transform:scale(1.15);border-color:var(--primary-solid)}
+.arch-card .icon svg{width:18px;height:18px}
+.arch-card .title{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.arch-card .desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.5}
+.security-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--s-md)}
+.security-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft)}
+.security-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.security-card .icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--primary-glow-sm);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:var(--s-md);transition:transform .25s,border-color .25s,border:1px solid var(--toggle-border)}
+.security-card:hover .icon{transform:scale(1.15);border-color:var(--primary-solid)}
+.security-card .icon svg{width:18px;height:18px}
+.security-card .title{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.security-card .desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.5}
+.perf-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md);margin-bottom:var(--s-lg)}
+.perf-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);text-align:center;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft)}
+.perf-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.perf-card .value{font-family:var(--font-mono);font-size:26px;font-weight:700;color:var(--primary);line-height:1.1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.perf-card .label{font-size:11px;color:var(--on-surface-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:1023px){.perf-metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.perf-metrics{grid-template-columns:1fr}}
+.ux-group{margin-bottom:var(--s-xl)}.ux-group:last-child{margin-bottom:0}
+.ux-group-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--s-md)}
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.ux-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ux-grid{grid-template-columns:1fr}}
+.ux-card{background:transparent;border:0;padding:0;text-align:left;cursor:pointer;font-family:inherit;color:inherit;perspective:1200px;min-height:150px;display:block;width:100%;-webkit-tap-highlight-color:transparent}
+.ux-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-md)}
+.ux-card-inner{position:relative;width:100%;height:100%;min-height:150px;transition:transform var(--dur-slow) var(--ease-back);transform-style:preserve-3d;display:block}
+.ux-card[aria-expanded="true"] .ux-card-inner{transform:rotateY(180deg)}
+.ux-card:hover .ux-card-inner{transform:translateY(-2px)}
+.ux-card[aria-expanded="true"]:hover .ux-card-inner{transform:rotateY(180deg) translateY(-2px)}
+.ux-card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);display:flex;flex-direction:column;transition:box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.ux-card:hover .ux-card-face{box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.ux-card-face-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);display:flex;flex-direction:column;transform:rotateY(180deg);border-color:var(--primary-glow-sm)}
+.ux-card-name{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:4px;display:block}
+.ux-card-def{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45;display:block;flex:1}
+.ux-card-rule{font-size:12.5px;color:var(--on-surface);line-height:1.45;padding-top:8px;border-top:1px solid var(--outline);display:block;flex:1}
+.ux-card-rule b{color:var(--primary);font-weight:600}
+.ux-card-flip-hint{font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--primary);opacity:0;transition:opacity var(--dur-fast) var(--ease-out-soft);margin-top:8px}
+.ux-card:hover .ux-card-flip-hint,.ux-card:focus-visible .ux-card-flip-hint{opacity:.8}
+@media(hover:none){.ux-card-flip-hint{opacity:.5}}
+.foundations-group{margin-bottom:var(--s-xl)}.foundations-group:last-child{margin-bottom:0}
+.foundations-group-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--s-md)}
+.foundations-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.foundations-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.foundations-grid{grid-template-columns:1fr}}
+.foundations-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);text-align:left;cursor:default;font-family:inherit;color:inherit;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.foundations-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.foundations-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-md)}
+.foundations-card .rule-name{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:4px;display:block}
+.foundations-card .rule-text{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45;display:block}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s-md)}
+.app-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);display:flex;flex-direction:column;gap:var(--s-sm);transition:transform var(--dur-med) var(--ease-out-soft),box-shadow var(--dur-med) var(--ease-out-soft)}
+.app-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.app-card:hover .app-icon{transform:scale(1.15);border-color:var(--primary-solid);background:var(--primary-glow-sm);color:var(--primary)}
+.app-card .app-tag{font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--primary)}
+.app-card .app-title{font-family:var(--font-display);font-size:14.5px;font-weight:600;color:var(--on-surface)}
+.app-card .app-desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45}
+.app-icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--surface-high);border:1px solid var(--outline);display:flex;align-items:center;justify-content:center;color:var(--on-surface-muted);transition:transform .25s,background .25s,border-color .25s,color .25s}
+.app-icon svg{width:18px;height:18px}
+/* ==GEN-CSS-END== */
+section.hero{background:linear-gradient(180deg,var(--bg) 0%,var(--bg-dim) 100%);padding:72px 0;border-bottom:1px solid var(--outline)}
+section.hero .container{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--outline);border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--secondary);background:var(--surface);margin-bottom:var(--s-md);letter-spacing:0.03em}
+.hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--secondary);flex-shrink:0}
+section.hero h1{font-family:var(--font-display);font-size:clamp(34px,5.4vw,60px);font-weight:600;line-height:1.02;letter-spacing:-0.02em;color:var(--on-surface);margin-bottom:var(--s-md)}
+section.hero h1 .accent{color:var(--primary)}
+section.hero p{font-size:16px;color:var(--on-surface-muted);max-width:520px;line-height:1.6;margin-bottom:var(--s-lg)}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero-primary{padding:13px 28px;background:var(--primary-solid);color:var(--on-primary);border:none;border-radius:var(--r-full);font:600 15px/1 var(--font-body);cursor:pointer;transition:transform .2s var(--ease-back),box-shadow .2s}
+.btn-hero-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:var(--shadow-lg)}.btn-hero-primary:active{transform:scale(.97)}
+.btn-hero-secondary{padding:13px 28px;background:transparent;color:var(--on-surface);border:2px solid var(--outline);border-radius:var(--r-full);font:600 15px/1 var(--font-body);cursor:pointer;transition:background .2s,transform .2s var(--ease-back),border-color .2s}
+.btn-hero-secondary:hover{background:var(--toggle-bg);transform:translateY(-2px);border-color:var(--outline-hi)}.btn-hero-secondary:active{transform:scale(.97)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font:600 11px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:0.03em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{padding:11px 14px;border:1.5px solid var(--outline);border-radius:var(--r-sm);font:14px/1.5 var(--font-body);color:var(--on-surface);background:var(--surface);transition:border-color var(--dur-fast) var(--ease-out-soft),box-shadow var(--dur-fast) var(--ease-out-soft);height:44px;outline:none}
+.form-textarea{height:96px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary-solid);box-shadow:0 0 0 4px var(--primary-glow-sm)}
+.form-select{-webkit-appearance:none;appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:34px}
+@media(max-width:767px){.form-grid{grid-template-columns:1fr}}
+/* SIGNATURES — commerce-storefront */
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.product-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.product-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
+.product-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);overflow:hidden;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft);display:flex;flex-direction:column}
+.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pc-media{position:relative;aspect-ratio:1/1;background:linear-gradient(135deg,var(--surface-high),var(--surface-mid));display:flex;align-items:center;justify-content:center;color:var(--outline-hi)}
+.pc-media svg{width:34%;height:34%;max-width:88px;max-height:88px}
+.pc-fav{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:var(--r-full);background:var(--surface);border:1px solid var(--outline);display:flex;align-items:center;justify-content:center;color:var(--on-surface-muted);cursor:pointer;transition:color .15s,transform .2s var(--ease-back),border-color .15s}
+.pc-fav:hover{color:var(--secondary);transform:scale(1.12)}
+.pc-fav.active{color:var(--secondary)}
+.pc-fav.active svg{fill:var(--secondary)}
+.pc-fav svg{width:16px;height:16px}
+.pc-flag{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:var(--r-full);font:600 10px/1 var(--font-body);letter-spacing:.04em}
+.pc-flag.sale{background:var(--secondary);color:var(--on-secondary)}
+.pc-flag.new{background:var(--primary-solid);color:var(--on-primary)}
+.pc-body{padding:var(--s-md);display:flex;flex-direction:column;gap:6px;flex:1}
+.pc-brand{font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-muted)}
+.pc-title{font-family:var(--font-display);font-size:15.5px;font-weight:600;color:var(--on-surface);line-height:1.25}
+.pc-rating{display:flex;align-items:center;gap:5px}
+.stars{display:inline-flex;gap:1px}
+.stars svg{width:13px;height:13px;color:var(--tertiary)}
+.stars svg.dim{color:var(--outline)}
+.stars.half svg.dim-half{color:var(--tertiary)}
+.pc-rating .rcount{font-size:11px;color:var(--on-surface-muted)}
+.pc-price-row{display:flex;align-items:baseline;gap:8px;margin-top:2px}
+.pc-price{font-family:var(--font-mono);font-size:17px;font-weight:600;color:var(--on-surface);font-variant-numeric:tabular-nums}
+.pc-price-old{font-family:var(--font-mono);font-size:12.5px;color:var(--on-surface-muted);text-decoration:line-through;font-variant-numeric:tabular-nums}
+.pc-price-save{font:600 10px/1 var(--font-mono);color:var(--positive)}
+.pc-cta{margin-top:8px}
+.pc-cta .btn{width:100%}
+.stars.lg svg{width:18px;height:18px}
+.rating-block{display:inline-flex;align-items:center;gap:10px}
+.rating-num{font-family:var(--font-mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.rating-total{font-size:12px;color:var(--on-surface-muted)}
+.gallery{max-width:560px}
+.gallery-main{position:relative;aspect-ratio:4/3;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline);background:linear-gradient(135deg,var(--surface-high),var(--surface-mid));display:flex;align-items:center;justify-content:center;color:var(--outline-hi)}
+.gallery-main svg{width:22%;height:22%}
+.gallery-badge{position:absolute;bottom:12px;left:12px;padding:6px 12px;border-radius:var(--r-full);background:var(--surface);border:1px solid var(--outline);font:600 11px/1 var(--font-body);color:var(--on-surface)}
+.gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-sm);margin-top:var(--s-sm)}
+.gallery-thumb{aspect-ratio:1/1;border-radius:var(--r-sm);border:2px solid var(--outline);background:linear-gradient(135deg,var(--surface-high),var(--surface-mid));display:flex;align-items:center;justify-content:center;color:var(--outline-hi);cursor:pointer;padding:0;transition:border-color .15s,transform .2s var(--ease-back)}
+.gallery-thumb svg{width:38%;height:38%}
+.gallery-thumb:hover{transform:translateY(-2px)}
+.gallery-thumb.active{border-color:var(--primary-solid)}
+.cart-overlay{position:fixed;inset:0;z-index:250;background:rgba(20,10,5,.4);opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-out-soft),visibility 0s linear var(--dur-med)}
+.cart-overlay.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out-soft)}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,94vw);z-index:260;background:var(--nav-bg);border-left:1px solid var(--outline);transform:translateX(105%);transition:transform var(--dur-slow) var(--ease-glide);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{display:flex;align-items:center;justify-content:space-between;padding:var(--s-md) var(--s-lg);border-bottom:1px solid var(--outline)}
+.cart-head .t{font-family:var(--font-display);font-size:17px;font-weight:600}
+.cart-head .cnt{font-family:var(--font-mono);font-size:12px;color:var(--on-surface-muted)}
+.cart-close{width:34px;height:34px;border-radius:var(--r-full);border:1px solid var(--outline);background:transparent;color:var(--on-surface-muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cart-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.cart-close svg{width:14px;height:14px}
+.cart-ship{padding:var(--s-md) var(--s-lg);border-bottom:1px solid var(--outline)}
+.cart-ship .msg{font-size:12px;color:var(--on-surface-muted);margin-bottom:6px}
+.cart-ship .msg b{color:var(--primary)}
+.cart-ship-bar{height:6px;border-radius:var(--r-full);background:var(--surface-high);overflow:hidden}
+.cart-ship-fill{height:100%;width:65%;background:var(--primary-solid);border-radius:var(--r-full);transition:width .5s var(--ease-out-soft)}
+.cart-items{flex:1;overflow-y:auto;padding:var(--s-sm) var(--s-lg)}
+.cart-item{display:flex;gap:12px;padding:var(--s-md) 0;border-bottom:1px solid var(--outline)}
+.cart-item:last-child{border-bottom:none}
+.ci-thumb{width:56px;height:56px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--surface-high),var(--surface-mid));display:flex;align-items:center;justify-content:center;color:var(--outline-hi);flex-shrink:0}
+.ci-thumb svg{width:55%;height:55%}
+.ci-info{flex:1;min-width:0}
+.ci-name{font:500 13.5px/1.3 var(--font-body);color:var(--on-surface);margin-bottom:4px}
+.ci-meta{font-size:11px;color:var(--on-surface-muted);margin-bottom:8px}
+.ci-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ci-qty{display:inline-flex;align-items:center;border:1px solid var(--outline);border-radius:var(--r-full);overflow:hidden}
+.ci-qty button{width:28px;height:28px;border:none;background:transparent;color:var(--on-surface-muted);cursor:pointer;font:600 14px/1 var(--font-body);transition:background .15s,color .15s}
+.ci-qty button:hover{background:var(--surface-high);color:var(--on-surface)}
+.ci-qty .q{min-width:22px;text-align:center;font:600 12px/1 var(--font-mono);font-variant-numeric:tabular-nums}
+.ci-price{font-family:var(--font-mono);font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.cart-foot{padding:var(--s-md) var(--s-lg) var(--s-lg);border-top:1px solid var(--outline)}
+.cart-sub{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.cart-sub .l{font-size:13px;color:var(--on-surface-muted)}
+.cart-sub .v{font-family:var(--font-mono);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.cart-note{font-size:11px;color:var(--on-surface-muted);margin-bottom:var(--s-md)}
+.cart-foot .btn{width:100%}
+.promo-bar{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px var(--s-lg);background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-md);flex-wrap:wrap}
+.promo-bar .p-text{font:600 13.5px/1 var(--font-body)}
+.promo-timer{display:inline-flex;gap:6px;font-variant-numeric:tabular-nums}
+.promo-timer .unit{background:rgba(0,0,0,.18);border-radius:var(--r-sm);min-width:38px;padding:5px 4px;text-align:center;font:600 14px/1 var(--font-mono)}
+.promo-timer .sep{align-self:center;font:700 12px/1 var(--font-mono);opacity:.7}
+.promo-cta{background:transparent;color:var(--on-secondary);border:1.5px solid var(--on-secondary);border-radius:var(--r-full);padding:7px 16px;font:600 12px/1 var(--font-body);cursor:pointer;transition:background .15s,transform .2s var(--ease-back)}
+.promo-cta:hover{background:rgba(0,0,0,.12);transform:translateY(-1px)}
+.review-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft)}
+.review-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.review-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.review-ava{width:36px;height:36px;border-radius:var(--r-full);background:var(--surface-high);display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--font-body);color:var(--primary);flex-shrink:0}
+.review-who .n{font:600 13px/1.2 var(--font-body);color:var(--on-surface)}
+.review-who .when{font-size:11px;color:var(--on-surface-muted)}
+.review-verified{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font:600 10px/1 var(--font-body);color:var(--positive);letter-spacing:.03em}
+.review-verified svg{width:12px;height:12px}
+.review-body{font-size:13.5px;color:var(--on-surface-muted);line-height:1.55}
+.review-stars-row{margin-bottom:8px}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.reviews-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.reviews-grid{grid-template-columns:1fr}}
+.sticky-cta{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);box-shadow:var(--shadow-md)}
+.sticky-cta .p{flex:1;min-width:0}
+.sticky-cta .p .n{font:600 12.5px/1.2 var(--font-body);color:var(--on-surface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sticky-cta .p .v{font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--primary);font-variant-numeric:tabular-nums}
+.sticky-cta .btn{padding:10px 18px}
+</style>
+</head>
+<body>
+<nav class="sidebar" aria-label="Section navigation" id="sidebar">
+  <div class="sidebar-header">
+    <span class="nav-logo">Commerce</span>
+    <button class="sidebar-close" aria-label="Close menu" onclick="closeMobileNav()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <button class="theme-toggle mobile-theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav">
+    <div class="nav-indicator" id="nav-indicator"></div>
+    <div class="nav-group" style="--i:0">
+      <div class="nav-group-label">Overview</div>
+      <a class="nav-item" href="#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Hero</span></a>
+      <a class="nav-item" href="#typography"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg><span>Typography</span></a>
+      <a class="nav-item" href="#colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg><span>Colors</span></a>
+      <a class="nav-item" href="#motion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>Motion</span></a>
+    </div>
+    <div class="nav-group" style="--i:1">
+      <div class="nav-group-label">Foundations</div>
+      <a class="nav-item" href="#spacing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg><span>Spacing</span></a>
+      <a class="nav-item" href="#radius"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="6"/></svg><span>Radius</span></a>
+      <a class="nav-item" href="#elevation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 15l4-4 4 4 4-4 4 4"/></svg><span>Elevation</span></a>
+    </div>
+    <div class="nav-group" style="--i:2">
+      <div class="nav-group-label">Commerce Components</div>
+      <a class="nav-item" href="#product-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg><span>Product Card</span></a>
+      <a class="nav-item" href="#star-rating"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><span>Star Rating</span></a>
+      <a class="nav-item" href="#product-gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Gallery</span></a>
+      <a class="nav-item" href="#cart-drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Cart Drawer</span></a>
+      <a class="nav-item" href="#countdown-promo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Countdown</span></a>
+    </div>
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Patterns</div>
+      <a class="nav-item" href="#buttons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="5"/><path d="M2 12h20"/></svg><span>Buttons</span></a>
+      <a class="nav-item" href="#chips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg><span>Chips</span></a>
+      <a class="nav-item" href="#reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Reviews</span></a>
+      <a class="nav-item" href="#forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 7h10M7 12h10M7 17h6"/></svg><span>Forms</span></a>
+      <a class="nav-item" href="#table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9h18M3 15h18M9 3v18"/></svg><span>Orders</span></a>
+      <a class="nav-item" href="#pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Pricing</span></a>
+    </div>
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Systems</div>
+      <a class="nav-item" href="#ux-principles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>UX Principles</span></a>
+      <a class="nav-item" href="#engineering"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Engineering</span></a>
+      <a class="nav-item" href="#accessibility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span>Accessibility</span></a>
+      <a class="nav-item" href="#security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Security</span></a>
+      <a class="nav-item" href="#performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>Performance</span></a>
+      <a class="nav-item" href="#responsive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="4"/><path d="M12 18h.01"/></svg><span>Responsive</span></a>
+      <a class="nav-item" href="#touch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v11M10 9.5V4a2 2 0 0 0-4 0v14l-2.5-2.5a2 2 0 0 0-3 3L6 22h12"/></svg><span>Touch</span></a>
+      <a class="nav-item" href="#architecture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="8" height="8" rx="2"/><rect x="8" y="13" width="8" height="8" rx="2"/></svg><span>Architecture</span></a>
+    </div>
+  </div>
+  <div class="sidebar-footer-tools">
+    <button class="md-copy-btn-global agent-tool" id="copy-all-btn" onclick="copyAllAsMarkdown()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span>Copy All as MD</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="collapse-toggle" id="collapse-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar width">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>
+      <span>Collapse</span>
+    </button>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeMobileNav()"></div>
+<div class="scroll-progress agent-tool"><div class="bar" id="scroll-bar"></div></div>
+<nav class="bottom-nav" id="bottom-nav" aria-label="Primary mobile navigation">
+  <a class="bn-item" href="#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a>
+  <a class="bn-item" href="#product-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span>Shop</span></a>
+  <button class="bn-item" onclick="openCart()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Bag</span><span class="bn-badge">3</span></button>
+  <a class="bn-item" href="#product-gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Search</span></a>
+  <button class="bn-item" onclick="openMobileNav()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg><span>Menu</span></button>
+</nav>
+<div class="page">
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-badge">REFERENCE BUILD 02</div>
+    <h1><span class="accent">Commerce Storefront</span><br>Design System</h1>
+    <p>Burnt orange & berry palette, image-first layouts, bouncy spring motion. Design thesis: product photography sells — every pixel of chrome must yield to the image.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary" onclick="copyAllAsMarkdown()">Copy All as MD</button>
+      <button class="btn-hero-secondary" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+  </div>
+</section>
+
+<section id="typography">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Typography</div>
+        <h2>Type System</h2>
+        <p>Fraunces for display warmth, Outfit for UI, IBM Plex Mono for prices. 15px base, 1.5 line-height. Prices always in mono with tabular figures.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('typography')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="type-list">
+      <div class="type-row"><div class="meta"><div class="token-name">--font-display</div><div class="spec">'Fraunces', serif</div></div><div class="specimen" style="font-family:var(--font-display);font-size:22px;font-weight:600">The Linen Collection</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-body</div><div class="spec">'Outfit', sans-serif</div></div><div class="specimen" style="font-family:var(--font-body);font-size:15px">Free shipping over $75</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-mono</div><div class="spec">'IBM Plex Mono', monospace</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:15px;font-variant-numeric:tabular-nums">$128.00 &nbsp; $89.99</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xs</div><div class="spec">11px / 1.4 · 600</div></div><div class="specimen" style="font-size:11px;font-weight:600;line-height:1.4">FREE RETURNS WITHIN 30 DAYS</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-sm</div><div class="spec">12px / 1.45 · 500</div></div><div class="specimen" style="font-size:12px;font-weight:500;line-height:1.45">In stock &middot; ships tomorrow</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-md</div><div class="spec">15px / 1.5 · 400</div></div><div class="specimen" style="font-size:15px;line-height:1.5">Relaxed fit, garment-washed European flax linen</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-lg</div><div class="spec">17px / 1.4 · 600</div></div><div class="specimen" style="font-size:17px;font-weight:600;line-height:1.4">Oversized Linen Shirt</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xl</div><div class="spec">22px / 1.2 · 600</div></div><div class="specimen" style="font-family:var(--font-display);font-size:22px;font-weight:600;line-height:1.2">Summer Collection 2026</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-2xl</div><div class="spec">30px / 1.1 · 700</div></div><div class="specimen" style="font-family:var(--font-display);font-size:30px;font-weight:700;line-height:1.1">Weekend Market Edit</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="colors" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Colors</div>
+        <h2>Color System</h2>
+        <p>Burnt orange primary, berry accent for sale badges, amber for stars. Warm cream base with low-chroma neutrals. Light theme is canonical.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('colors')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="color-grid">
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#faf7f4" data-name="bg"><div class="color-swatch-fill" style="background:#faf7f4"></div><div class="color-swatch-info"><div class="hex">#faf7f4</div><div class="name">bg</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#ffffff" data-name="surface"><div class="color-swatch-fill" style="background:#ffffff"></div><div class="color-swatch-info"><div class="hex">#ffffff</div><div class="name">surface</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#f0ebe6" data-name="surface-high"><div class="color-swatch-fill" style="background:#f0ebe6"></div><div class="color-swatch-info"><div class="hex">#f0ebe6</div><div class="name">surface-high</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#e6dfd7" data-name="surface-highest"><div class="color-swatch-fill" style="background:#e6dfd7"></div><div class="color-swatch-info"><div class="hex">#e6dfd7</div><div class="name">surface-highest</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#c9beb2" data-name="outline-hi"><div class="color-swatch-fill" style="background:#c9beb2"></div><div class="color-swatch-info"><div class="hex">#c9beb2</div><div class="name">outline-hi</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#78716c" data-name="on-surface-muted"><div class="color-swatch-fill" style="background:#78716c"></div><div class="color-swatch-info"><div class="hex">#78716c</div><div class="name">on-surface-muted</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#d9480f" data-name="primary"><div class="color-swatch-fill" style="background:#d9480f"></div><div class="color-swatch-info"><div class="hex">#d9480f</div><div class="name">primary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#ea580c" data-name="brand-orange"><div class="color-swatch-fill" style="background:#ea580c"></div><div class="color-swatch-info"><div class="hex">#ea580c</div><div class="name">brand-orange</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#e11d48" data-name="secondary"><div class="color-swatch-fill" style="background:#e11d48"></div><div class="color-swatch-info"><div class="hex">#e11d48</div><div class="name">secondary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#b45309" data-name="tertiary"><div class="color-swatch-fill" style="background:#b45309"></div><div class="color-swatch-info"><div class="hex">#b45309</div><div class="name">tertiary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#0d9488" data-name="quaternary"><div class="color-swatch-fill" style="background:#0d9488"></div><div class="color-swatch-info"><div class="hex">#0d9488</div><div class="name">quaternary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#15803d" data-name="positive"><div class="color-swatch-fill" style="background:#15803d"></div><div class="color-swatch-info"><div class="hex">#15803d</div><div class="name">positive</div></div></div>
+    </div>
+  </div>
+</section>
+<section id="motion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Motion</div>
+        <h2>Motion System</h2>
+        <p>Bouncy retail feel: out-soft for entrances, back for taps (carts, favorites), glide for drawers. Hover the boxes.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('motion')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="motion-row">
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-fast);transition-timing-function:var(--ease-out-soft)"></div><div class="m-name">out-soft · .15s</div><div class="m-curve">(.22,1,.36,1)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-med);transition-timing-function:var(--ease-back)"></div><div class="m-name">back · .3s</div><div class="m-curve">(.68,-.4,.32,1.4)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-slow);transition-timing-function:var(--ease-glide)"></div><div class="m-name">glide · .5s</div><div class="m-curve">(.65,0,.35,1)</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="spacing" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Spacing</div>
+        <h2>Spacing Scale</h2>
+        <p>Fibonacci rhythm: 4, 8, 16, 24, 40, 64. Generous whitespace lets product imagery breathe.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('spacing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="spacing-ruler">
+      <div class="spacing-block" style="flex:1"><span class="lbl">4</span></div>
+      <div class="spacing-block" style="flex:2"><span class="lbl">8</span></div>
+      <div class="spacing-block" style="flex:4"><span class="lbl">16</span></div>
+      <div class="spacing-block" style="flex:6"><span class="lbl">24</span></div>
+      <div class="spacing-block" style="flex:10"><span class="lbl">40</span></div>
+      <div class="spacing-block" style="flex:16"><span class="lbl">64</span></div>
+    </div>
+    <div class="spacing-labels"><span>xs · 4</span><span>sm · 8</span><span>md · 16</span><span>lg · 24</span><span>xl · 40</span><span>2xl · 64</span></div>
+  </div>
+</section>
+
+<section id="radius">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Radius</div>
+        <h2>Radius Scale</h2>
+        <p>Soft system: 4, 10, 16, 24, 32px plus pill. Rounded corners feel friendly and tap-safe.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('radius')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="radius-grid">
+      <div class="radius-item"><div class="radius-box" style="width:54px;height:54px;border-radius:var(--r-xs)"></div><div class="r-name">r-xs</div><div class="r-value">4px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:54px;height:54px;border-radius:var(--r-sm)"></div><div class="r-name">r-sm</div><div class="r-value">10px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:54px;height:54px;border-radius:var(--r-md)"></div><div class="r-name">r-md</div><div class="r-value">16px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:54px;height:54px;border-radius:var(--r-lg)"></div><div class="r-name">r-lg</div><div class="r-value">24px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:54px;height:54px;border-radius:var(--r-xl)"></div><div class="r-name">r-xl</div><div class="r-value">32px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:54px;height:54px;border-radius:var(--r-full)"></div><div class="r-name">r-full</div><div class="r-value">pill</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="elevation" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Elevation</div>
+        <h2>Elevation Scale</h2>
+        <p>4 levels with warm brown-tinted shadows. Never cool gray shadows on warm surfaces.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('elevation')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="elevation-grid">
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Flat</div><div class="e-sub">Product tiles</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Raised</div><div class="e-sub">Cards at rest</div></div>
+      <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Overlay</div><div class="e-sub">Dropdowns</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Drawer</div><div class="e-sub">Cart drawer</div></div>
+    </div>
+  </div>
+</section>
+<section id="product-card">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Product Card</div>
+        <h2>Product Card</h2>
+        <p>The money component: full-bleed imagery, brand line, title, stars, mono price, full-width add-to-cart. Wishlist heart top-right.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('product-card')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="pc-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16 2l4 3-2 3-2-1v13a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V7L6 8 4 5l4-3a4 4 0 0 0 8 0z"/></svg><span class="pc-flag sale">-30%</span><button class="pc-fav active" aria-label="Remove from wishlist" onclick="this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 2.61a5.5 5.5 0 0 0-7.78 0L12 3.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.06-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button></div>
+        <div class="pc-body"><span class="pc-brand">ATELIER NORD</span><div class="pc-title">Oversized Linen Shirt</div><div class="pc-rating"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span><span class="rcount">4.6 (231)</span></div><div class="pc-price-row"><span class="pc-price">$89.99</span><span class="pc-price-old">$128.00</span><span class="pc-price-save">Save 30%</span></div><div class="pc-cta"><button class="btn btn-primary">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card">
+        <div class="pc-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 2v3M10 2v3M14 2v3"/></svg><span class="pc-flag new">New</span><button class="pc-fav" aria-label="Add to favorites" onclick="this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 2.61a5.5 5.5 0 0 0-7.78 0L12 3.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.06-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button></div>
+        <div class="pc-body"><span class="pc-brand">KILN & CO</span><div class="pc-title">Ceramic Pour-Over Set</div><div class="pc-rating"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span><span class="rcount">4.9 (87)</span></div><div class="pc-price-row"><span class="pc-price">$54.00</span></div><div class="pc-cta"><button class="btn btn-primary">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card">
+        <div class="pc-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 18v-6a9 3 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg><button class="pc-fav" aria-label="Add to favorites" onclick="this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 2.61a5.5 5.5 0 0 0-7.78 0L12 3.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.06-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button></div>
+        <div class="pc-body"><span class="pc-brand">WOVEN AUDIO</span><div class="pc-title">Studio Wireless Headphones</div><div class="pc-rating"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span><span class="rcount">4.4 (1,042)</span></div><div class="pc-price-row"><span class="pc-price">$179.00</span><span class="pc-price-old">$229.00</span><span class="pc-price-save">Save 22%</span></div><div class="pc-cta"><button class="btn btn-primary">Add to Bag</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="star-rating" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Star Rating</div>
+        <h2>Star Rating &amp; Review Badge</h2>
+        <p>Social proof on every card: filled/dim star pairs with count. Larger display size for product pages.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('star-rating')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:var(--s-md);max-width:420px">
+      <div class="rating-block"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span><span class="rating-num">4.9</span><span class="rating-total">128 reviews</span></div>
+      <div class="rating-block"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span><span class="rating-num">3.0</span><span class="rating-total">14 reviews</span></div>
+      <div class="rating-block"><span class="stars lg"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span><span class="rating-num">4.0</span><span class="rating-total">256 reviews</span></div>
+      <div style="display:inline-flex;gap:var(--s-sm);flex-wrap:wrap"><div class="chip success-chip">Verified purchase</div><div class="chip warn-chip">Only 3 left</div><div class="chip accent">Bestseller</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="product-gallery">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Gallery</div>
+        <h2>Product Gallery</h2>
+        <p>4:3 main image with active thumbnail ring, hover zoom hint, and variant chips. Click a thumb to activate.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('product-gallery')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="gallery">
+      <div class="gallery-main"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M16 2l4 3-2 3-2-3v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5l-2 3-2-3 4-3a4 4 0 0 0 8 0z"/></svg><span class="gallery-badge">Hover to zoom</span></div>
+      <div class="gallery-thumbs">
+        <button class="gallery-thumb active" onclick="galleryPick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16 2l4 3-2 3-2-3v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5l-2 3-2-3 4-3a4 4 0 0 0 8 0z"/></svg></button>
+        <button class="gallery-thumb" onclick="galleryPick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z"/></svg></button>
+        <button class="gallery-thumb" onclick="galleryPick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 14l4-4 4 4 4-4 4 4"/></svg></button>
+        <button class="gallery-thumb" onclick="galleryPick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg></button>
+      </div>
+      <div style="display:flex;gap:var(--s-sm);margin-top:var(--s-md);flex-wrap:wrap"><div class="chip filled">S</div><div class="chip">M</div><div class="chip">L</div><div class="chip outline">XL</div></div>
+    </div>
+  </div>
+</section>
+<section id="cart-drawer" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Cart Drawer</div>
+        <h2>Cart Drawer</h2>
+        <p>Slide-in bag with free-shipping progress, qty steppers, and sticky checkout. Open the live demo:</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('cart-drawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div style="display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-start">
+      <button class="btn btn-primary" onclick="openCart()">Open Cart Demo</button>
+      <div class="sticky-cta" style="max-width:420px">
+        <div class="p"><div class="n">Oversized Linen Shirt</div><div class="v">$89.99</div></div>
+        <button class="btn btn-primary">Add to Bag</button>
+      </div>
+    </div>
+    <p style="margin-top:var(--s-md);font-size:12.5px;color:var(--on-surface-muted)">The sticky-cta bar (above right) is the mobile pattern: pinned to the bottom of the viewport below the thumb, always showing price + add action.</p>
+  </div>
+</section>
+
+<section id="countdown-promo">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Countdown</div>
+        <h2>Countdown Promo Bar</h2>
+        <p>Sale urgency component: berry band, mono digits, pill CTA. The timer is live.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('countdown-promo')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="promo-bar">
+      <span class="p-text">Mid-Season Sale ends in</span>
+      <span class="promo-timer" id="promo-timer"><span class="sep">04</span><span class="sep">:</span><span class="sep">23</span><span class="sep">:</span><span class="sep">11</span></span>
+      <button class="promo-cta">Shop the Sale</button>
+    </div>
+  </div>
+</section>
+
+<section id="buttons" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Buttons</div>
+        <h2>Buttons</h2>
+        <p>7 variants, pill by default with one squared exception. Big tappable heights (44px+).</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('buttons')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="button-grid">
+      <div class="button-item"><button class="btn btn-primary">Primary</button><div class="btn-label">--primary</div></div>
+      <div class="button-item"><button class="btn btn-secondary">Secondary</button><div class="btn-label">outline</div></div>
+      <div class="button-item"><button class="btn btn-ghost">Ghost</button><div class="btn-label">transparent</div></div>
+      <div class="button-item"><button class="btn btn-pill-primary">Berry Pill</button><div class="btn-label">--secondary</div></div>
+      <div class="button-item"><button class="btn btn-pill-accent">Amber Pill</button><div class="btn-label">--tertiary</div></div>
+      <div class="button-item"><button class="btn btn-outline-pill">Outline Berry</button><div class="btn-label">--secondary</div></div>
+      <div class="button-item"><button class="btn btn-sq btn-primary">Squared</button><div class="btn-label">r-sm</div></div>
+      <div class="button-item"><button class="btn btn-disabled" disabled>Disabled</button><div class="btn-label">opacity:.5</div></div>
+    </div>
+  </div>
+</section>
+<section id="chips">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Chips</div>
+        <h2>Chips</h2>
+        <p>Filter pills for category browsing. Filled = selected. Status chips reuse the pattern.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('chips')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="chip-grid">
+      <div class="chip filled">All</div>
+      <div class="chip">Linen</div>
+      <div class="chip">Ceramics</div>
+      <div class="chip">Audio</div>
+      <div class="chip">Home</div>
+      <div class="chip outline">On Sale</div>
+      <div class="chip accent">New In</div>
+      <div class="chip success-chip">In Stock</div>
+      <div class="chip warn-chip">Low Stock</div>
+      <div class="chip error-chip">Sold Out</div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Reviews</div>
+        <h2>Review Cards</h2>
+        <p>Avatar, name, date, verified badge, stars, body text. Three-up on desktop, stacked on mobile.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('reviews')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card"><div class="review-head"><div class="review-ava review-ava">MC</div><div class="review-who"><div class="n">Maya Chen</div><div class="when">2 days ago</div></div><span class="review-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>VERIFIED</span></div><div class="review-stars stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div><div class="review-body">The linen is beautifully washed and the oversized cut drapes perfectly. Sizing runs true to the chart.</div></div>
+      <div class="review-card"><div class="review-head"><div class="review-ava">TR</div><div class="review-who"><div class="n">Tom Reyes</div><div class="when">1 week ago</div></div><span class="review-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>VERIFIED</span></div><div class="review-stars stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div><div class="review-body">Pour-over set arrived intact, packaging was excellent. Coffee tastes noticeably better with the ceramic dripper.</div></div>
+      <div class="review-card"><div class="review-head"><div class="review-ava">AO</div><div class="review-who"><div class="n">Amara Okafor</div><div class="when">3 weeks ago</div></div><span class="review-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>VERIFIED</span></div><div class="review-stars stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg><svg class="dim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div><div class="review-body">Sound quality is superb but the headband runs tight. Still recommend for long studio sessions.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="forms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Forms</div>
+        <h2>Forms</h2>
+        <p>Checkout-ready inputs: 44px height, 4px focus ring, pill select. Error states use --error.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('forms')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Email</label><input class="form-input" type="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Shipping Address</label><input class="form-input" type="text" placeholder="221 Market Street"></div>
+      <div class="form-group"><label>Delivery Speed</label><select class="form-select"><option>Standard (3-5 days)</option><option>Express (1-2 days)</option><option>Next Day</option></select></div>
+      <div class="form-group"><label>Discount Code</label><input class="form-input" type="text" placeholder="SPRING15"></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Gift Note</label><textarea class="form-textarea" placeholder="Write something warm for the unboxing moment..."></textarea></div>
+    </div>
+  </div>
+</section>
+
+<section id="table" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Orders</div>
+        <h2>Orders Table</h2>
+        <p>Admin order list: status dots, mono prices and dates, avatar customers.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('table')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="table-wrap">
+      <table class="ds-table">
+        <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Placed</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="cell-mono">#20481</td><td class="cell-name"><div class="avatar">SC</div><div class="n">Sofia Cruz</div></td><td class="cell-mono">3</td><td class="cell-mono">$237.97</td><td class="cell-mono">Mar 14</td><td><div class="cell-status s-live">Shipped</div></td></tr>
+          <tr><td class="cell-mono">#20480</td><td class="cell-name"><div class="avatar">JB</div><div class="n">Jonas Berg</div></td><td class="cell-mono">1</td><td class="cell-mono">$54.00</td><td class="cell-mono">Mar 14</td><td><div class="cell-status s-live">Shipped</div></td></tr>
+          <tr><td class="cell-mono">#20479</td><td class="cell-name"><div class="avatar">PN</div><div class="n">Priya Nair</div></td><td class="cell-mono">2</td><td class="cell-mono">$128.50</td><td class="cell-mono">Mar 13</td><td><div class="cell-status s-draft">Packing</div></td></tr>
+          <tr><td class="cell-mono">#20478</td><td class="cell-name"><div class="avatar">LK</div><div class="n">Leo Kato</div></td><td class="cell-mono">4</td><td class="cell-mono">$489.00</td><td class="cell-mono">Mar 13</td><td><div class="cell-status s-paused">Refunded</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Pricing</div>
+        <h2>Membership Tiers</h2>
+        <p>Storefront memberships, not SaaS plans: free tier, insider, concierge.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('pricing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card"><div class="tier">Explorer</div><div class="price">Free<span class="price-sub"> forever</span></div><ul class="pricing-features"><li>Member pricing</li><li>Order tracking</li><li>30-day returns</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary btn-sq" style="width:100%">Create Account</button></div></div>
+      <div class="pricing-card featured"><div class="pricing-badge">Most Popular</div><div class="tier">Insider</div><div class="price">$9<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Early access to drops</li><li>Free shipping always</li><li>Double loyalty points</li><li>Members-only edits</li></ul><div class="pricing-cta-margin"><button class="btn btn-primary" style="width:100%">Join Insider</button></div></div>
+      <div class="pricing-card"><div class="tier">Concierge</div><div class="price">$29<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Everything in Insider</li><li>Personal stylist</li><li>Same-day courier</li><li>Alterations included</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary btn-sq" style="width:100%">Contact Concierge</button></div></div>
+    </div>
+  </div>
+</section>
+<section id="ux-principles" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; UX Principles</div>
+        <h2>UX Principles</h2>
+        <p>Commerce-specific laws. Each card flips to reveal a hard rule.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('ux-principles')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Conversion</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Paradox of Choice</span><span class="ux-card-def">More options paralyze decisions rather than enable them.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> One primary action per product card. Max 3 CTA colors visible in any view.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Fitts's Law</span><span class="ux-card-def">Time to acquire a target scales with distance and size.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Add-to-bag is at least 48px tall and appears sticky in the viewport once the header scrolls away on mobile.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Peak-End Rule</span><span class="ux-card-def">People judge an experience by its peak and how it ends.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Order confirmation is a designed moment: status, timeline, and a real next step, never a bare receipt.</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Trust</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Social Proof</span><span class="ux-card-def">We look to others to decide what is correct.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every product card shows rating + review count. A product with zero reviews is not featured.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Loss Aversion</span><span class="ux-card-def">Losses loom larger than equivalent gains.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Scarcity is shown as plain fact ("Only 3 left"). Fake countdowns and fake stock counters are banned.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Transparency Bias</span><span class="ux-card-def">Hidden costs at the end destroy trust retroactively.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Tax and shipping are in the total before checkout begins. The cart drawer shows the final number.</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Thumb-First Mobile</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Thumb Zone</span><span class="ux-card-def">One-handed reach maps an arc across the screen's bottom.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Primary actions live in the bottom third. Top-level navigation is a bottom tab bar, never a hamburger alone.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Von Restorff</span><span class="ux-card-def">The isolated item is remembered; the uniform is not.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Sale price gets the berry accent. Flag no more than 2 of 12 visible products to keep the flag meaningful.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Cognitive Load</span><span class="ux-card-def">Each visible field costs attention at the exact wrong moment.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Max 5 fields per checkout step. Every step saves silently; nothing is lost on back-navigation.</span></div></div></button>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="engineering">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Engineering</div>
+        <h2>Engineering Principles</h2>
+        <p>Hard rules for building with this system. Never break these.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('engineering')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="app-grid">
+      <div class="app-card"><div class="app-tag">Token</div><div class="app-title">CSS Variables Only</div><div class="app-desc">Never hardcode colors, radii, or spacing. Always reference var(--*).</div></div>
+      <div class="app-card"><div class="app-tag">Token</div><div class="app-title">Prices Are Mono</div><div class="app-desc">Every price uses --font-mono with tabular-nums. No serif or body-font prices.</div></div>
+      <div class="app-card"><div class="app-tag">Layout</div><div class="app-title">Image Ratio Lock</div><div class="app-desc">Product card media is locked 1:1. The gallery's main image is locked 4:3. Never let either shift during load.</div></div>
+      <div class="app-card"><div class="app-tag">Motion</div><div class="app-title">Respect Reduced Motion</div><div class="app-desc">Check prefers-reduced-motion. Disable spring animations when set.</div></div>
+      <div class="app-card"><div class="app-tag">Accessibility</div><div class="app-title">AA Contrast Both Themes</div><div class="app-desc">All text meets WCAG AA in light AND dark. Verify sale badges too.</div></div>
+      <div class="app-card"><div class="app-tag">Architecture</div><div class="app-title">Single File</div><div class="app-desc">One self-contained HTML file per system. Zero build step.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="accessibility" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Accessibility</div>
+        <h2>Accessibility</h2>
+        <p>WCAG AA compliance for commerce: focus, labels, contrast, reduced motion, screen readers.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('accessibility')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">Focus Ring</span><span class="rule-text">4px primary glow ring, visible on every interactive element in both themes.</span></div>
+      <div class="foundations-card"><span class="rule-name">Keyboard Nav</span><span class="rule-text">Tab follows visual order. Escape closes cart drawer and mobile menu.</span></div>
+      <div class="foundations-card"><span class="rule-name">Aria Labels</span><span class="rule-text">Fav buttons announce add/remove. Bottom-nav tabs have accessible names.</span></div>
+      <div class="foundations-card"><span class="rule-name">Contrast</span><span class="rule-text">4.5:1 normal text, 3:1 large. Verified against cream and charcoal backgrounds.</span></div>
+      <div class="foundations-card"><span class="rule-name">Reduced Motion</span><span class="rule-text">Springs become instant transitions when prefers-reduced-motion is set.</span></div>
+      <div class="foundations-card"><span class="rule-name">Screen Reader</span><span class="rule-text">Product cards are one article element. Prices are text, never images.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="security">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Security</div>
+        <h2>Storefront Security</h2>
+        <p>Checkout integrity, customer data protection, and fraud prevention patterns.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('security')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="security-grid">
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="3"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">PCI-DSS Flow</div><div class="desc">Card data never touches our servers. Tokenized via payment provider only.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="title">Session Security</div><div class="desc">HttpOnly, Secure, SameSite cookies. Cart survives hours, not secrets.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="title">Fraud Signals</div><div class="desc">Velocity checks and address verification run server-side, invisibly.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg></div><div class="title">Privacy by Default</div><div class="desc">Minimal PII at signup. Data export and delete requests honored in 24h.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="performance" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Performance</div>
+        <h2>Performance</h2>
+        <p>Storefront speed is conversion speed. Targets for product-heavy pages.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('performance')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="perf-metrics">
+      <div class="perf-card"><div class="value">&lt;2.5s</div><div class="label">LCP Target</div></div>
+      <div class="perf-card"><div class="value">&lt;100ms</div><div class="label">Input Delay</div></div>
+      <div class="perf-card"><div class="value">&lt;0.1</div><div class="label">CLS Score</div></div>
+      <div class="perf-card"><div class="value">60fps</div><div class="label">Scroll &amp; Drawers</div></div>
+    </div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">Image Pipeline</span><span class="rule-text">AVIF/WebP with aspect-ratio reserved: zero layout shift on load.</span></div>
+      <div class="foundations-card"><span class="rule-name">Lazy Below Fold</span><span class="rule-text">Above-fold imagery eager, everything else lazy with blur placeholder.</span></div>
+      <div class="foundations-card"><span class="rule-name">Optimistic Cart</span><span class="rule-text">Bag updates instantly with rollback on failure. Never block on network.</span></div>
+    </div>
+  </div>
+</section>
+<section id="responsive">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Responsive</div>
+        <h2>Responsive &amp; Phone Feel</h2>
+        <p>Breakpoints: 640px, 767px, 1023px. Mobile becomes an app: fixed bottom tab bar, sticky add-to-bag, safe-area padding. On a phone-sized window, resize now to feel it.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('responsive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="responsive-grid">
+      <div class="responsive-col"><div class="responsive-col-title">Desktop (1024px+)</div><div style="display:flex;gap:8px"><div style="width:150px;min-height:170px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-sm);padding:12px;font-size:11px;color:var(--on-surface-muted)">Sidebar nav</div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="height:56px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:10px;font-size:11px;color:var(--on-surface-muted)">Hero / Campaign banner</div><div style="min-height:104px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:10px;font-size:11px;color:var(--on-surface-muted)">Product grid (3-up)</div></div></div></div>
+      <div class="responsive-col"><div class="responsive-col-title">Phone (&lt;767px)</div><div style="display:flex;flex-direction:column;gap:8px"><div style="height:56px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-sm);padding:10px;font-size:11px;color:var(--on-surface-muted)">Product + sticky Add to Bag</div><div style="height:58px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-sm);padding:10px 12px;font-size:11px;color:var(--on-surface-muted);display:flex;align-items:center;justify-content:space-around"><span>Home</span><span>Shop</span><span>Bag 3</span><span>Menu</span></div><div style="height:8px;background:var(--on-surface-muted);border-radius:var(--r-full);width:70px;margin:0 auto"></div></div></div>
+    </div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">Bottom Tab Bar</span><span class="rule-text">Fixed, 5 items max, safe-area padded. Replaces top navigation under 1024px.</span></div>
+      <div class="foundations-card"><span class="rule-name">Sticky CTA</span><span class="rule-text">Add-to-bag pins to the bottom edge on product pages, above the tab bar.</span></div>
+      <div class="foundations-card"><span class="rule-name">Grid Collapse</span><span class="rule-text">3-up to 2-up at 1023px, to 1-up at 640px with full-width cards.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="touch" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Touch</div>
+        <h2>Touch Targets</h2>
+        <p>Thumb-friendly: minimum 44x44, primary actions 48px. Press feedback via scale, not delay.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('touch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="touch-grid">
+      <div class="touch-card"><div class="touch-label">Primary Button</div><div class="touch-val">48px height</div><div class="touch-visual"><div class="touch-target"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Tab Bar Item</div><div class="touch-val">56px height</div><div class="touch-visual"><div class="touch-target" style="width:100%;height:44px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Qty Stepper</div><div class="touch-val">28px buttons + padding</div><div class="touch-visual"><div class="touch-target" style="width:110px;height:44px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Fav Button</div><div class="touch-val">36px visual, 44px target</div><div class="touch-visual"><div class="touch-target" style="width:44px;height:44px"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 02 &middot; Architecture</div>
+        <h2>Architecture</h2>
+        <p>Storefront stack: edge-rendered pages, client cart, payment tokens.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('architecture')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="arch-grid">
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="title">Edge Render</div><div class="desc">Product pages are statically generated with edge revalidation on inventory change.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="title">Client Cart</div><div class="desc">Bag state lives in localStorage, synced to server on auth. Optimistic mutations.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg></div><div class="title">Payment Tokens</div><div class="desc">Provider-side tokenization. Card fields hosted; PCI scope stays minimal.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 16V8l-9-5-9 5v8l9 5z"/><path d="M3.27 6.96 12 12l8.73-5.04M12 22V12"/></svg></div><div class="title">Image CDN</div><div class="desc">On-demand resize and format negotiation per device. Ratio locked in markup.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="ds-footer">
+  <div class="container">
+    <p>Commerce Storefront Design System &middot; Burnt Orange &amp; Berry &middot; Reference Build 02</p>
+    <div class="version">v0.2.0</div>
+  </div>
+</footer>
+</div>
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<aside class="cart-drawer" id="cart-drawer" aria-label="Shopping bag">
+  <div class="cart-head"><span class="t">Your Bag</span><span class="cnt">3 items</span><button class="cart-close" aria-label="Close bag" onclick="closeCart()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div class="cart-ship"><div class="msg">Add <b>$12.00</b> more for free shipping</div><div class="cart-ship-bar"><div class="cart-ship-fill" style="width:94%"></div></div></div>
+  <div class="cart-items">
+    <div class="cart-item"><div class="ci-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16 2l4 3-2 3-2-3v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5l-2 3-2-3 4-3a4 4 0 0 0 8 0z"/></svg></div><div class="ci-info"><div class="ci-name">Oversized Linen Shirt</div><div class="ci-meta">M &middot; Natural</div><div class="ci-row"><span class="ci-qty"><button aria-label="Decrease quantity">-</button><span class="q">1</span><button aria-label="Increase quantity">+</button></span><span class="ci-price">$89.99</span></div></div></div>
+    <div class="cart-item"><div class="ci-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 2v3M10 2v3M14 2v3"/></svg></div><div class="ci-info"><div class="ci-name">Ceramic Pour-Over Set</div><div class="ci-meta">Dripper + Carafe</div><div class="ci-row"><span class="ci-qty"><button aria-label="Decrease quantity">-</button><span class="q">2</span><button aria-label="Increase quantity">+</button></span><span class="ci-price">$108.00</span></div></div></div>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-sub"><span class="l">Subtotal (tax included)</span><span class="v">$197.99</span></div>
+    <div class="cart-note">Free returns within 30 days</div>
+    <button class="btn btn-primary">Checkout</button>
+  </div>
+</aside>
+<script>
+/* ==GEN-JS-START== */
+function toggleTheme(){
+  const h=document.documentElement;const c=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',c);
+  document.querySelectorAll('.theme-toggle').forEach(t=>{t.querySelectorAll('svg').forEach(s=>{s.style.display=s.classList.contains(c==='dark'?'moon':'sun')?'none':'block'})});
+}
+function toggleSidebar(){document.documentElement.classList.toggle('nav-collapsed')}
+function openMobileNav(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebar-backdrop').classList.add('show');document.body.classList.add('nav-locked')}
+function closeMobileNav(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-backdrop').classList.remove('show');document.body.classList.remove('nav-locked')}
+function toggleFlip(btn){const e=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!e))}
+function updateScrollSpy(){
+  const s=document.querySelector('.sidebar-nav');const ind=document.getElementById('nav-indicator');
+  const items=s?s.querySelectorAll('.nav-item'):[];
+  let cur=null;const st=window.scrollY+90;
+  document.querySelectorAll('section[id]').forEach(sec=>{if(st>=sec.offsetTop&&st<sec.offsetTop+sec.offsetHeight)cur=sec.id});
+  items.forEach(item=>{const h=item.getAttribute('href');if(h&&h==='#'+cur){item.classList.add('active')}else{item.classList.remove('active')}});
+  const bn=document.getElementById('bottom-nav');
+  if(bn){bn.querySelectorAll('.bn-item').forEach(item=>{const h=item.getAttribute('href');if(h&&h==='#'+cur){item.classList.add('active')}else{item.classList.remove('active')}})}
+  const active=s?s.querySelector('.nav-item.active'):null;
+  if(active&&ind){const sy=active.offsetTop-s.scrollTop;ind.style.top=sy+'px';ind.style.height=active.offsetHeight+'px';ind.style.opacity='1'}
+  else if(ind){ind.style.opacity='0'}
+}
+function updateScrollProgress(){const b=document.getElementById('scroll-bar');if(!b)return;const m=document.documentElement.scrollHeight-window.innerHeight;b.style.width=m>0?((window.scrollY/m)*100)+'%':'0%'}
+window.addEventListener('scroll',()=>{requestAnimationFrame(()=>{updateScrollSpy();updateScrollProgress()})},{passive:true});
+window.addEventListener('resize',()=>{updateScrollSpy();if(window.innerWidth>=1024){closeMobileNav()}});
+window.addEventListener('DOMContentLoaded',()=>{updateScrollSpy();updateScrollProgress()});
+function getMarkdown(id){
+  const sec=document.getElementById(id);if(!sec)return'';
+  const el=sec.cloneNode(true);el.querySelectorAll('.agent-tool').forEach(e=>e.remove());
+  let md='';const h=el.querySelector('h2');if(h)md+='## '+h.textContent.trim()+'\n\n';
+  const p=el.querySelector('.section-header-text p');if(p)md+=p.textContent.trim()+'\n\n';
+  const rows=el.querySelectorAll('.type-row');
+  if(rows.length){md+='| Token | Spec | Specimen |\n|---|---|---|\n';
+    rows.forEach(r=>{const m=r.querySelector('.meta');const sp=r.querySelector('.specimen');
+      if(m&&sp)md+='| '+m.querySelector('.token-name').textContent.trim()+' | '+m.querySelector('.spec').textContent.trim()+' | '+sp.textContent.trim()+' |\n'});
+    md+='\n'}
+  const swatches=el.querySelectorAll('.color-swatch');
+  if(swatches.length){md+='| Swatch | Hex | Token |\n|---|---|---|\n';
+    swatches.forEach(s=>{md+='| !['+s.dataset.name+']('+s.dataset.hex+'.png) | `'+s.dataset.hex+'` | '+s.dataset.name+' |\n'});
+    md+='\n'}
+  if(!rows.length&&!swatches.length){const ps=el.querySelectorAll('p');ps.forEach(p=>{md+=p.textContent.trim()+'\n\n'})}
+  return md.trim()+'\n';
+}
+function copySectionAsMarkdown(id){const md=getMarkdown(id);if(!md)return;navigator.clipboard.writeText(md).then(()=>{const b=document.querySelector('[onclick*="copySectionAsMarkdown(\''+id+'\'"]');if(b){b.classList.add('copied');const sp=b.querySelector('span');if(sp){const old=sp.textContent;sp.textContent='Copied!';setTimeout(()=>{sp.textContent=old;b.classList.remove('copied')},2000)}}})}
+function copyAllAsMarkdown(){
+  const ids=Array.from(document.querySelectorAll('section[id]')).map(s=>s.id);
+  let md='# Commerce Storefront Design System\n\n> Design thesis: Product photography sells; every pixel of chrome must yield to the image.\n\n---\n\n';
+  ids.forEach(id=>{md+=getMarkdown(id)+'\n\n---\n\n'});
+  navigator.clipboard.writeText(md.trim()).then(()=>{const b=document.getElementById('copy-all-btn');if(b){b.classList.add('copied');const sp=b.querySelector('span');if(sp){sp.textContent='Copied!';setTimeout(()=>{sp.textContent='Copy All as MD';b.classList.remove('copied')},2000)}}})
+}
+function copySwatch(el){const hex=el.dataset.hex;if(hex)navigator.clipboard.writeText(hex)}
+/* ==GEN-JS-END== */
+function openCart(){document.getElementById('cart-drawer').classList.add('open');document.getElementById('cart-overlay').classList.add('show')}
+function closeCart(){document.getElementById('cart-drawer').classList.remove('open');document.getElementById('cart-overlay').classList.remove('show')}
+function galleryPick(btn){btn.parentElement.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));btn.classList.add('active')}
+let promoSec=4*3600+23*60+11;
+setInterval(()=>{promoSec--;if(promoSec<0)promoSec=4*3600+23*60+11;const h=Math.floor(promoSec/3600),m=Math.floor((promoSec%3600)/60),s=promoSec%60;const t=document.getElementById('promo-timer');if(t)t.innerHTML='<span class="unit">'+String(h).padStart(2,'0')+'</span><span class="sep">:</span><span class="unit">'+String(m).padStart(2,'0')+'</span><span class="sep">:</span><span class="unit">'+String(s).padStart(2,'0')+'</span>';},1000);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeMobileNav()}});
+</script>
+</body>
+</html>

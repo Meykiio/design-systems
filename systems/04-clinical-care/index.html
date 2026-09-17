@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fintech Trust Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=Source+Sans+3:wght@300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:15px;line-height:1.5;color:var(--on-surface);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:var(--transition)}
+a{text-decoration:none;color:inherit}img{max-width:100%;display:block}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--scroll-track)}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+::selection{background:var(--primary-solid);color:var(--on-primary)}
+.container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 var(--s-lg)}
+@media(max-width:767px){.container{padding:0 var(--s-md)}}
+
+:root{--sidebar-w:264px}
+
+.scroll-progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:3px;z-index:400;pointer-events:none}
+.scroll-progress .bar{display:block;height:100%;width:0;background:var(--primary-solid);border-radius:0 var(--r-full) var(--r-full) 0}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:220;display:flex;flex-direction:column;background:var(--nav-bg);border-right:1px solid var(--outline);transition:transform var(--dur-slow) var(--ease-out-soft),background .3s,border-color .3s}
+.sidebar-header{display:flex;align-items:center;gap:8px;padding:20px 20px 14px}
+.nav-logo{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--on-surface);letter-spacing:-0.01em;white-space:nowrap}
+.nav-logo:hover{opacity:.75}
+.sidebar-close{display:none;margin-left:auto;width:34px;height:34px;flex-shrink:0;align-items:center;justify-content:center;background:transparent;border:1px solid var(--outline);border-radius:var(--r-sm);color:var(--on-surface-muted);cursor:pointer;transition:color .15s,border-color .15s}
+.sidebar-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.sidebar-close svg{width:15px;height:15px}
+.sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;padding:6px 12px 18px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+.sidebar-nav::-webkit-scrollbar{width:4px}.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+.nav-indicator{position:absolute;left:0;top:0;width:3px;height:0;opacity:0;z-index:0;background:var(--primary-solid);border-radius:0 var(--r-full) var(--r-full) 0;transition:top .4s var(--ease-back),height .4s var(--ease-back),opacity .15s var(--ease-out-soft);pointer-events:none}
+.nav-group{padding-top:14px}.nav-indicator+.nav-group{padding-top:4px}
+.nav-group-label{font:600 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--outline-hi);padding:0 10px 7px}
+.nav-item{display:flex;align-items:center;gap:10px;position:relative;z-index:1;padding:8px 10px;margin-bottom:2px;border-radius:var(--r-sm);font:500 13.5px/1.2 var(--font-body);color:var(--on-surface-muted);-webkit-tap-highlight-color:transparent;transition:color var(--dur-fast) var(--ease-out-soft),transform var(--dur-fast) var(--ease-out-soft)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.6;transition:opacity var(--dur-fast) var(--ease-out-soft),color var(--dur-fast) var(--ease-out-soft)}
+.nav-item:hover{color:var(--on-surface);transform:translateX(2px)}.nav-item:hover svg{opacity:1}
+.nav-item.active{color:var(--primary);transform:translateX(2px)}.nav-item.active svg{opacity:1;color:var(--primary)}
+.nav-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px;border-radius:var(--r-sm)}
+.sidebar-footer{display:flex;align-items:center;gap:8px;padding:14px 16px}
+.collapse-toggle{display:none;flex:1;align-items:center;justify-content:center;gap:6px;padding:10px 14px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:500 12px/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.collapse-toggle:hover{color:var(--primary);border-color:var(--primary-solid)}
+.collapse-toggle:active{transform:scale(.97)}
+.collapse-toggle svg{width:14px;height:14px;transition:transform .4s var(--ease-out-soft)}
+@media(min-width:1024px){.collapse-toggle{display:flex}}
+html.nav-collapsed .collapse-toggle svg{transform:rotate(180deg)}
+.theme-toggle{background:transparent;border:1px solid var(--toggle-border);color:var(--primary);border-radius:var(--r-full);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:border-color var(--dur-fast) var(--ease-out-soft),transform var(--dur-med) var(--ease-back)}
+.theme-toggle:hover{border-color:var(--primary-solid);transform:scale(1.12) rotate(15deg)}
+.theme-toggle svg{width:15px;height:15px}
+.mobile-theme-toggle{display:none}
+.sidebar-backdrop{display:none}
+.page{margin-left:var(--sidebar-w);transition:margin-left .4s var(--ease-out-soft)}
+section[id]{scroll-margin-top:20px}
+.nav-tooltip{position:fixed;z-index:500;pointer-events:none;transform:translateY(-50%) translateX(-4px);opacity:0;background:var(--surface-highest);color:var(--on-surface);border:1px solid var(--outline);border-radius:var(--r-sm);font:500 11px/1 var(--font-body);padding:6px 9px;white-space:nowrap;box-shadow:var(--shadow-md);transition:opacity .15s,transform .15s}
+.nav-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0)}
+@media(min-width:1024px){
+  html.nav-collapsed{--sidebar-w:70px}
+  html.nav-collapsed .sidebar-header{flex-direction:column;gap:12px;padding:16px 10px 10px}
+  html.nav-collapsed .nav-logo{font-size:0}
+  html.nav-collapsed .nav-logo::before{content:'C';font-size:20px;font-weight:700;color:var(--on-surface)}
+  html.nav-collapsed .sidebar-nav{padding:6px 9px 18px}
+  html.nav-collapsed .nav-group{padding-top:8px;margin-top:8px;border-top:1px solid var(--outline)}
+  html.nav-collapsed .nav-indicator+.nav-group{padding-top:4px;margin-top:0;border-top:none}
+  html.nav-collapsed .nav-group-label{display:none}
+  html.nav-collapsed .nav-item{justify-content:center;padding:8px 0;gap:0}
+  html.nav-collapsed .nav-item:hover,html.nav-collapsed .nav-item.active{transform:none}
+  html.nav-collapsed .nav-item span{display:none}
+  html.nav-collapsed .nav-item svg{width:17px;height:17px;opacity:.85}
+  html.nav-collapsed .sidebar-footer{flex-direction:column;padding:10px}
+  html.nav-collapsed .collapse-toggle{width:100%;padding:10px 0}
+  html.nav-collapsed .collapse-toggle span{display:none}
+}
+@media(max-width:1023px){
+  .page{margin-left:0}
+  section[id]{scroll-margin-top:14px}
+  .scroll-progress{left:0}
+  .sidebar{width:min(300px,86vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .mobile-theme-toggle{display:flex;margin-left:auto}
+  .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:190;background:rgba(20,10,5,.45);opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-out-soft),visibility 0s linear var(--dur-med)}
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out-soft)}
+  body.nav-locked{overflow:hidden}
+  .sidebar .nav-group{opacity:0;transform:translateX(-14px);transition:opacity .15s,transform .15s}
+  .sidebar.open .nav-group{opacity:1;transform:none;transition:opacity .45s var(--ease-out-soft),transform .45s var(--ease-out-soft);transition-delay:calc(.08s + var(--i,0)*55ms)}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar,.sidebar-backdrop,.nav-indicator,.nav-item{transition:none!important}}
+
+
+/* ═══════════════════════════════════════════
+   FINTECH TRUST DESIGN SYSTEM — AGENT INSTRUCTIONS
+   Design thesis: Money demands calm authority; trust is
+   engineered through restraint, precision, and proof.
+   What it rejects: Playful gradients and bubbly rounded
+   finance apps that feel unserious.
+
+   WHAT TO CHANGE PER PROJECT:
+   1. Find/replace "Fintech Trust" with the real project name.
+   2. Recolor --primary/--primary-solid, --secondary, --tertiary,
+      --quaternary, --positive in BOTH [data-theme] blocks.
+   3. Swap Google Fonts imports + font tokens if needed.
+   4. Replace example balances, transactions, limits, legal copy.
+   5. Update footer and nav-logo text.
+
+   WHAT TO KEEP VERBATIM:
+   - Motion tokens (near-zero system: --dur-* .08/.16/.24s)
+   - The spacing/radius/elevation SCALE (values, not colors)
+   - UX Principles section (archetype-specific rules)
+   - Engineering Principles section
+   - Component structural CSS (layout, not color)
+
+   EXCLUDED FROM REPLICATION:
+   Every element with class "agent-tool" is tooling for reading
+   THIS reference, not a UI pattern.
+   ═══════════════════════════════════════════
+   TOKEN SYSTEM — Emerald & Azure
+   Primary:   #047857 Emerald (light) / #34d399 Emerald (dark)
+   Secondary: #0369a1 Azure (links, info)
+   Tertiary:  #a16207 Amber (holds, pending)
+   Quaternary: #6d28d9 Violet (rare)
+   Motion:    NEAR-ZERO — --ease-instant (.16,1,.3,1)
+              .08s · .16s · .24s (fastest of all 10 systems)
+   Density:   Compact — 14px base, 1.35 line-height
+   Default:   LIGHT theme (canonical)
+   ═══════════════════════════════════════════ */
+:root {
+  --bg:#f7faf9;--bg-dim:#eef4f2;--surface:#ffffff;--surface-mid:#f2f7f5;
+  --surface-high:#e8f0ed;--surface-highest:#dbe6e2;
+  --on-surface:#16211d;--on-surface-muted:#5f6b66;
+  --outline:#dfe8e4;--outline-hi:#aebfb8;
+  --primary:#047857;--primary-solid:#047857;--on-primary:#ffffff;
+  --primary-glow:rgba(4,120,87,0.15);--primary-glow-sm:rgba(4,120,87,0.07);
+  --brand-emerald:#059669;--secondary:#0369a1;--secondary-dim:#075985;--on-secondary:#ffffff;
+  --tertiary:#a16207;--on-tertiary:#ffffff;
+  --quaternary:#6d28d9;--on-quaternary:#ffffff;
+  --positive:#16a34a;--on-positive:#ffffff;--error:#dc2626;
+  --shadow-sm:0 1px 2px rgba(10,30,24,0.08);--shadow-md:0 4px 14px rgba(10,30,24,0.1);
+  --shadow-lg:0 14px 36px rgba(10,30,24,0.14);
+  --nav-bg:#ffffff;--scroll-track:#eef4f2;--scroll-thumb:#cfdedb;--scroll-thumb-hi:#047857;
+  --toggle-bg:rgba(4,120,87,0.06);--toggle-border:rgba(4,120,87,0.2);
+  --table-header-bg:#e8f0ed;--table-header-fg:#065f46;
+  --table-row-bg:#ffffff;--table-row-hover:#f2f7f5;--table-border:#dfe8e4;
+  --section-alt:#eef4f2;
+  --font-display:'Source Serif 4',serif;--font-body:'Source Sans 3',sans-serif;--font-mono:'Fira Code',monospace;
+  --r-xs:2px;--r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:18px;--r-full:9999px;
+  --s-xs:4px;--s-sm:8px;--s-md:14px;--s-lg:20px;--s-xl:28px;--s-2xl:44px;
+  --content-max:1100px;--transition:background .16s,color .16s,border-color .16s,box-shadow .16s;
+  --ease-instant:cubic-bezier(.16,1,.3,1);--ease-out-soft:cubic-bezier(.16,1,.3,1);--ease-back:cubic-bezier(.16,1,.3,1);--ease-glide:cubic-bezier(.16,1,.3,1);
+  --dur-fast:.08s;--dur-med:.16s;--dur-slow:.24s;
+}
+[data-theme="dark"] {
+  --bg:#0b1210;--bg-dim:#070d0b;--surface:#101816;--surface-mid:#15201c;
+  --surface-high:#1b2823;--surface-highest:#243230;
+  --on-surface:#e7f0ec;--on-surface-muted:#8fa39b;
+  --outline:#1b2823;--outline-hi:#3a4b44;
+  --primary:#34d399;--primary-solid:#34d399;--on-primary:#06281d;
+  --primary-glow:rgba(52,211,153,0.18);--primary-glow-sm:rgba(52,211,153,0.09);
+  --brand-emerald:#34d399;--secondary:#38bdf8;--secondary-dim:#0ea5e9;--on-secondary:#082435;
+  --tertiary:#fbbf24;--on-tertiary:#422006;
+  --quaternary:#a78bfa;--on-quaternary:#2e1065;
+  --positive:#4ade80;--on-positive:#052e16;--error:#f87171;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.4);--shadow-md:0 4px 14px rgba(0,0,0,0.45);
+  --shadow-lg:0 14px 36px rgba(0,0,0,0.5);
+  --nav-bg:#070d0b;--scroll-track:#101816;--scroll-thumb:#243230;--scroll-thumb-hi:#34d399;
+  --toggle-bg:rgba(52,211,153,0.08);--toggle-border:rgba(52,211,153,0.25);
+  --table-header-bg:#15201c;--table-header-fg:#34d399;
+  --table-row-bg:#0b1210;--table-row-hover:#101816;--table-border:#1b2823;
+  --section-alt:#070d0b;
+}
+section{padding:var(--s-xl) 0;transition:background .3s;background:var(--bg)}
+.section-label{display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--primary);margin-bottom:10px}
+.section-label .dot{width:5px;height:5px;border-radius:50%;background:var(--primary-solid);flex-shrink:0}
+.section-header{margin-bottom:var(--s-lg);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-lg)}
+.section-header-text{flex:1;min-width:0}
+.md-copy-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:7px 14px;margin-top:2px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-full);font:500 11px/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft),background var(--dur-fast) var(--ease-out-soft),transform var(--dur-fast) var(--ease-back)}
+.md-copy-btn svg{width:12px;height:12px;flex-shrink:0}
+.md-copy-btn:hover{color:var(--primary);border-color:var(--primary-glow-sm);background:var(--toggle-bg)}
+.md-copy-btn:active{transform:scale(.95)}.md-copy-btn.copied{color:var(--positive);border-color:var(--positive)}
+@media(max-width:767px){.section-header{flex-direction:column}.md-copy-btn span{display:none}.md-copy-btn{padding:7px;border-radius:var(--r-sm)}}
+.md-copy-btn-global{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px 12px;background:transparent;color:var(--on-surface-muted);border:1px solid var(--outline);border-radius:var(--r-sm);font:500 12px/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:color var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.md-copy-btn-global svg{width:14px;height:14px;flex-shrink:0}
+.md-copy-btn-global:hover{color:var(--primary);border-color:var(--primary-glow-sm)}
+.md-copy-btn-global:active{transform:scale(.97)}.md-copy-btn-global.copied{color:var(--positive);border-color:var(--positive)}
+html.nav-collapsed .md-copy-btn-global span{display:none}
+.sidebar-footer-tools{padding:14px 16px;border-top:1px solid var(--outline)}
+html.nav-collapsed .sidebar-footer-tools{padding:14px 8px}
+.section-header h2{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--on-surface);letter-spacing:-0.01em;line-height:1.15;margin-bottom:10px}
+.section-header p{font-size:13.5px;color:var(--on-surface-muted);max-width:520px;line-height:1.55}
+@media(max-width:767px){.section-header h2{font-size:21px}}
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s-md)}
+.color-swatch{position:relative;cursor:pointer;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--outline);transition:transform var(--dur-med) var(--ease-out-soft),box-shadow var(--dur-med) var(--ease-out-soft)}
+.color-swatch:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.color-swatch:active{transform:translateY(-1px) scale(.98)}
+.color-swatch-fill{height:60px}
+.color-swatch-info{padding:9px 12px;background:var(--surface)}
+.color-swatch-info .hex{font-size:10px;font-weight:600;font-family:var(--font-mono);color:var(--on-surface-muted);margin-bottom:2px;letter-spacing:0.03em}
+.color-swatch-info .name{font-size:11.5px;color:var(--on-surface)}
+.type-list{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--outline)}
+.type-row{display:flex;justify-content:space-between;align-items:center;padding:var(--s-md) var(--s-lg);gap:var(--s-lg);border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-out-soft)}
+.type-row:last-child{border-bottom:none}.type-row:nth-child(even){background:var(--surface-mid)}.type-row:nth-child(odd){background:var(--surface)}
+.type-row:hover{background:var(--surface-high)}
+.type-row .meta{flex:0 0 180px}
+.type-row .meta .token-name{font-size:10px;font-weight:600;font-family:var(--font-mono);color:var(--primary);margin-bottom:3px;letter-spacing:0.06em;text-transform:uppercase}
+.type-row .meta .spec{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.type-row .specimen{flex:1;text-align:right;word-break:break-word}
+@media(max-width:767px){.type-row{flex-direction:column;align-items:flex-start}.type-row .meta{flex:unset}.type-row .specimen{text-align:left;margin-top:var(--s-sm)}}
+.spacing-ruler{display:flex;align-items:stretch;gap:3px;height:48px;background:var(--surface-high);border-radius:var(--r-sm);padding:3px}
+.spacing-block{display:flex;align-items:center;justify-content:center;background:var(--primary-solid);border-radius:var(--r-xs);font:600 9px/1 var(--font-body);color:var(--on-primary);transition:flex .45s var(--ease-out-soft);min-width:6px;overflow:hidden}
+.spacing-block .lbl{opacity:0;transition:opacity .15s;white-space:nowrap}
+.spacing-block:hover{flex:3!important}.spacing-block:hover .lbl{opacity:1}
+.spacing-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.radius-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:6px}
+.radius-box{background:var(--surface-high);border:2px solid var(--primary-solid);transition:background .3s,transform var(--dur-med) var(--ease-back)}
+.radius-box:hover{transform:scale(1.08) rotate(-2deg)}
+.r-name{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono);font-weight:600}
+.r-value{font-size:10px;color:var(--outline-hi);font-family:var(--font-mono)}
+.elevation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+.elevation-card{background:var(--surface);border-radius:var(--r-md);padding:var(--s-lg);text-align:center;border:1px solid var(--outline);transition:transform var(--dur-med) var(--ease-out-soft),background .3s,box-shadow var(--dur-med) var(--ease-out-soft)}
+.elevation-card:hover{transform:translateY(-4px)}
+.elevation-card .e-num{width:40px;height:40px;margin:0 auto;border-radius:var(--r-sm);background:var(--surface-high);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--primary)}
+.elevation-card .e-label{font-size:11.5px;color:var(--on-surface-muted);margin-top:10px;font-family:var(--font-body)}
+.elevation-card .e-sub{font-size:10px;color:var(--outline-hi);margin-top:3px;font-family:var(--font-body)}
+.el-0{box-shadow:none}.el-1{box-shadow:var(--shadow-sm)}.el-2{box-shadow:var(--shadow-md)}.el-3{box-shadow:var(--shadow-lg);border-color:var(--primary-solid)}
+@media(max-width:767px){.elevation-grid{grid-template-columns:repeat(2,1fr)}}
+.motion-row{display:flex;gap:var(--s-lg);flex-wrap:wrap}
+.motion-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.motion-box{width:50px;height:50px;border-radius:var(--r-sm);background:var(--primary-solid);transition-property:transform}
+.motion-item:hover .motion-box{transform:translateX(44px)}
+.m-name{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono);font-weight:600}
+.m-curve{font-size:9px;color:var(--outline-hi);font-family:var(--font-mono)}
+.button-grid{display:flex;flex-wrap:wrap;gap:var(--s-md);align-items:flex-end}
+.button-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.button-item .btn-label{font-size:10px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:600 14px/1 var(--font-body);padding:11px 22px;border:none;border-radius:var(--r-full);cursor:pointer;white-space:nowrap;transition:transform var(--dur-fast) var(--ease-out-soft),box-shadow var(--dur-fast) var(--ease-out-soft),opacity var(--dur-fast) var(--ease-out-soft),background var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.btn:active{transform:scale(.96)!important}
+.btn-primary{background:var(--primary-solid);color:var(--on-primary)}.btn-primary:hover{opacity:.92;transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-secondary{background:transparent;color:var(--primary);border:2px solid var(--primary-solid)}.btn-secondary:hover{background:var(--primary-glow-sm);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--on-surface-muted)}.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
+.btn-pill-primary{background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full)}.btn-pill-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-pill-accent{background:var(--tertiary);color:var(--on-tertiary);border-radius:var(--r-full)}.btn-pill-accent:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-outline-pill{background:transparent;color:var(--secondary);border:2px solid var(--secondary)}.btn-outline-pill:hover{background:rgba(225,29,72,0.06);transform:translateY(-2px)}
+.btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.5}
+.btn-sq{border-radius:var(--r-sm)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-lg)}
+.pricing-card{background:var(--surface);border:2px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-lg);display:flex;flex-direction:column;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft);position:relative}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pricing-card.featured{border-color:var(--primary-solid)}
+.pricing-badge{display:inline-block;padding:5px 12px;background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full);font:600 10px/1 var(--font-body);margin-bottom:var(--s-md);align-self:flex-start;letter-spacing:0.03em}
+.pricing-card .tier{font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--on-surface);margin-bottom:4px}
+.pricing-card .price{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--on-surface);margin-bottom:var(--s-lg);line-height:1.1}
+.pricing-card.featured .price{color:var(--primary)}
+.pricing-card .price-sub{font-size:13px;color:var(--on-surface-muted);font-weight:400}
+.pricing-features{list-style:none;margin-bottom:var(--s-lg);flex:1}
+.pricing-features li{font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--outline);display:flex;align-items:center;gap:8px;color:var(--on-surface-muted)}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:'\2713';color:var(--primary);font-weight:700;flex-shrink:0;font-size:11px}
+.pricing-cta-margin{margin-top:auto}
+@media(max-width:1023px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}.pricing-card.featured{order:-1}}
+.chip-grid{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-full);font:500 13px/1 var(--font-body);border:1px solid var(--outline);color:var(--on-surface-muted);background:transparent;transition:transform var(--dur-fast) var(--ease-back),box-shadow var(--dur-fast) var(--ease-out-soft),background var(--dur-fast) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft),color var(--dur-fast) var(--ease-out-soft);cursor:pointer;white-space:nowrap}
+.chip:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--outline-hi);color:var(--on-surface)}
+.chip.filled{background:var(--primary-solid);border-color:var(--primary-solid);color:var(--on-primary)}.chip.filled:hover{opacity:.92}
+.chip.accent{background:var(--secondary);border-color:var(--secondary);color:var(--on-secondary)}.chip.accent:hover{transform:translateY(-2px)}
+.chip.outline{border-color:var(--primary);color:var(--primary)}.chip.outline:hover{background:var(--primary-glow-sm)}
+.chip .check{width:14px;height:14px}
+.chip.error-chip{border-color:var(--error);color:var(--error)}
+.chip.success-chip{border-color:var(--positive);color:var(--positive)}
+.chip.warn-chip{border-color:var(--tertiary);color:var(--tertiary)}
+.table-wrap{overflow-x:auto;border:1px solid var(--outline);border-radius:var(--r-md);background:var(--surface)}
+table.ds-table{width:100%;border-collapse:collapse;font-size:13.5px;color:var(--on-surface)}
+.ds-table thead{background:var(--table-header-bg)}
+.ds-table th{padding:12px 16px;text-align:left;font:600 11px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;color:var(--table-header-fg);border-bottom:1px solid var(--outline);white-space:nowrap}
+.ds-table td{padding:12px 16px;border-bottom:1px solid var(--outline);white-space:nowrap;color:var(--on-surface);background:var(--table-row-bg);transition:background .3s}
+.ds-table tbody tr{transition:background .15s}
+.ds-table tbody tr:hover td{background:var(--table-row-hover)}
+.ds-table tbody tr:last-child td{border-bottom:none}
+.ds-table .cell-name{display:flex;align-items:center;gap:9px}
+.ds-table .cell-name .avatar{width:28px;height:28px;border-radius:var(--r-full);background:var(--surface-high);display:flex;align-items:center;justify-content:center;font:600 11px/1 var(--font-body);color:var(--primary);flex-shrink:0}
+.ds-table .cell-name .n{font-weight:500}
+.ds-table .cell-status{display:inline-flex;align-items:center;gap:5px;font-size:12.5px}
+.ds-table .cell-status::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ds-table .cell-status.s-live::before{background:var(--positive)}.ds-table .cell-status.s-live{color:var(--positive)}
+.ds-table .cell-status.s-draft::before{background:var(--tertiary)}.ds-table .cell-status.s-draft{color:var(--tertiary)}
+.ds-table .cell-status.s-paused::before{background:var(--error)}.ds-table .cell-status.s-paused{color:var(--error)}
+.ds-table .cell-mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.responsive-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md);margin-bottom:var(--s-lg)}
+.responsive-col{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg)}
+.responsive-col-title{font:600 10px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:var(--s-md)}
+@media(max-width:1023px){.responsive-grid{grid-template-columns:1fr}}
+.touch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--s-md)}
+.touch-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);text-align:center;transition:transform var(--dur-fast) var(--ease-out-soft),box-shadow var(--dur-med) var(--ease-out-soft)}
+.touch-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.touch-label{font-size:11.5px;font-weight:600;color:var(--on-surface);margin-bottom:4px}
+.touch-val{font-size:12px;color:var(--on-surface-muted);font-family:var(--font-mono)}
+.touch-visual{width:100%;height:44px;background:var(--surface-high);border-radius:var(--r-sm);margin-top:var(--s-sm);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.touch-target{position:absolute;width:48px;height:48px;border:2px dashed var(--primary);border-radius:var(--r-sm);opacity:.7}
+footer.ds-footer{background:var(--bg-dim);border-top:1px solid var(--outline);padding:var(--s-xl) 0}
+footer .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-lg);flex-wrap:wrap}
+footer p{font-size:12.5px;color:var(--on-surface-muted)}
+footer .version{font-family:var(--font-mono);font-size:11px;color:var(--outline-hi)}
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--s-md)}
+.arch-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.arch-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.arch-card .icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--primary-glow-sm);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:var(--s-md);transition:transform .25s,border-color .25s,border:1px solid var(--toggle-border)}
+.arch-card:hover .icon{transform:scale(1.15);border-color:var(--primary-solid)}
+.arch-card .icon svg{width:18px;height:18px}
+.arch-card .title{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.arch-card .desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.5}
+.security-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--s-md)}
+.security-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft)}
+.security-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.security-card .icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--primary-glow-sm);display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:var(--s-md);transition:transform .25s,border-color .25s,border:1px solid var(--toggle-border)}
+.security-card:hover .icon{transform:scale(1.15);border-color:var(--primary-solid)}
+.security-card .icon svg{width:18px;height:18px}
+.security-card .title{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.security-card .desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.5}
+.perf-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md);margin-bottom:var(--s-lg)}
+.perf-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);text-align:center;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft)}
+.perf-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.perf-card .value{font-family:var(--font-mono);font-size:26px;font-weight:700;color:var(--primary);line-height:1.1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.perf-card .label{font-size:11px;color:var(--on-surface-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:1023px){.perf-metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.perf-metrics{grid-template-columns:1fr}}
+.ux-group{margin-bottom:var(--s-xl)}.ux-group:last-child{margin-bottom:0}
+.ux-group-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--s-md)}
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.ux-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ux-grid{grid-template-columns:1fr}}
+.ux-card{background:transparent;border:0;padding:0;text-align:left;cursor:pointer;font-family:inherit;color:inherit;perspective:1200px;min-height:150px;display:block;width:100%;-webkit-tap-highlight-color:transparent}
+.ux-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-md)}
+.ux-card-inner{position:relative;width:100%;height:100%;min-height:150px;transition:transform var(--dur-slow) var(--ease-back);transform-style:preserve-3d;display:block}
+.ux-card[aria-expanded="true"] .ux-card-inner{transform:rotateY(180deg)}
+.ux-card:hover .ux-card-inner{transform:translateY(-2px)}
+.ux-card[aria-expanded="true"]:hover .ux-card-inner{transform:rotateY(180deg) translateY(-2px)}
+.ux-card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);display:flex;flex-direction:column;transition:box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.ux-card:hover .ux-card-face{box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.ux-card-face-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);display:flex;flex-direction:column;transform:rotateY(180deg);border-color:var(--primary-glow-sm)}
+.ux-card-name{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:4px;display:block}
+.ux-card-def{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45;display:block;flex:1}
+.ux-card-rule{font-size:12.5px;color:var(--on-surface);line-height:1.45;padding-top:8px;border-top:1px solid var(--outline);display:block;flex:1}
+.ux-card-rule b{color:var(--primary);font-weight:600}
+.ux-card-flip-hint{font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--primary);opacity:0;transition:opacity var(--dur-fast) var(--ease-out-soft);margin-top:8px}
+.ux-card:hover .ux-card-flip-hint,.ux-card:focus-visible .ux-card-flip-hint{opacity:.8}
+@media(hover:none){.ux-card-flip-hint{opacity:.5}}
+.foundations-group{margin-bottom:var(--s-xl)}.foundations-group:last-child{margin-bottom:0}
+.foundations-group-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--s-md)}
+.foundations-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.foundations-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.foundations-grid{grid-template-columns:1fr}}
+.foundations-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg);text-align:left;cursor:default;font-family:inherit;color:inherit;transition:transform var(--dur-med) var(--ease-back),box-shadow var(--dur-med) var(--ease-out-soft),border-color var(--dur-fast) var(--ease-out-soft)}
+.foundations-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.foundations-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-md)}
+.foundations-card .rule-name{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:4px;display:block}
+.foundations-card .rule-text{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45;display:block}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s-md)}
+.app-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-lg);display:flex;flex-direction:column;gap:var(--s-sm);transition:transform var(--dur-med) var(--ease-out-soft),box-shadow var(--dur-med) var(--ease-out-soft)}
+.app-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.app-card:hover .app-icon{transform:scale(1.15);border-color:var(--primary-solid);background:var(--primary-glow-sm);color:var(--primary)}
+.app-card .app-tag{font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--primary)}
+.app-card .app-title{font-family:var(--font-display);font-size:14.5px;font-weight:600;color:var(--on-surface)}
+.app-card .app-desc{font-size:12.5px;color:var(--on-surface-muted);line-height:1.45}
+.app-icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--surface-high);border:1px solid var(--outline);display:flex;align-items:center;justify-content:center;color:var(--on-surface-muted);transition:transform .25s,background .25s,border-color .25s,color .25s}
+.app-icon svg{width:18px;height:18px}
+/* ==03 SIGNATURES — fintech-trust ==*/
+section.hero{background:var(--bg-dim);padding:60px 0;border-bottom:1px solid var(--outline)}
+section.hero .container{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid var(--outline);border-radius:var(--r-xs);font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--secondary);background:var(--surface);margin-bottom:var(--s-md);letter-spacing:0.04em}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:1px;background:var(--secondary);flex-shrink:0}
+section.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,52px);font-weight:600;line-height:1.05;letter-spacing:-0.015em;color:var(--on-surface);margin-bottom:var(--s-md)}
+section.hero h1 .accent{color:var(--primary)}
+section.hero p{font-size:15px;color:var(--on-surface-muted);max-width:520px;line-height:1.55;margin-bottom:var(--s-lg)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-hero-primary{padding:11px 22px;background:var(--primary-solid);color:var(--on-primary);border:none;border-radius:var(--r-xs);font:600 14px/1 var(--font-body);cursor:pointer;transition:opacity var(--dur-fast) var(--ease-instant)}
+.btn-hero-primary:hover{opacity:.9}.btn-hero-primary:active{opacity:.8}
+.btn-hero-secondary{padding:13px 21px;background:transparent;color:var(--on-surface);border:1px solid var(--outline);border-radius:var(--r-xs);font:600 14px/1 var(--font-body);cursor:pointer;transition:border-color var(--dur-fast) var(--ease-instant)}
+.btn-hero-secondary:hover{border-color:var(--outline-hi)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font:600 10.5px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:0.04em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{padding:9px 11px;border:1px solid var(--outline);border-radius:var(--r-xs);font:13px/1.4 var(--font-body);color:var(--on-surface);background:var(--surface);transition:border-color var(--dur-fast) var(--ease-instant),box-shadow var(--dur-fast) var(--ease-instant);height:36px;outline:none}
+.form-textarea{height:76px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
+.form-select{-webkit-appearance:none;appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235f6b66' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 9px center;padding-right:28px}
+@media(max-width:767px){.form-grid{grid-template-columns:1fr}}
+.balances-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.balances-grid{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
+.balance-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-lg);transition:box-shadow var(--dur-med) var(--ease-instant),border-color var(--dur-fast) var(--ease-instant)}
+.balance-card:hover{box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.balance-label{display:flex;align-items:center;justify-content:space-between;font:600 10.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:10px}
+.balance-card .chip-mini{padding:3px 8px;border-radius:var(--r-xs);background:var(--primary-glow-sm);color:var(--primary);font:600 9.5px/1 var(--font-mono);letter-spacing:.04em}
+.balance-value{font-family:var(--font-mono);font-size:30px;font-weight:500;color:var(--on-surface);line-height:1.05;margin-bottom:4px;font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
+.balance-sub{font-size:12px;color:var(--on-surface-muted)}
+.balance-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:var(--s-md);padding-top:var(--s-md);border-top:1px solid var(--outline)}
+.balance-row .lbl{font-size:11px;color:var(--on-surface-muted)}
+.balance-row .val{font-family:var(--font-mono);font-size:12px;color:var(--on-surface);font-variant-numeric:tabular-nums}
+.masked{font-family:var(--font-mono);font-size:15px;color:var(--on-surface);letter-spacing:.18em}
+.txn-feed{border:1px solid var(--outline);border-radius:var(--r-md);background:var(--surface);overflow:hidden}
+.txn-row{display:flex;align-items:center;gap:12px;padding:var(--s-sm) var(--s-md);border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-instant)}
+.txn-row:last-child{border-bottom:none}
+.txn-row:hover{background:var(--table-row-hover)}
+.txn-ico{width:32px;height:32px;border-radius:var(--r-sm);background:var(--surface-high);display:flex;align-items:center;justify-content:center;color:var(--on-surface-muted);flex-shrink:0}
+.txn-ico.in{background:var(--primary-glow-sm);color:var(--primary)}
+.txn-ico svg{width:15px;height:15px}
+.txn-info{flex:1;min-width:0}
+.txn-name{font:500 13px/1.25 var(--font-body);color:var(--on-surface)}
+.txn-meta{font-size:11px;color:var(--on-surface-muted)}
+.txn-amt{font-family:var(--font-mono);font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.txn-amt.pos{color:var(--primary)}
+.limit-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-md);padding:var(--s-md) var(--s-lg)}
+.limit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.limit-head .t{font:600 11px/1 var(--font-body);letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface-muted)}
+.limit-head .v{font-family:var(--font-mono);font-size:13px;color:var(--on-surface);font-variant-numeric:tabular-nums}
+.limit-head .v b{font-weight:500;color:var(--primary)}
+.limit-bar{height:8px;border-radius:var(--r-full);background:var(--surface-high);overflow:hidden}
+.limit-fill{height:100%;border-radius:var(--r-full);transition:width .24s var(--ease-instant)}
+.limit-fill.ok{background:var(--primary-solid);width:34%}
+.limit-fill.warn{background:var(--tertiary);width:68%}
+.limit-fill.crit{background:var(--error);width:91%}
+.limit-note{font-size:11px;color:var(--on-surface-muted);margin-top:6px}
+.verify-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:640px}
+.vstep{border:1px solid var(--outline);border-radius:var(--r-sm);padding:12px 10px;text-align:center;background:var(--surface)}
+.vstep.done{border-color:var(--primary-solid);background:var(--primary-glow-sm)}
+.vstep.current{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
+.vstep .n{width:22px;height:22px;margin:0 auto 6px;border-radius:var(--r-full);background:var(--surface-high);color:var(--on-surface-muted);font:600 11px/22px var(--font-mono)}
+.vstep.done .n,.vstep.current .n{background:var(--primary-solid);color:var(--on-primary)}
+.vstep .t{font:600 11px/1.3 var(--font-body);color:var(--on-surface)}
+.vstep .s{font-size:10px;color:var(--on-surface-muted);margin-top:2px}
+@media(max-width:640px){.verify-steps{grid-template-columns:1fr 1fr}}
+.badge-row{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center}
+.ins-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border:1px solid var(--outline);border-radius:var(--r-xs);background:var(--surface);font:500 12px/1 var(--font-body);color:var(--on-surface)}
+.ins-badge svg{width:15px;height:15px;color:var(--primary)}
+.ins-badge .sub{font-size:10px;color:var(--on-surface-muted);display:block;margin-top:2px}/* topbar (fintech keeps a top bar on mobile — contrast with commerce/social) */
+.topbar{display:none}
+.menu-toggle{display:none}
+@media(max-width:1023px){
+  .page{margin-left:0}
+  section[id]{scroll-margin-top:calc(var(--topbar-h,56px) + 12px)}
+  section.hero{padding:calc(var(--topbar-h,56px) + 36px) 0 44px}
+  .scroll-progress{left:0}
+  .topbar{display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;height:var(--topbar-h,56px);z-index:160;padding:0 14px;background:var(--nav-bg);border-bottom:1px solid var(--outline)}
+  .topbar .theme-toggle{margin-left:auto}
+  .menu-toggle{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:var(--r-xs);background:transparent;border:1px solid var(--toggle-border);color:var(--primary);cursor:pointer;transition:border-color var(--dur-fast) var(--ease-instant)}
+  .menu-toggle:hover{border-color:var(--primary-solid)}
+  .menu-toggle:active{transform:scale(.92)}
+  .menu-toggle svg{width:18px;height:18px}
+  .sidebar{width:min(290px,85vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:190;background:rgba(4,12,10,.5);opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-instant),visibility 0s linear var(--dur-med)}
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-instant)}
+  body.nav-locked{overflow:hidden}
+  .sidebar .nav-group{opacity:0;transform:translateX(-12px);transition:none}
+  .sidebar.open .nav-group{opacity:1;transform:none;transition:opacity .2s var(--ease-instant),transform .2s var(--ease-instant);transition-delay:calc(.05s + var(--i,0)*40ms)}
+}
+</style>
+</head>
+<body>
+<nav class="sidebar" aria-label="Section navigation" id="sidebar">
+  <div class="sidebar-header">
+    <span class="nav-logo">Fintech Trust</span>
+    <button class="sidebar-close" aria-label="Close menu" onclick="closeMobileNav()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav">
+    <div class="nav-indicator" id="nav-indicator"></div>
+    <div class="nav-group" style="--i:0">
+      <div class="nav-group-label">Overview</div>
+      <a class="nav-item" href="#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Hero</span></a>
+      <a class="nav-item" href="#typography"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg><span>Typography</span></a>
+      <a class="nav-item" href="#colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg><span>Colors</span></a>
+    </div>
+    <div class="nav-group" style="--i:1">
+      <div class="nav-group-label">Trust</div>
+      <a class="nav-item" href="#security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Security First</span></a>
+      <a class="nav-item" href="#motion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>Motion</span></a>
+      <a class="nav-item" href="#spacing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg><span>Spacing</span></a>
+      <a class="nav-item" href="#radius"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span>Radius</span></a>
+      <a class="nav-item" href="#elevation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l4-4 4 4 4-4 4 4"/></svg><span>Elevation</span></a>
+    </div>
+    <div class="nav-group" style="--i:2">
+      <div class="nav-group-label">Banking Components</div>
+      <a class="nav-item" href="#balance-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Balance Card</span></a>
+      <a class="nav-item" href="#transaction-feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Transaction Feed</span></a>
+      <a class="nav-item" href="#limit-progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7h-6M21 7v6"/></svg><span>Limit Progress</span></a>
+      <a class="nav-item" href="#verify-stepper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span>Verify Stepper</span></a>
+      <a class="nav-item" href="#badges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg><span>Insurance Badges</span></a>
+    </div>
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Patterns</div>
+      <a class="nav-item" href="#buttons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="1"/><path d="M2 12h20"/></svg><span>Buttons</span></a>
+      <a class="nav-item" href="#chips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg><span>Chips</span></a>
+      <a class="nav-item" href="#forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg><span>Forms</span></a>
+      <a class="nav-item" href="#table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg><span>Ledger</span></a>
+      <a class="nav-item" href="#pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Fee Tiers</span></a>
+    </div>
+    <div class="nav-group" style="--i:4">
+      <div class="nav-group-label">Systems</div>
+      <a class="nav-item" href="#ux-principles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>UX Principles</span></a>
+      <a class="nav-item" href="#engineering"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Engineering</span></a>
+      <a class="nav-item" href="#accessibility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span>Accessibility</span></a>
+      <a class="nav-item" href="#responsive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><span>Responsive</span></a>
+      <a class="nav-item" href="#touch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v11M10 9.5V4a2 2 0 0 0-4 0v14l-2.5-2.5a2 2 0 0 0-3 3L6 22h12"/></svg><span>Touch</span></a>
+      <a class="nav-item" href="#architecture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="8" y="13" width="8" height="8" rx="1"/></svg><span>Architecture</span></a>
+    </div>
+  </div>
+  <div class="sidebar-footer-tools">
+    <button class="md-copy-btn-global agent-tool" id="copy-all-btn" onclick="copyAllAsMarkdown()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span>Copy All as MD</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="collapse-toggle" id="collapse-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar width">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>
+      <span>Collapse</span>
+    </button>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeMobileNav()"></div>
+<div class="scroll-progress agent-tool"><div class="bar" id="scroll-bar"></div></div>
+<header class="topbar">
+  <button class="menu-toggle" aria-label="Open menu" onclick="openMobileNav()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+  <span class="nav-logo" style="font-size:15px">Fintech Trust</span>
+  <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</header>
+<div class="page"><section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-badge">REFERENCE BUILD 03</div>
+    <h1><span class="accent">Fintech Trust</span><br>Design System</h1>
+    <p>Emerald &amp; azure palette, near-zero motion, dense ledgers. Design thesis: money demands calm authority — trust is engineered through restraint, precision, and proof.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary" onclick="copyAllAsMarkdown()">Copy All as MD</button>
+      <button class="btn-hero-secondary" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+  </div>
+</section>
+
+<section id="typography">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Typography</div>
+        <h2>Type System</h2>
+        <p>Source Serif 4 for gravitas, Source Sans 3 for UI, Fira Code for every number. 14px base, 1.35 line-height. Account figures are always mono.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('typography')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="type-list">
+      <div class="type-row"><div class="meta"><div class="token-name">--font-display</div><div class="spec">'Source Serif 4', serif</div></div><div class="specimen" style="font-family:var(--font-display);font-size:21px;font-weight:600">Your money, accounted for</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-body</div><div class="spec">'Source Sans 3', sans-serif</div></div><div class="specimen" style="font-family:var(--font-body);font-size:14px">Instant transfers land in seconds</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">--font-mono</div><div class="spec">'Fira Code', monospace</div></div><div class="specimen" style="font-family:var(--font-mono);font-size:14px;font-variant-numeric:tabular-nums">$24,618.42</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xs</div><div class="spec">11px / 1.35 · 600</div></div><div class="specimen" style="font-size:11px;font-weight:600;line-height:1.35">FDIC INSURED UP TO $250,000</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-sm</div><div class="spec">12px / 1.35 · 500</div></div><div class="specimen" style="font-size:12px;font-weight:500;line-height:1.35">Posting &middot; settles Mar 17</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-md</div><div class="spec">14px / 1.35 · 400</div></div><div class="specimen" style="font-size:14px;line-height:1.35">Statement period Feb 1 - Feb 28 &middot; 42 transactions</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-lg</div><div class="spec">15px / 1.35 · 600</div></div><div class="specimen" style="font-size:15px;font-weight:600;line-height:1.35">Total balance across 3 accounts</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-xl</div><div class="spec">20px / 1.3 · 600</div></div><div class="specimen" style="font-family:var(--font-display);font-size:20px;font-weight:600;line-height:1.3">Spending insight: groceries down 8%</div></div>
+      <div class="type-row"><div class="meta"><div class="token-name">fs-2xl</div><div class="spec">26px / 1.2 · 700</div></div><div class="specimen" style="font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.2">Security you can verify</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="colors" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Colors</div>
+        <h2>Color System</h2>
+        <p>Emerald primary signals growth and safety; azure for interactive. Cool mint-tinted neutrals. Light theme canonical, dark for extended sessions.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('colors')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="color-grid">
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#f7faf9" data-name="bg"><div class="color-swatch-fill" style="background:#f7faf9"></div><div class="color-swatch-info"><div class="hex">#f7faf9</div><div class="name">bg</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#ffffff" data-name="surface"><div class="color-swatch-fill" style="background:#ffffff"></div><div class="color-swatch-info"><div class="hex">#ffffff</div><div class="name">surface</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#e8f0ed" data-name="surface-high"><div class="color-swatch-fill" style="background:#e8f0ed"></div><div class="color-swatch-info"><div class="hex">#e8f0ed</div><div class="name">surface-high</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#dbe6e2" data-name="surface-highest"><div class="color-swatch-fill" style="background:#dbe6e2"></div><div class="color-swatch-info"><div class="hex">#dbe6e2</div><div class="name">surface-highest</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#aebfb8" data-name="outline-hi"><div class="color-swatch-fill" style="background:#aebfb8"></div><div class="color-swatch-info"><div class="hex">#aebfb8</div><div class="name">outline-hi</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#5f6b66" data-name="on-surface-muted"><div class="color-swatch-fill" style="background:#5f6b66"></div><div class="color-swatch-info"><div class="hex">#5f6b66</div><div class="name">on-surface-muted</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#047857" data-name="primary"><div class="color-swatch-fill" style="background:#047857"></div><div class="color-swatch-info"><div class="hex">#047857</div><div class="name">primary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#059669" data-name="brand-emerald"><div class="color-swatch-fill" style="background:#059669"></div><div class="color-swatch-info"><div class="hex">#059669</div><div class="name">brand-emerald</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#0369a1" data-name="secondary"><div class="color-swatch-fill" style="background:#0369a1"></div><div class="color-swatch-info"><div class="hex">#0369a1</div><div class="name">secondary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#a16207" data-name="tertiary"><div class="color-swatch-fill" style="background:#a16207"></div><div class="color-swatch-info"><div class="hex">#a16207</div><div class="name">tertiary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#6d28d9" data-name="quaternary"><div class="color-swatch-fill" style="background:#6d28d9"></div><div class="color-swatch-info"><div class="hex">#6d28d9</div><div class="name">quaternary</div></div></div>
+      <div class="color-swatch" onclick="copySwatch(this)" data-hex="#16a34a" data-name="positive"><div class="color-swatch-fill" style="background:#16a34a"></div><div class="color-swatch-info"><div class="hex">#16a34a</div><div class="name">positive</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="security" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Security First</div>
+        <h2>Security &amp; Trust</h2>
+        <p>Trust surfaces early in fintech: insurance proof, verification state, and audit transparency are first-class UI, not footers.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('security')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="security-grid">
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="title">FDIC Insurance</div><div class="desc">Deposits insured to $250,000 per depositor. The badge links to the certificate.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">256-bit Encryption</div><div class="desc">TLS 1.3 in transit, AES-256 at rest. Keys rotated every 90 days.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="title">Real-time Alerts</div><div class="desc">Every transaction notifies within 2 seconds. Anomalies flag automatically.</div></div>
+      <div class="security-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg></div><div class="title">Audit Trail</div><div class="desc">Every account action is logged, immutable, and exportable by the customer.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="motion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Motion</div>
+        <h2>Motion System</h2>
+        <p>Near-zero motion by design: money interfaces must feel instant, never playful. The shortest durations of all 10 systems.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('motion')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="motion-row">
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-fast);transition-timing-function:var(--ease-instant)"></div><div class="m-name">instant · .08s</div><div class="m-curve">(.16,1,.3,1)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-med);transition-timing-function:var(--ease-instant)"></div><div class="m-name">state · .16s</div><div class="m-curve">(.16,1,.3,1)</div></div>
+      <div class="motion-item"><div class="motion-box" style="transition-duration:var(--dur-slow);transition-timing-function:var(--ease-instant)"></div><div class="m-name">panel · .24s</div><div class="m-curve">(.16,1,.3,1)</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="spacing" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Spacing</div>
+        <h2>Spacing Scale</h2>
+        <p>4/6 hybrid rhythm: 4, 8, 14, 20, 28, 44. Tight enough for dense ledgers, roomy enough for trust.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('spacing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="spacing-ruler">
+      <div class="spacing-block" style="flex:1"><span class="lbl">4</span></div>
+      <div class="spacing-block" style="flex:2"><span class="lbl">8</span></div>
+      <div class="spacing-block" style="flex:3.5"><span class="lbl">14</span></div>
+      <div class="spacing-block" style="flex:5"><span class="lbl">20</span></div>
+      <div class="spacing-block" style="flex:7"><span class="lbl">28</span></div>
+      <div class="spacing-block" style="flex:11"><span class="lbl">44</span></div>
+    </div>
+    <div class="spacing-labels"><span>xs · 4</span><span>sm · 8</span><span>md · 14</span><span>lg · 20</span><span>xl · 28</span><span>2xl · 44</span></div>
+  </div>
+</section>
+
+<section id="radius">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Radius</div>
+        <h2>Radius Scale</h2>
+        <p>Crisp system: 2, 6, 10, 14, 18, 22px. Sharp corners read as precise and engineered.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('radius')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="radius-grid">
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xs)"></div><div class="r-name">r-xs</div><div class="r-value">2px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-sm)"></div><div class="r-name">r-sm</div><div class="r-value">6px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-md)"></div><div class="r-name">r-md</div><div class="r-value">10px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-lg)"></div><div class="r-name">r-lg</div><div class="r-value">14px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-xl)"></div><div class="r-name">r-xl</div><div class="r-value">18px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:52px;height:52px;border-radius:var(--r-full)"></div><div class="r-name">r-full</div><div class="r-value">pill</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="elevation" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Elevation</div>
+        <h2>Elevation Scale</h2>
+        <p>4 levels, cool green-tinted shadows. Shadows stay subtle: money UIs flatten, not float.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('elevation')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="elevation-grid">
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Flat</div><div class="e-sub">Ledgers, tables</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Raised</div><div class="e-sub">Balance cards</div></div>
+      <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Overlay</div><div class="e-sub">Menus, pickers</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Modal</div><div class="e-sub">Transfer sheet</div></div>
+    </div>
+  </div>
+</section><section id="balance-card">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Balance Card</div>
+        <h2>Balance Card</h2>
+        <p>Account overview: mono figures, masked numbers, status chip. The primary trust object of the app.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('balance-card')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="balances-grid">
+      <div class="balance-card"><div class="balance-label"><span>Everyday Checking</span><span class="chip-mini">ACTIVE</span></div><div class="balance-value">$12,482.90</div><div class="balance-sub">Personal &middot; &bull;&bull;&bull;&bull; 4821</div><div class="balance-row"><span class="lbl">Available now</span><span class="val">$12,300.00</span></div></div>
+      <div class="balance-card"><div class="balance-label"><span>High-Yield Savings</span><span class="chip-mini">4.10% APY</span></div><div class="balance-value">$88,214.13</div><div class="balance-sub">Vault &middot; &bull;&bull;&bull;&bull; 9012</div><div class="balance-row"><span class="lbl">Next interest</span><span class="val">Mar 31</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="transaction-feed" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Transaction Feed</div>
+        <h2>Transaction Feed</h2>
+        <p>Category icons in/out, mono amounts, status metas. Rows are dense and scannable.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('transaction-feed')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="txn-feed">
+      <div class="txn-row"><div class="txn-ico in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div><div class="txn-info"><div class="txn-name">Payroll - Meridian Labs</div><div class="txn-meta">Mar 15 &middot; Completed</div></div><span class="txn-amt pos">+$4,120.00</span></div>
+      <div class="txn-row"><div class="txn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg></div><div class="txn-info"><div class="txn-name">Whole Foods Market</div><div class="txn-meta">Mar 15 &middot; Groceries</div></div><span class="txn-amt">-$86.40</span></div>
+      <div class="txn-row"><div class="txn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div class="txn-info"><div class="txn-name">Transfer to Savings Vault</div><div class="txn-meta">Mar 14 &middot; Internal</div></div><span class="txn-amt">-$500.00</span></div>
+      <div class="txn-row"><div class="txn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="txn-info"><div class="txn-name">Cloud Hosting</div><div class="txn-meta">Mar 14 &middot; Subscriptions</div></div><span class="txn-amt">-$129.00</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="limit-progress">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Limit Progress</div>
+        <h2>Credit Limit Progress</h2>
+        <p>Utilization at three thresholds: ok, warn, critical. Color, never decoration, carries the state.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('limit-progress')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:var(--s-md);max-width:520px">
+      <div class="limit-card"><div class="limit-head"><span class="t">Utilization</span><span class="v"><b>$1,360</b> / $4,000</span></div><div class="limit-bar"><div class="limit-fill ok"></div></div><div class="limit-note">34% used &middot; healthy range</div></div>
+      <div class="limit-card"><div class="limit-head"><span class="t">Utilization</span><span class="v"><b>$2,720</b> / $4,000</span></div><div class="limit-bar"><div class="limit-fill warn"></div></div><div class="limit-note">Approaching the 30% guideline</div></div>
+      <div class="limit-card"><div class="limit-head"><span class="t">Utilization</span><span class="v"><b>$3,640</b> / $4,000</span></div><div class="limit-bar"><div class="limit-fill crit"></div></div><div class="limit-note">91% used &middot; pay down to protect your score</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="verify-stepper" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Verify Stepper</div>
+        <h2>Verification Stepper</h2>
+        <p>Identity verification: four steps, persistent state, never restarts on back-navigation.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('verify-stepper')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="verify-steps">
+      <div class="vstep done"><div class="n">1</div><div class="t">Identity</div><div class="s">Verified</div></div>
+      <div class="vstep done"><div class="n">2</div><div class="t">Address</div><div class="s">Verified</div></div>
+      <div class="vstep current"><div class="n">3</div><div class="t">2FA Phone</div><div class="s">In progress</div></div>
+      <div class="vstep"><div class="n">4</div><div class="t">Review</div><div class="s">Pending</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="badges">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Insurance Badges</div>
+        <h2>Insurance Badge Row</h2>
+        <p>Proof, not decoration: every badge links to its certificate and states the exact coverage.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('badges')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="badge-row">
+      <span class="ins-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>FDIC Insured<span class="sub">Up to $250,000</span></span></span>
+      <span class="ins-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>SOC 2 Type II<span class="sub">Audited annually</span></span></span>
+      <span class="ins-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-3.6 8.4-9 11-5.4-2.6-9-6.03-9-11V5l9-3 9 3z"/></svg><span>SIPC Protected<span class="sub">Securities coverage</span></span></span>
+    </div>
+  </div>
+</section>
+
+<section id="buttons">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Buttons</div>
+        <h2>Buttons</h2>
+        <p>7 variants, squared by default. Money actions never bounce.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('buttons')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="button-grid">
+      <div class="button-item"><button class="btn btn-primary">Primary</button><div class="btn-label">--primary</div></div>
+      <div class="button-item"><button class="btn btn-secondary">Secondary</button><div class="btn-label">outline</div></div>
+      <div class="button-item"><button class="btn btn-ghost">Ghost</button><div class="btn-label">transparent</div></div>
+      <div class="button-item"><button class="btn btn-pill-primary">Azure Pill</button><div class="btn-label">--secondary</div></div>
+      <div class="button-item"><button class="btn btn-pill-accent">Amber Pill</button><div class="btn-label">--tertiary</div></div>
+      <div class="button-item"><button class="btn btn-outline-pill">Outline Azure</button><div class="btn-label">--secondary</div></div>
+      <div class="button-item"><button class="btn btn-disabled" disabled>Disabled</button><div class="btn-label">opacity:.5</div></div>
+    </div>
+  </div>
+</section><section id="chips" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Chips</div>
+        <h2>Chips</h2>
+        <p>Status and filter chips: completed, pending, holds, internal.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('chips')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="chip-grid">
+      <div class="chip">All</div>
+      <div class="chip filled">Checking</div>
+      <div class="chip outline">Savings</div>
+      <div class="chip success-chip">Completed</div>
+      <div class="chip warn-chip">Pending</div>
+      <div class="chip error-chip">Declined</div>
+      <div class="chip accent">Recurring</div>
+    </div>
+  </div>
+</section>
+
+<section id="forms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Forms</div>
+        <h2>Forms</h2>
+        <p>Transfer form: 36px inputs, 3px focus ring, zero decoration near money fields.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('forms')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Recipient</label><input class="form-input" type="text" placeholder="Name or account number"></div>
+      <div class="form-group"><label>Amount</label><input class="form-input" type="text" inputmode="decimal" placeholder="$0.00"></div>
+      <div class="form-group"><label>From Account</label><select class="form-select"><option>Checking &bull;&bull;&bull;&bull; 4821</option><option>Savings &bull;&bull;&bull;&bull; 9012</option></select></div>
+      <div class="form-group"><label>When</label><select class="form-select"><option>Now</option><option>Schedule</option></select></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Memo</label><textarea class="form-textarea" placeholder="Appears on both statements"></textarea></div>
+    </div>
+  </div>
+</section>
+
+<section id="table" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Ledger</div>
+        <h2>Ledger Table</h2>
+        <p>Statement rows: mono amounts and dates, category metas, status dots.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('table')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="table-wrap">
+      <table class="ds-table">
+        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th>Balance</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="cell-mono">Mar 15</td><td>Payroll - Meridian Labs</td><td>Income</td><td class="cell-mono" style="color:var(--primary)">+$4,120.00</td><td class="cell-mono">$24,618.90</td><td><div class="cell-status s-live">Cleared</div></td></tr>
+          <tr><td class="cell-mono">Mar 15</td><td>Whole Foods Market</td><td>Groceries</td><td class="cell-mono">-$86.40</td><td class="cell-mono">$20,498.90</td><td><div class="cell-status s-live">Cleared</div></td></tr>
+          <tr><td class="cell-mono">Mar 14</td><td>Transfer to Savings</td><td>Internal</td><td class="cell-mono">-$500.00</td><td class="cell-mono">$20,585.30</td><td><div class="cell-status s-live">Cleared</div></td></tr>
+          <tr><td class="cell-mono">Mar 14</td><td>Cloud Hosting</td><td>Subscriptions</td><td class="cell-mono">-$129.00</td><td class="cell-mono">$21,085.30</td><td><div class="cell-status s-draft">Pending</div></td></tr>
+          <tr><td class="cell-mono">Mar 13</td><td>Card Temporary Hold</td><td>Travel</td><td class="cell-mono">-$1.00</td><td class="cell-mono">$21,214.30</td><td><div class="cell-status s-paused">Hold</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Fee Tiers</div>
+        <h2>Account Tiers</h2>
+        <p>Fees stated plainly. No asterisks, no teaser rates.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('pricing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card"><div class="tier">Essential</div><div class="price">$0<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>No minimum balance</li><li>2 free ATM withdrawals</li><li>Standard transfers</li><li>FDIC insured</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%">Open Essential</button></div></div>
+      <div class="pricing-card featured"><div class="pricing-badge">Most Chosen</div><div class="tier">Premier</div><div class="price">$12<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Unlimited ATM refunds</li><li>4.10% APY on savings</li><li>Instant transfers</li><li>Fee-free overdraft to $100</li><li>Priority support</li></ul><div class="pricing-cta-margin"><button class="btn btn-primary" style="width:100%">Open Premier</button></div></div>
+      <div class="pricing-card"><div class="tier">Private Client</div><div class="price">$49<span class="price-sub"> /mo</span></div><ul class="pricing-features"><li>Dedicated advisor</li><li>Wire fees waived</li><li>Multi-user access</li><li>Estate coordination</li></ul><div class="pricing-cta-margin"><button class="btn btn-secondary" style="width:100%">Talk to Us</button></div></div>
+    </div>
+  </div>
+</section><section id="ux-principles" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; UX Principles</div>
+        <h2>UX Principles</h2>
+        <p>Fintech-specific laws. Each card flips to reveal a hard rule.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('ux-principles')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Security Perception</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Processing Fluency</span><span class="ux-card-def">Familiar, legible patterns read as safe.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Never redesign money conventions: balances read top-down, debits negative, credits positive.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Signaling Theory</span><span class="ux-card-def">Costly, verifiable signals carry weight.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Every trust badge links to a real certificate. Unverifiable claims are banned.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Fear Arousal</span><span class="ux-card-def">Overly alarming security copy reduces action.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Security language states facts, not fear. "Protected" over "danger".</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Data Display</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Absolute Judgments</span><span class="ux-card-def">People compare two magnitudes better than judging one.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Percentages always show the base: "34% of $4,000", never a bare percent.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Serial Position</span><span class="ux-card-def">First and last items are remembered best.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Primary account first, action row last. Middle items never carry critical info.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Stroop Effect</span><span class="ux-card-def">Conflicting color-meaning pairs slow reading.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Green means credit, red means debit, amber means pending. No exceptions anywhere.</span></div></div></button>
+      </div>
+    </div>
+    <div class="ux-group">
+      <div class="ux-group-title">Error Prevention</div>
+      <div class="ux-grid">
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Confirmation Bias</span><span class="ux-card-def">People confirm without reading, so confirmations must cost attention.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Transfers over $1,000 re-type the amount. No one-click confirmation of large sums.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Zeigarnik Effect</span><span class="ux-card-def">Interrupted tasks stay in memory.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Verification state persists. Nothing a user completed is ever asked for twice.</span></div></div></button>
+        <button class="ux-card" aria-expanded="false" onclick="toggleFlip(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleFlip(this)}"><div class="ux-card-inner"><div class="ux-card-face"><span class="ux-card-name">Uncanny Numbers</span><span class="ux-card-def">Randomness in money reads as error, not chance.</span><span class="ux-card-flip-hint">Tap to reveal rule</span></div><div class="ux-card-face-back"><span class="ux-card-rule"><b>Rule:</b> Balances always show exact cents. Rounding or hiding cents reads as concealment.</span></div></div></button>
+      </div>
+    </div>
+  </div>
+</section><section id="engineering">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Engineering</div>
+        <h2>Engineering Principles</h2>
+        <p>Hard rules for building with this system. Never break these.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('engineering')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="app-grid">
+      <div class="app-card"><div class="app-tag">Token</div><div class="app-title">CSS Variables Only</div><div class="app-desc">Never hardcode colors, radii, or spacing. Always reference var(--*).</div></div>
+      <div class="app-card"><div class="app-tag">Money</div><div class="app-title">Figures Are Mono</div><div class="app-desc">Every monetary value uses --font-mono with tabular figures.</div></div>
+      <div class="app-card"><div class="app-tag">State</div><div class="app-title">Persistent Sessions</div><div class="app-desc">Verification, drafts, and filters survive refresh and back-navigation.</div></div>
+      <div class="app-card"><div class="app-tag">Motion</div><div class="app-title">Near-Zero Durations</div><div class="app-desc">.08-.24s only. No bounce, no spring, no playful curves.</div></div>
+      <div class="app-card"><div class="app-tag">Accessibility</div><div class="app-title">AA Both Themes</div><div class="app-desc">Contrast verified in light and dark. Focus rings never removed.</div></div>
+      <div class="app-card"><div class="app-tag">Architecture</div><div class="app-title">Single File</div><div class="app-desc">One self-contained HTML file per system. Zero build step.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="accessibility" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Accessibility</div>
+        <h2>Accessibility</h2>
+        <p>Banking must work for everyone. WCAG AA is a floor, not a goal.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('accessibility')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="foundations-grid">
+      <div class="foundations-card"><span class="rule-name">Focus Ring</span><span class="rule-text">3px primary ring on all interactive elements, both themes.</span></div>
+      <div class="foundations-card"><span class="rule-name">Keyboard First</span><span class="rule-text">Full flows operable by keyboard. Enter submits, Escape cancels.</span></div>
+      <div class="foundations-card"><span class="rule-name">Aria Labels</span><span class="rule-text">Amounts announce with currency. Status changes are live regions.</span></div>
+      <div class="foundations-card"><span class="rule-name">Contrast</span><span class="rule-text">4.5:1 normal, 3:1 large. Verified on mint-tinted and dark surfaces.</span></div>
+      <div class="foundations-card"><span class="rule-name">Color Independence</span><span class="rule-text">Signs and labels carry meaning; color never stands alone.</span></div>
+      <div class="foundations-card"><span class="rule-name">Error Copy</span><span class="rule-text">Errors say what happened, why, and the exact next step.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="responsive">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Responsive</div>
+        <h2>Responsive Design</h2>
+        <p>Breakpoints: 640px, 767px, 1023px. Mobile uses a top app bar (banking contrast with commerce/social systems).</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('responsive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="responsive-grid">
+      <div class="responsive-col"><div class="responsive-col-title">Desktop (1024px+)</div><div style="display:flex;gap:8px"><div style="width:150px;min-height:168px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:12px;font-size:11px;color:var(--on-surface-muted)">Accounts nav</div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="height:54px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Balance summary</div><div style="min-height:102px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Ledger table</div></div></div></div>
+      <div class="responsive-col"><div class="responsive-col-title">Mobile (&lt;767px)</div><div style="display:flex;flex-direction:column;gap:8px"><div style="height:42px;background:var(--surface-mid);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Top app bar</div><div style="height:54px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Balance card</div><div style="min-height:76px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xs);padding:10px;font-size:11px;color:var(--on-surface-muted)">Transaction feed (scroll)</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="touch" style="background:var(--section-alt)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Touch</div>
+        <h2>Touch Targets</h2>
+        <p>Precise, not huge: 36-44px targets, immediate state change, no playful press effects.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('touch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="touch-grid">
+      <div class="touch-card"><div class="touch-label">Primary Button</div><div class="touch-val">44px height</div><div class="touch-visual"><div class="touch-target"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Input</div><div class="touch-val">36px height</div><div class="touch-visual"><div class="touch-target" style="width:100%;height:36px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Nav Item</div><div class="touch-val">36px height</div><div class="touch-visual"><div class="touch-target" style="width:100%;height:36px"></div></div></div>
+      <div class="touch-card"><div class="touch-label">Amount Key</div><div class="touch-val">52px keypad keys</div><div class="touch-visual"><div class="touch-target" style="width:52px;height:52px"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Reference 03 &middot; Architecture</div>
+        <h2>Architecture</h2>
+        <p>Banking stack: ledger-first data model, strong auth, audited actions.</p>
+      </div>
+      <button class="md-copy-btn agent-tool" onclick="copySectionAsMarkdown('architecture')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy as MD</span></button>
+    </div>
+    <div class="arch-grid">
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="title">Ledger Core</div><div class="desc">Append-only, double-entry ledger. Balances are derived, never stored mutable.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="8" y="13" width="8" height="8" rx="1"/></svg></div><div class="title">Event Sourcing</div><div class="desc">Every transaction is an immutable event with a full audit chain.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="title">Auth Layers</div><div class="desc">MFA mandatory. Device binding, step-up auth on sensitive actions.</div></div>
+      <div class="arch-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="title">Realtime Push</div><div class="desc">Transaction websockets deliver alerts under 2 seconds end-to-end.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="ds-footer">
+  <div class="container">
+    <p>Fintech Trust Design System &middot; Emerald &amp; Azure &middot; Reference Build 03</p>
+    <div class="version">v0.3.0</div>
+  </div>
+</footer>
+</div>
+<script>
+function toggleTheme(){
+  const h=document.documentElement;const c=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',c);
+  document.querySelectorAll('.theme-toggle').forEach(t=>{t.querySelectorAll('svg').forEach(s=>{s.style.display=s.classList.contains(c==='dark'?'moon':'sun')?'none':'block'})});
+}
+function toggleSidebar(){document.documentElement.classList.toggle('nav-collapsed')}
+function openMobileNav(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebar-backdrop').classList.add('show');document.body.classList.add('nav-locked')}
+function closeMobileNav(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-backdrop').classList.remove('show');document.body.classList.remove('nav-locked')}
+function toggleFlip(btn){const e=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!e))}
+function updateScrollSpy(){
+  const s=document.querySelector('.sidebar-nav');const ind=document.getElementById('nav-indicator');
+  if(!s||!ind)return;
+  let cur=null;const st=window.scrollY+90;
+  document.querySelectorAll('section[id]').forEach(sec=>{if(st>=sec.offsetTop&&st<sec.offsetTop+sec.offsetHeight)cur=sec.id});
+  s.querySelectorAll('.nav-item').forEach(item=>{const href=item.getAttribute('href');if(href&&href==='#'+cur){item.classList.add('active')}else{item.classList.remove('active')}});
+  const active=s.querySelector('.nav-item.active');
+  if(active){const sy=active.offsetTop-s.scrollTop;ind.style.top=sy+'px';ind.style.height=active.offsetHeight+'px';ind.style.opacity='1'}
+  else{ind.style.opacity='0'}
+}
+function updateScrollProgress(){const b=document.getElementById('scroll-bar');if(!b)return;const m=document.documentElement.scrollHeight-window.innerHeight;b.style.width=m>0?((window.scrollY/m)*100)+'%':'0%'}
+window.addEventListener('scroll',()=>{requestAnimationFrame(()=>{updateScrollSpy();updateScrollProgress()})},{passive:true});
+window.addEventListener('resize',()=>{updateScrollSpy();if(window.innerWidth>=1024){closeMobileNav()}});
+window.addEventListener('DOMContentLoaded',()=>{updateScrollSpy();updateScrollProgress()});
+function getMarkdown(id){
+  const sec=document.getElementById(id);if(!sec)return'';
+  const el=sec.cloneNode(true);el.querySelectorAll('.agent-tool').forEach(e=>e.remove());
+  let md='';const h=el.querySelector('h2');if(h)md+='## '+h.textContent.trim()+'\n\n';
+  const p=el.querySelector('.section-header-text p');if(p)md+=p.textContent.trim()+'\n\n';
+  let handled=false;
+  const rows=el.querySelectorAll('.type-row');
+  if(rows.length){handled=true;md+='| Token | Spec | Specimen |\n|---|---|---|\n';
+    rows.forEach(r=>{const m=r.querySelector('.meta');const sp=r.querySelector('.specimen');
+      if(m&&sp)md+='| '+m.querySelector('.token-name').textContent.trim()+' | '+m.querySelector('.spec').textContent.trim()+' | '+sp.textContent.trim()+' |\n'});
+    md+='\n'}
+  const swatches=el.querySelectorAll('.color-swatch');
+  if(swatches.length){handled=true;md+='| Swatch | Hex | Token |\n|---|---|---|\n';
+    swatches.forEach(s=>{md+='| !['+s.dataset.name+']('+s.dataset.hex+'.png) | `'+s.dataset.hex+'` | '+s.dataset.name+' |\n'});
+    md+='\n'}
+  const buttons=el.querySelectorAll('.button-item');
+  if(buttons.length){handled=true;buttons.forEach(b=>{const btn=b.querySelector('button,a');const lbl=b.querySelector('.btn-label');
+    if(btn)md+='- **'+btn.textContent.trim()+'** (`'+btn.className.trim()+'`)'+(lbl?' — '+lbl.textContent.trim():'')+'\n'});
+    md+='\n'}
+  const chips=el.querySelectorAll('.chip');
+  if(chips.length){handled=true;md+=Array.from(chips).map(c=>c.textContent.trim()).join(', ')+'\n\n'}
+  const uxGroups=el.querySelectorAll('.ux-group');
+  if(uxGroups.length){handled=true;uxGroups.forEach(g=>{const t=g.querySelector('.ux-group-title');if(t)md+='### '+t.textContent.trim()+'\n\n';
+    g.querySelectorAll('.ux-card').forEach(c=>{const n=c.querySelector('.ux-card-name');const d=c.querySelector('.ux-card-def');const r=c.querySelector('.ux-card-rule');
+      if(n)md+='- **'+n.textContent.trim()+'** — '+(d?d.textContent.trim():'')+'\n  '+(r?r.textContent.trim():'')+'\n'});
+    md+='\n'})}
+  const cards=el.querySelectorAll('.card-demo,.security-card,.balance-card,.pricing-card');
+  if(cards.length){handled=true;cards.forEach(c=>{
+    const title=c.querySelector('.card-title,.title,.balance-label,.tier');
+    const tag=c.querySelector('.card-tag');
+    const text=c.querySelector('.card-text,.desc');
+    const price=c.querySelector('.price');
+    if(title)md+='- **'+title.textContent.trim()+'**'+(tag?' ('+tag.textContent.trim()+')':'')+(price?' — '+price.textContent.trim():'')+(text?': '+text.textContent.trim():'')+'\n'});
+    md+='\n'}
+  const table=el.querySelector('table');
+  if(table){handled=true;const heads=Array.from(table.querySelectorAll('thead th')).map(t=>t.textContent.trim());
+    if(heads.length){md+='| '+heads.join(' | ')+' |\n|'+heads.map(()=>'---').join('|')+'|\n';
+      table.querySelectorAll('tbody tr').forEach(tr=>{md+='| '+Array.from(tr.children).map(td=>td.textContent.trim()).join(' | ')+' |\n'});
+      md+='\n'}}
+  const forms=el.querySelectorAll('.form-group label');
+  if(forms.length){handled=true;forms.forEach(l=>{md+='- '+l.textContent.trim()+'\n'});md+='\n'}
+  if(!handled){const ps=el.querySelectorAll('p');ps.forEach(p=>{md+=p.textContent.trim()+'\n\n'})}
+  return md.trim()+'\n';
+}
+function copySectionAsMarkdown(id){const md=getMarkdown(id);if(!md)return;navigator.clipboard.writeText(md).then(()=>{const b=document.querySelector('[onclick*="copySectionAsMarkdown(\''+id+'\'"]');if(b){b.classList.add('copied');const sp=b.querySelector('span');if(sp){const old=sp.textContent;sp.textContent='Copied!';setTimeout(()=>{sp.textContent=old;b.classList.remove('copied')},2000)}}})}
+function copyAllAsMarkdown(){
+  const ids=['hero','typography','colors','security','motion','spacing','radius','elevation','balance-card','transaction-feed','limit-progress','verify-stepper','badges','buttons','chips','forms','table','pricing','ux-principles','engineering','accessibility','responsive','touch','architecture'];
+  let md='# Fintech Trust Design System\n\n> Design thesis: Money demands calm authority; trust is engineered through restraint, precision, and proof.\n\n---\n\n';
+  ids.forEach(id=>{md+=getMarkdown(id)+'\n\n---\n\n'});
+  navigator.clipboard.writeText(md.trim()).then(()=>{const b=document.getElementById('copy-all-btn');if(b){b.classList.add('copied');const sp=b.querySelector('span');if(sp){sp.textContent='Copied!';setTimeout(()=>{sp.textContent='Copy All as MD';b.classList.remove('copied')},2000)}}})
+}
+function copySwatch(el){const hex=el.dataset.hex;if(hex)navigator.clipboard.writeText(hex)}
+</script>
+</body>
+</html>
