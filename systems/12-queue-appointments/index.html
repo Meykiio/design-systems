@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Queue &amp; Appointments Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/*
+  ═══════════════════════════════════════════════════════
+  QUEUE & APPOINTMENTS DESIGN SYSTEM — v2
+  Queue management + appointment scheduling.
+  Algerian service businesses: barbershops, clinics, salons.
+
+  WHAT CHANGED FROM v1:
+  Dropped warm near-black / warm off-white / dot-grid — too
+  close to the Green Algeria system (earthy, nature, organic).
+  This system is the opposite register: operational, precise,
+  moving. The queue is a machine. The UI is its dashboard.
+
+  IDENTITY:
+  Transit terminal meets local barbershop. The number is king.
+  Every screen answers one question: "Where am I in the queue?"
+  Cold infrastructure palette with one warm humanizing note.
+
+  PALETTE:
+  Base dark:  #0F1623 — deep navy, not warm-black
+  Base light: #F0F4FF — cool blue-white, not cream
+  Primary:    #2563EB — electric blue, direct, clear action
+  Signal:     #FF4D2E — hot vermillion. Not terracotta. The
+                        "your turn" color. Pulls attention fast.
+  Positive:   #10B981 — cyan-green, clinical, reads "done"
+  Warning:    #F59E0B — amber
+  Surface:    #1A2235 (dark) / #FFFFFF (light)
+
+  FONTS:
+  Display:  Outfit 700/800 — clean geometric, modern sans
+  Mono:     DM Mono 500 — queue numbers ONLY. Tabular.
+            This is the signature typographic move: a mono
+            typeface for numerals only, giving numbers their
+            own visual register distinct from all UI text.
+  Body:     Noto Sans — Arabic/French/English, trilingual
+  Arabic:   Noto Sans Arabic
+
+  SIGNATURE MOTIFS:
+  1. Mono queue number — large, prominent, its own typeface
+  2. Thin 2px left-edge status line (not 4px bar — more precise)
+  3. "Called" state: primary blue fill, inverted — the moment
+     that matters most gets maximum contrast
+  4. No decorative backgrounds. Surfaces are flat. Depth comes
+     only from borders and subtle shadow, not texture or pattern.
+  5. Status column: a narrow right-aligned column showing states,
+     like arrivals/departures boards.
+
+  WHAT THIS REFUSES:
+  No warm brown/amber surfaces (Green Algeria's territory).
+  No dot-grid or radial-gradient hero backgrounds.
+  No earthy or organic color language.
+  No draw-underline in the closing section.
+  No em-dashes.
+  ═══════════════════════════════════════════════════════
+*/
+
+/* ─── DARK THEME ─── */
+:root {
+  --bg:               #0F1623;
+  --bg-dim:           #0A0F1A;
+  --surface:          #1A2235;
+  --surface-mid:      #1F2A3F;
+  --surface-high:     #263044;
+  --surface-highest:  #2E3A52;
+  --on-surface:       #E8EEFF;
+  --on-surface-muted: #7A8BAD;
+  --outline:          #263044;
+  --outline-hi:       #3A4D6A;
+
+  /* Primary — electric blue */
+  --primary:          #3B82F6;
+  --primary-solid:    #3B82F6;
+  --on-primary:       #FFFFFF;
+  --primary-glow:     rgba(59,130,246,0.20);
+  --primary-glow-sm:  rgba(59,130,246,0.09);
+  --primary-dim:      rgba(59,130,246,0.13);
+
+  /* Signal — hot vermillion. The "your turn" color. */
+  --signal:           #FF4D2E;
+  --signal-solid:     #FF4D2E;
+  --on-signal:        #FFFFFF;
+  --signal-glow:      rgba(255,77,46,0.22);
+  --signal-dim:       rgba(255,77,46,0.12);
+
+  /* Positive — cyan-green */
+  --positive:         #10B981;
+  --on-positive:      #FFFFFF;
+  --positive-dim:     rgba(16,185,129,0.13);
+
+  /* Warning */
+  --warning:          #F59E0B;
+  --on-warning:       #FFFFFF;
+  --warning-dim:      rgba(245,158,11,0.13);
+
+  /* Error */
+  --error:            #EF4444;
+  --on-error:         #FFFFFF;
+  --error-dim:        rgba(239,68,68,0.13);
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.6);
+  --shadow-md:  0 6px 20px rgba(0,0,0,0.65);
+  --shadow-lg:  0 18px 48px rgba(0,0,0,0.75);
+
+  --nav-bg:       #0A0F1A;
+  --scroll-track: #1A2235;
+  --scroll-thumb: #2E3A52;
+  --scroll-hi:    #3B82F6;
+
+  --table-hd-bg:  #1F2A3F;
+  --table-hd-fg:  #3B82F6;
+  --table-row:    #0F1623;
+  --table-hover:  #1A2235;
+  --table-border: #263044;
+
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-mono:    'DM Mono', 'Cascadia Code', monospace;
+  --font-body:    'Noto Sans', system-ui, sans-serif;
+  --font-arabic:  'Noto Sans Arabic', system-ui, sans-serif;
+
+  --r-xs:   2px;
+  --r-sm:   5px;
+  --r-md:   8px;
+  --r-lg:   12px;
+  --r-xl:   16px;
+  --r-2xl:  24px;
+  --r-full: 9999px;
+
+  --s-xs:  4px;
+  --s-sm:  8px;
+  --s-md:  16px;
+  --s-lg:  24px;
+  --s-xl:  48px;
+  --s-2xl: 80px;
+
+  --sidebar-w:   272px;
+  --topbar-h:    60px;
+  --content-max: 1080px;
+
+  --ease-out:    cubic-bezier(.22,1,.36,1);
+  --ease-spring: cubic-bezier(.34,1.22,.64,1);
+  --dur-fast:    .15s;
+  --dur-med:     .26s;
+  --dur-slow:    .48s;
+
+  /* The status line — 2px, sharper than a bar */
+  --status-line: 2px;
+}
+
+/* ─── LIGHT THEME ─── */
+[data-theme="light"] {
+  --bg:               #F0F4FF;
+  --bg-dim:           #E4EAFB;
+  --surface:          #FFFFFF;
+  --surface-mid:      #F5F7FF;
+  --surface-high:     #EBF0FF;
+  --surface-highest:  #DDEEFF;
+  --on-surface:       #0D1526;
+  --on-surface-muted: #4A5880;
+  --outline:          #D4DCEF;
+  --outline-hi:       #A8B6D4;
+
+  --primary:          #2563EB;
+  --primary-solid:    #2563EB;
+  --on-primary:       #FFFFFF;
+  --primary-glow:     rgba(37,99,235,0.14);
+  --primary-glow-sm:  rgba(37,99,235,0.07);
+  --primary-dim:      rgba(37,99,235,0.09);
+
+  --signal:           #E63A1E;
+  --signal-solid:     #E63A1E;
+  --on-signal:        #FFFFFF;
+  --signal-glow:      rgba(230,58,30,0.16);
+  --signal-dim:       rgba(230,58,30,0.09);
+
+  --positive:         #059669;
+  --on-positive:      #FFFFFF;
+  --positive-dim:     rgba(5,150,105,0.10);
+
+  --warning:          #D97706;
+  --on-warning:       #FFFFFF;
+  --warning-dim:      rgba(217,119,6,0.10);
+
+  --error:            #DC2626;
+  --on-error:         #FFFFFF;
+  --error-dim:        rgba(220,38,38,0.10);
+
+  --shadow-sm:  0 1px 3px rgba(13,21,38,0.07);
+  --shadow-md:  0 6px 20px rgba(13,21,38,0.09);
+  --shadow-lg:  0 18px 48px rgba(13,21,38,0.12);
+
+  --nav-bg:       #FFFFFF;
+  --scroll-track: #EBF0FF;
+  --scroll-thumb: #C0CDE4;
+  --scroll-hi:    #2563EB;
+
+  --table-hd-bg:  #EBF0FF;
+  --table-hd-fg:  #2563EB;
+  --table-row:    #FFFFFF;
+  --table-hover:  #F5F7FF;
+  --table-border: #D4DCEF;
+}
+
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);font-size:16px;line-height:1.55;
+  color:var(--on-surface);background:var(--bg);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--scroll-track)}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-hi)}
+::selection{background:var(--primary-solid);color:var(--on-primary)}
+.container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 var(--s-lg)}
+@media(max-width:767px){.container{padding:0 var(--s-md)}}
+
+/* ─── SCROLL PROGRESS ─── */
+.scroll-progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:2px;z-index:400;pointer-events:none;transition:left .45s var(--ease-out)}
+.scroll-progress .bar{display:block;height:100%;width:0;background:var(--signal-solid);border-radius:0 var(--r-full) var(--r-full) 0}
+
+/* ─── SIDEBAR ─── */
+.topbar{display:none}
+.menu-toggle{display:none}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:220;
+  display:flex;flex-direction:column;
+  background:var(--nav-bg);
+  border-right:1px solid var(--outline);
+  transition:transform var(--dur-slow) var(--ease-out),width .42s var(--ease-out),background .3s,border-color .3s;
+}
+.sidebar-header{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 20px 14px;
+  border-bottom:1px solid var(--outline);
+}
+/* Logo: L in a blue square, number display style */
+.nav-logomark{
+  width:32px;height:32px;border-radius:var(--r-sm);
+  background:var(--primary-solid);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-family:var(--font-mono);font-size:15px;font-weight:500;
+  color:var(--on-primary);letter-spacing:-0.04em;
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:18px;font-weight:800;
+  color:var(--on-surface);letter-spacing:-0.02em;white-space:nowrap;
+  transition:opacity var(--dur-fast);
+}
+.nav-logo .signal{color:var(--signal)}
+.nav-logo:hover{opacity:.7}
+.sidebar-close{
+  display:none;margin-left:auto;width:30px;height:30px;flex-shrink:0;
+  align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--outline);
+  border-radius:var(--r-md);color:var(--on-surface-muted);cursor:pointer;
+  transition:color .2s,border-color .2s;
+}
+.sidebar-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.sidebar-close svg{width:14px;height:14px}
+.sidebar-nav{
+  flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 10px 20px;
+  scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent;
+}
+.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+/* Indicator: left-edge line, matches the 2px status-line motif */
+.nav-indicator{
+  position:absolute;left:0;top:0;
+  width:var(--status-line);height:0;opacity:0;z-index:0;
+  background:var(--signal-solid);
+  border-radius:0 1px 1px 0;
+  transition:top .46s var(--ease-spring),height .46s var(--ease-spring),opacity .18s var(--ease-out);
+  pointer-events:none;
+}
+.nav-group{padding-top:16px}
+.nav-indicator+.nav-group{padding-top:6px}
+.nav-group-label{
+  font:600 10px/1 var(--font-body);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--outline-hi);padding:0 10px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:9px;position:relative;z-index:1;
+  padding:8px 10px;margin-bottom:1px;border-radius:var(--r-md);
+  font:500 13px/1.3 var(--font-body);color:var(--on-surface-muted);
+  -webkit-tap-highlight-color:transparent;
+  transition:color var(--dur-fast),background var(--dur-fast),transform var(--dur-fast);
+}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.55;transition:opacity var(--dur-fast)}
+.nav-item:hover{color:var(--on-surface);background:var(--surface-mid);transform:translateX(2px)}
+.nav-item:hover svg{opacity:1}
+.nav-item.active{color:var(--primary);font-weight:600}
+.nav-item.active svg{opacity:1;color:var(--primary)}
+.nav-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px}
+.sidebar-footer{display:flex;align-items:center;gap:8px;padding:12px 14px;border-top:1px solid var(--outline)}
+.collapse-toggle{
+  display:none;flex:1;align-items:center;justify-content:center;gap:8px;
+  padding:9px 14px;background:transparent;color:var(--on-surface-muted);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 12px/1 var(--font-body);cursor:pointer;white-space:nowrap;
+  transition:color var(--dur-fast),border-color var(--dur-fast),transform var(--dur-fast);
+}
+.collapse-toggle:hover{color:var(--primary);border-color:var(--primary-solid)}
+.collapse-toggle:active{transform:scale(.97)}
+.collapse-toggle svg{width:14px;height:14px;transition:transform .4s var(--ease-out)}
+@media(min-width:1024px){.collapse-toggle{display:flex}}
+html.nav-collapsed .collapse-toggle svg{transform:rotate(180deg)}
+.theme-toggle{
+  background:transparent;border:1px solid var(--outline);
+  color:var(--primary);border-radius:var(--r-full);
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  transition:border-color var(--dur-fast),transform var(--dur-med) var(--ease-spring);
+}
+.theme-toggle:hover{border-color:var(--primary-solid);transform:scale(1.1) rotate(14deg)}
+.theme-toggle svg{width:14px;height:14px}
+.sidebar-backdrop{display:none}
+.page{margin-left:var(--sidebar-w);transition:margin-left .42s var(--ease-out)}
+section[id]{scroll-margin-top:24px}
+.nav-tooltip{
+  position:fixed;z-index:500;pointer-events:none;
+  transform:translateY(-50%) translateX(-6px);opacity:0;
+  background:var(--surface-highest);color:var(--on-surface);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 11px/1 var(--font-body);padding:6px 10px;white-space:nowrap;
+  box-shadow:var(--shadow-md);transition:opacity .15s,transform .15s;
+}
+.nav-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0)}
+@media(min-width:1024px){
+  html.nav-collapsed{--sidebar-w:68px}
+  html.nav-collapsed .sidebar-header{flex-direction:column;gap:0;padding:14px 8px 12px}
+  html.nav-collapsed .nav-logo{display:none}
+  html.nav-collapsed .sidebar-nav{padding:6px 6px 20px}
+  html.nav-collapsed .nav-group{padding-top:8px;margin-top:6px;border-top:1px solid var(--outline)}
+  html.nav-collapsed .nav-indicator+.nav-group{padding-top:4px;margin-top:0;border-top:none}
+  html.nav-collapsed .nav-group-label{display:none}
+  html.nav-collapsed .nav-item{justify-content:center;padding:9px 0;gap:0}
+  html.nav-collapsed .nav-item:hover,html.nav-collapsed .nav-item.active{transform:none}
+  html.nav-collapsed .nav-item span{display:none}
+  html.nav-collapsed .nav-item svg{width:17px;height:17px;opacity:.7}
+  html.nav-collapsed .sidebar-footer{flex-direction:column;padding:10px 8px}
+  html.nav-collapsed .collapse-toggle{width:100%;padding:9px 0}
+  html.nav-collapsed .collapse-toggle span{display:none}
+}
+@media(max-width:1023px){
+  .page{margin-left:0}
+  section[id]{scroll-margin-top:calc(var(--topbar-h)+16px)}
+  section.hero{padding:calc(var(--topbar-h)+52px) 0 64px}
+  .scroll-progress{left:0}
+  .topbar{
+    display:flex;align-items:center;gap:10px;
+    position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:160;
+    padding:0 16px;background:var(--nav-bg);border-bottom:1px solid var(--outline);
+  }
+  .topbar .theme-toggle{margin-left:auto}
+  .menu-toggle{
+    display:flex;align-items:center;justify-content:center;
+    width:38px;height:38px;border-radius:var(--r-md);
+    background:transparent;border:1px solid var(--outline);
+    color:var(--primary);cursor:pointer;
+    transition:border-color var(--dur-fast),transform var(--dur-fast) var(--ease-spring);
+  }
+  .menu-toggle:hover{border-color:var(--primary-solid)}
+  .menu-toggle:active{transform:scale(.9)}
+  .menu-toggle svg{width:19px;height:19px}
+  .sidebar{width:min(300px,86vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .sidebar-footer{display:none}
+  .sidebar-backdrop{
+    display:block;position:fixed;inset:0;z-index:190;
+    background:rgba(9,13,22,.7);
+    opacity:0;visibility:hidden;
+    transition:opacity var(--dur-med) var(--ease-out),visibility 0s linear var(--dur-med);
+  }
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out)}
+  body.nav-locked{overflow:hidden}
+  .sidebar .nav-group{opacity:0;transform:translateX(-14px);transition:opacity .2s,transform .2s}
+  .sidebar.open .nav-group{
+    opacity:1;transform:none;
+    transition:opacity .44s var(--ease-out),transform .44s var(--ease-out);
+    transition-delay:calc(.07s + var(--i,0)*50ms);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .sidebar,.sidebar-backdrop,.nav-indicator,.nav-item,.nav-group{transition:none!important}
+}
+
+/* ─── SECTIONS ─── */
+section{padding:var(--s-xl) 0;background:var(--bg);transition:background .3s}
+section:nth-child(even):not(.hero):not(.closing-band){background:var(--bg-dim)}
+.section-label{
+  display:flex;align-items:center;gap:6px;
+  font:600 10px/1 var(--font-body);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--signal);margin-bottom:10px;
+}
+.section-label .dot{width:5px;height:5px;border-radius:50%;background:var(--signal);flex-shrink:0}
+.section-header{margin-bottom:var(--s-lg);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-lg)}
+.section-header-text{flex:1;min-width:0}
+.section-header h2{
+  font-family:var(--font-display);font-size:28px;font-weight:800;
+  color:var(--on-surface);letter-spacing:-0.02em;line-height:1.2;margin-bottom:10px;
+}
+.section-header p{font-size:15px;color:var(--on-surface-muted);max-width:560px;line-height:1.6}
+@media(max-width:767px){.section-header h2{font-size:22px}}
+
+/* ─── HERO ─── */
+section.hero{
+  background:var(--bg-dim);padding:80px 0;
+  border-bottom:1px solid var(--outline);
+  position:relative;overflow:hidden;
+}
+/* Departures-board stripe pattern — horizontal, not dots */
+section.hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 48px,
+    var(--outline) 48px,
+    var(--outline) 49px
+  );
+  opacity:.3;
+}
+section.hero .container{position:relative;z-index:1}
+
+/* Status pill: the queue number as badge */
+.hero-num-badge{
+  display:inline-flex;align-items:stretch;
+  border:1px solid var(--outline-hi);border-radius:var(--r-sm);
+  overflow:hidden;margin-bottom:var(--s-lg);font-family:var(--font-mono);
+}
+.hero-num-digit{
+  background:var(--signal-solid);color:var(--on-signal);
+  padding:7px 14px;font-size:14px;font-weight:500;letter-spacing:.04em;
+}
+.hero-num-label{
+  background:var(--surface-high);color:var(--on-surface-muted);
+  padding:7px 12px;font-size:13px;font-weight:400;letter-spacing:.02em;
+  font-family:var(--font-body);
+}
+
+section.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(36px,5.5vw,66px);
+  font-weight:800;line-height:1.02;letter-spacing:-0.025em;
+  color:var(--on-surface);margin-bottom:20px;
+}
+.h1-blue{color:var(--primary)}
+.h1-signal{color:var(--signal)}
+
+section.hero p{font-size:16px;color:var(--on-surface-muted);max-width:520px;line-height:1.65;margin-bottom:var(--s-lg)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-hero-primary{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:12px 24px;background:var(--primary-solid);color:var(--on-primary);
+  border:none;border-radius:var(--r-sm);font:700 14px/1 var(--font-display);cursor:pointer;
+  transition:transform .18s,box-shadow .18s;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-hero-primary:active{transform:scale(.97)}
+.btn-hero-secondary{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:12px 24px;background:transparent;color:var(--on-surface);
+  border:1px solid var(--outline-hi);border-radius:var(--r-sm);
+  font:600 14px/1 var(--font-body);cursor:pointer;
+  transition:background .18s,transform .18s,border-color .18s;
+}
+.btn-hero-secondary:hover{background:var(--surface-high);transform:translateY(-2px)}
+.btn-hero-secondary:active{transform:scale(.97)}
+
+/* ─── DEPARTURES BOARD: the hero live preview ─── */
+/* This IS the product demo. A transit-style board. */
+.board{
+  margin-top:var(--s-xl);
+  background:var(--surface);
+  border:1px solid var(--outline);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+}
+.board-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+  background:var(--surface-mid);
+  border-bottom:1px solid var(--outline);
+}
+.board-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--on-surface);letter-spacing:.02em}
+.board-meta{font-family:var(--font-mono);font-size:11px;color:var(--on-surface-muted)}
+.board-live{display:inline-flex;align-items:center;gap:6px;font:600 10px/1 var(--font-body);color:var(--positive)}
+.board-live .pulse{
+  width:7px;height:7px;border-radius:50%;background:var(--positive);
+  animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.board-rows{display:flex;flex-direction:column}
+.board-row{
+  display:grid;
+  grid-template-columns:56px 1fr auto 120px;
+  align-items:center;gap:16px;
+  padding:14px 20px;
+  border-bottom:1px solid var(--outline);
+  position:relative;
+  transition:background var(--dur-fast);
+}
+.board-row:last-child{border-bottom:none}
+.board-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:var(--status-line);border-radius:0;
+}
+.board-row.waiting::before{background:var(--outline-hi)}
+.board-row.called::before{background:var(--primary-solid)}
+.board-row.serving::before{background:var(--signal-solid)}
+.board-row.done::before{background:var(--positive)}
+
+/* Called row inverts: maximum attention */
+.board-row.called{background:var(--primary-dim)}
+
+.board-num{
+  font-family:var(--font-mono);font-size:22px;font-weight:500;
+  color:var(--on-surface);letter-spacing:-.02em;text-align:center;
+  transition:color var(--dur-fast);
+}
+.board-row.called .board-num{color:var(--primary)}
+.board-row.serving .board-num{color:var(--signal)}
+.board-row.done .board-num{color:var(--positive);opacity:.6}
+
+.board-name{font:500 14px/1 var(--font-body);color:var(--on-surface)}
+.board-service{font:400 12px/1 var(--font-body);color:var(--on-surface-muted);margin-top:3px}
+
+.board-eta{
+  font-family:var(--font-mono);font-size:12px;color:var(--on-surface-muted);
+  text-align:right;white-space:nowrap;
+}
+
+.board-status{display:flex;justify-content:flex-end}
+.status-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  font:500 10px/1 var(--font-body);letter-spacing:.05em;
+  padding:4px 9px;border-radius:var(--r-xs);
+}
+.status-pill .d{width:4px;height:4px;border-radius:50%;background:currentColor}
+.sp-waiting{background:var(--surface-high);color:var(--on-surface-muted)}
+.sp-called{background:var(--primary-dim);color:var(--primary);font-weight:600}
+.sp-serving{background:var(--signal-dim);color:var(--signal);font-weight:600}
+.sp-done{background:var(--positive-dim);color:var(--positive)}
+@media(max-width:640px){.board-row{grid-template-columns:44px 1fr auto}.board-eta{display:none}}
+
+/* ─── COLORS ─── */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:10px}
+.color-swatch{
+  position:relative;cursor:pointer;border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--outline);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out);
+}
+.color-swatch:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.color-swatch-fill{height:66px}
+.color-swatch-info{padding:9px 12px;background:var(--surface)}
+.color-swatch-info .hex{font:500 10px/1 var(--font-mono);color:var(--on-surface-muted);margin-bottom:3px;letter-spacing:.04em}
+.color-swatch-info .name{font:400 12px/1 var(--font-body);color:var(--on-surface)}
+.color-swatch::after{
+  content:'Copy';position:absolute;top:6px;right:6px;z-index:2;
+  font:500 9px/1 var(--font-mono);
+  background:rgba(9,13,22,.65);color:#fff;padding:4px 8px;border-radius:var(--r-full);
+  opacity:0;transform:translateY(-3px);
+  transition:opacity var(--dur-fast),transform var(--dur-fast);pointer-events:none;
+}
+.color-swatch:hover::after,.color-swatch:focus-visible::after{opacity:1;transform:none}
+.color-swatch.copied::after{content:'Copied';background:var(--positive);opacity:1;transform:none}
+
+/* ─── TYPOGRAPHY ─── */
+.type-list{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline)}
+.type-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--s-md) var(--s-lg);gap:var(--s-lg);
+  border-bottom:1px solid var(--outline);
+  transition:background var(--dur-fast),box-shadow var(--dur-fast);
+}
+.type-row:last-child{border-bottom:none}
+.type-row:nth-child(even){background:var(--surface-mid)}
+.type-row:nth-child(odd){background:var(--surface)}
+/* Status-line hover: the 2px motif appears on typography rows too */
+.type-row:hover{background:var(--surface-high);box-shadow:inset var(--status-line) 0 0 0 var(--signal-solid)}
+.type-row .meta{flex:0 0 200px}
+.type-row .meta .token-name{font:500 10px/1 var(--font-mono);color:var(--signal);margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase}
+.type-row .meta .spec{font-size:12px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.type-row .specimen{flex:1;text-align:right;word-break:break-word}
+.type-row.arabic .specimen{font-family:var(--font-arabic);direction:rtl;text-align:left}
+@media(max-width:767px){.type-row{flex-direction:column;align-items:flex-start}.type-row .meta{flex:unset}.type-row .specimen{text-align:left;margin-top:8px}}
+
+/* ─── BUTTONS ─── */
+.button-grid{display:flex;flex-wrap:wrap;gap:var(--s-lg);align-items:flex-end}
+.button-item{display:flex;flex-direction:column;align-items:center;gap:7px}
+.button-item .btn-label{font:400 11px/1 var(--font-body);color:var(--on-surface-muted)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  font:600 13px/1 var(--font-body);padding:10px 18px;
+  border:none;border-radius:var(--r-sm);cursor:pointer;white-space:nowrap;
+  transition:transform var(--dur-fast),box-shadow var(--dur-fast),opacity var(--dur-fast),background var(--dur-fast),border-color var(--dur-fast);
+}
+.btn:active{transform:scale(.96)!important}
+.btn-primary{background:var(--primary-solid);color:var(--on-primary)}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-signal{background:var(--signal-solid);color:var(--on-signal)}
+.btn-signal:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-ghost{background:transparent;color:var(--on-surface-muted)}
+.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
+.btn-outline{background:transparent;color:var(--primary);border:1px solid var(--primary-solid)}
+.btn-outline:hover{background:var(--primary-dim);transform:translateY(-1px)}
+.btn-outline-signal{background:transparent;color:var(--signal);border:1px solid var(--signal-solid)}
+.btn-outline-signal:hover{background:var(--signal-dim);transform:translateY(-1px)}
+.btn-pill-primary{background:var(--primary-solid);color:var(--on-primary);border-radius:var(--r-full)}
+.btn-pill-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-pill-signal{background:var(--signal-solid);color:var(--on-signal);border-radius:var(--r-full)}
+.btn-pill-signal:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-danger{background:var(--error-dim);color:var(--error);border:1px solid var(--error)}
+.btn-danger:hover{background:var(--error);color:var(--on-error)}
+.btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.5}
+.btn-icon{
+  width:38px;height:38px;padding:0;background:transparent;
+  border:1px solid var(--outline);border-radius:var(--r-md);
+  color:var(--on-surface-muted);
+  transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast),transform var(--dur-fast);
+}
+.btn-icon:hover{color:var(--primary);border-color:var(--primary-solid);background:var(--primary-dim)}
+
+/* ─── STATUS CHIPS ─── */
+.chips-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:var(--s-md)}
+.chip{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 9px;border-radius:var(--r-xs);
+  font:500 10px/1 var(--font-mono);letter-spacing:.05em;
+  transition:transform var(--dur-fast);
+}
+.chip:hover{transform:translateY(-1px)}
+.chip-waiting{background:var(--surface-high);color:var(--on-surface-muted);border:1px solid var(--outline-hi)}
+.chip-called{background:var(--primary-dim);color:var(--primary);border:1px solid rgba(59,130,246,.3)}
+.chip-serving{background:var(--signal-dim);color:var(--signal);border:1px solid rgba(255,77,46,.3)}
+.chip-done{background:var(--positive-dim);color:var(--positive);border:1px solid rgba(16,185,129,.3)}
+.chip-noshow{background:var(--error-dim);color:var(--error);border:1px solid rgba(239,68,68,.3)}
+.chip-paused{background:var(--warning-dim);color:var(--warning);border:1px solid rgba(245,158,11,.3)}
+.chip-free{background:var(--surface-high);color:var(--on-surface-muted);border:1px solid var(--outline-hi)}
+.chip-pro{background:var(--primary-dim);color:var(--primary);border:1px solid rgba(59,130,246,.3)}
+.chip .d{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+.chip-x{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:13px;height:13px;margin-left:2px;border-radius:50%;
+  background:transparent;color:inherit;border:none;
+  font:700 10px/1 var(--font-body);cursor:pointer;opacity:.6;
+  transition:opacity var(--dur-fast),background var(--dur-fast);
+}
+.chip-x:hover{opacity:1;background:rgba(255,255,255,.1)}
+.chip.removing{opacity:0;transform:scale(.82);transition:opacity .18s,transform .18s}
+
+/* ─── CARDS ─── */
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.cards-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+.card-demo{
+  background:var(--surface);border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast);
+}
+.card-demo:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.card-tag{display:inline-block;font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--signal);margin-bottom:10px}
+.card-title{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--on-surface);margin-bottom:6px}
+.card-text{font-size:14px;color:var(--on-surface-muted);line-height:1.6}
+.card-link{display:inline-block;margin-top:12px;font:600 12px/1 var(--font-body);color:var(--primary)}
+.card-link:hover{text-decoration:underline}
+.card-icon{
+  width:40px;height:40px;border-radius:var(--r-md);margin-bottom:12px;
+  background:var(--primary-dim);border:1px solid rgba(59,130,246,.2);
+  display:flex;align-items:center;justify-content:center;color:var(--primary);
+}
+.card-icon svg{width:17px;height:17px}
+/* The ticket card: status-line on left, mono number */
+.card-ticket{
+  background:var(--surface);border:1px solid var(--outline);
+  border-radius:var(--r-xl);
+  padding:var(--s-lg) var(--s-lg) var(--s-lg) calc(var(--s-lg) + var(--status-line) + 10px);
+  position:relative;overflow:hidden;
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast);
+}
+.card-ticket::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:var(--status-line);
+}
+.card-ticket.primary-line::before{background:var(--primary-solid)}
+.card-ticket.signal-line::before{background:var(--signal-solid)}
+.card-ticket.positive-line::before{background:var(--positive)}
+.card-ticket.warning-line::before{background:var(--warning)}
+.card-ticket:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+/* Called card inverts like the board row */
+.card-ticket.called-state{background:var(--primary-dim);border-color:rgba(59,130,246,.35)}
+.card-stat-label{font-size:12px;color:var(--on-surface-muted);margin-bottom:5px;font-family:var(--font-body)}
+.card-stat-value{
+  font-family:var(--font-mono);font-size:34px;font-weight:500;
+  color:var(--on-surface);margin-bottom:10px;line-height:1;letter-spacing:-.02em;
+}
+.card-stat-value span{font-size:13px;font-weight:400;color:var(--on-surface-muted);font-family:var(--font-body)}
+
+/* ─── PRICING ─── */
+.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md);max-width:680px}
+@media(max-width:1023px){.pricing-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}}
+.pricing-card{
+  background:var(--surface);border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  display:flex;flex-direction:column;
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast);
+}
+.pricing-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pricing-card.featured{border-color:var(--primary-solid)}
+.pricing-card.featured:hover{box-shadow:0 0 0 1px var(--primary-solid),var(--shadow-md)}
+.pricing-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;background:var(--primary-solid);color:var(--on-primary);
+  border-radius:var(--r-full);font:600 10px/1 var(--font-body);
+  margin-bottom:var(--s-md);align-self:flex-start;letter-spacing:.04em;
+}
+.pricing-card .tier{font:700 16px/1 var(--font-display);color:var(--primary);margin-bottom:5px}
+.pricing-card .price{font:500 28px/1 var(--font-mono);color:var(--on-surface);margin-bottom:var(--s-md);letter-spacing:-.02em}
+.pricing-card .price-sub{font:400 13px/1 var(--font-body);color:var(--on-surface-muted)}
+.pricing-features{list-style:none;margin-bottom:var(--s-lg);flex:1}
+.pricing-features li{
+  font-size:13px;padding:7px 0;border-bottom:1px solid var(--outline);
+  display:flex;align-items:center;gap:8px;color:var(--on-surface-muted);
+}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--positive);flex-shrink:0}
+.pricing-cta-margin{margin-top:auto}
+
+/* ─── FORMS ─── */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-lg)}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font:600 11px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:.03em}
+.form-hint{font:400 11px/1.4 var(--font-body);color:var(--on-surface-muted);opacity:.7}
+.form-input,.form-select,.form-textarea{
+  padding:10px 12px;border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:14px/1.4 var(--font-body);color:var(--on-surface);background:var(--surface);
+  transition:border-color var(--dur-fast),box-shadow var(--dur-fast);
+  height:44px;outline:none;
+}
+.form-textarea{height:92px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
+.form-input.focused{border-color:var(--primary-solid);box-shadow:0 0 0 3px var(--primary-glow-sm)}
+.form-input.error{border-color:var(--error);box-shadow:0 0 0 3px var(--error-dim)}
+.form-select{
+  -webkit-appearance:none;appearance:none;
+  background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%237A8BAD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+  padding-right:32px;
+}
+@media(max-width:767px){.form-grid{grid-template-columns:1fr}}
+
+/* ─── SPACING + RADIUS ─── */
+.spacing-ruler{
+  display:flex;align-items:stretch;gap:3px;height:48px;
+  background:var(--surface-high);border-radius:var(--r-sm);padding:4px;
+}
+.spacing-block{
+  display:flex;align-items:center;justify-content:center;
+  background:var(--primary-solid);border-radius:var(--r-xs);
+  font:500 10px/1 var(--font-mono);color:var(--on-primary);
+  transition:flex .42s var(--ease-out);min-width:8px;overflow:hidden;
+}
+.spacing-block .lbl{opacity:0;transition:opacity .18s;white-space:nowrap}
+.spacing-block:hover{flex:3!important}.spacing-block:hover .lbl{opacity:1}
+.spacing-labels{
+  display:flex;justify-content:space-between;margin-top:7px;
+  font:400 10px/1 var(--font-mono);color:var(--on-surface-muted);
+}
+.radius-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:7px}
+.radius-box{
+  background:var(--surface-high);border:1.5px solid var(--primary-solid);
+  transition:background .3s,transform var(--dur-med) var(--ease-spring);
+}
+.radius-box:hover{transform:scale(1.08) rotate(-2deg)}
+.r-name{font:500 10px/1 var(--font-mono);color:var(--on-surface-muted)}
+.r-value{font:400 10px/1 var(--font-mono);color:var(--outline-hi)}
+
+/* ─── ELEVATION ─── */
+.elevation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+.elevation-card{
+  background:var(--surface);border-radius:var(--r-lg);
+  padding:var(--s-lg);text-align:center;border:1px solid var(--outline);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out);
+}
+.elevation-card:hover{transform:translateY(-5px)}
+.elevation-card .e-num{
+  width:40px;height:40px;margin:0 auto;border-radius:var(--r-sm);
+  background:var(--surface-high);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:16px;font-weight:500;color:var(--primary);
+}
+.elevation-card .e-label{font-size:12px;color:var(--on-surface-muted);margin-top:10px;font-family:var(--font-body)}
+.elevation-card .e-sub{font:400 10px/1 var(--font-mono);color:var(--outline-hi);margin-top:3px}
+.el-0{box-shadow:none}.el-1{box-shadow:var(--shadow-sm)}.el-2{box-shadow:var(--shadow-md)}.el-3{box-shadow:var(--shadow-lg);border-color:var(--primary-solid)}
+@media(max-width:767px){.elevation-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ─── TABLE ─── */
+.responsive-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline)}
+.responsive-table th,.responsive-table td{padding:12px var(--s-lg);text-align:left;border-bottom:1px solid var(--outline);transition:background var(--dur-fast)}
+.responsive-table th{background:var(--table-hd-bg);color:var(--table-hd-fg);font:600 10px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.08em}
+.responsive-table td{font-size:13px;background:var(--table-row);color:var(--on-surface)}
+.responsive-table tr:last-child td{border-bottom:none}
+.responsive-table tr:hover td{background:var(--table-hover)}
+.responsive-notes{margin-top:var(--s-lg);display:grid;gap:9px}
+.responsive-notes li{font-size:14px;color:var(--on-surface-muted);display:flex;align-items:flex-start;gap:8px;list-style:none}
+.responsive-notes li::before{content:'';flex-shrink:0;margin-top:8px;width:12px;height:var(--status-line);background:var(--signal-solid);border-radius:var(--r-full)}
+
+/* ─── TOUCH ─── */
+.touch-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.touch-item{display:flex;flex-direction:column;align-items:center;gap:7px}
+.touch-target{
+  width:44px;height:44px;background:var(--primary-solid);border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;color:var(--on-primary);
+  font:500 10px/1 var(--font-mono);position:relative;
+}
+.touch-target::after{content:'';position:absolute;inset:-5px;border:1px dashed var(--primary-solid);border-radius:calc(var(--r-sm)+3px);opacity:.3}
+.touch-label{font:400 11px/1 var(--font-body);color:var(--on-surface-muted)}
+.touch-input{height:44px;padding:10px 12px;border:1px solid var(--outline);border-radius:var(--r-sm);font:14px/1 var(--font-body);width:200px;outline:none;background:var(--surface);color:var(--on-surface)}
+
+/* ─── UX PRINCIPLES ─── */
+.ux-group{margin-bottom:var(--s-xl)}.ux-group:last-child{margin-bottom:0}
+.ux-group-title{font:700 11px/1 var(--font-mono);color:var(--signal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--s-md)}
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.ux-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ux-grid{grid-template-columns:1fr}}
+.ux-card{
+  background:transparent;border:0;padding:0;text-align:left;cursor:pointer;
+  font-family:inherit;color:inherit;perspective:1200px;
+  min-height:160px;display:block;width:100%;-webkit-tap-highlight-color:transparent;
+}
+.ux-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--r-lg)}
+.ux-card-inner{position:relative;width:100%;height:100%;min-height:160px;transition:transform var(--dur-slow) var(--ease-spring);transform-style:preserve-3d;display:block}
+.ux-card[aria-expanded="true"] .ux-card-inner{transform:rotateY(180deg)}
+.ux-card:hover .ux-card-inner{transform:translateY(-3px)}
+.ux-card[aria-expanded="true"]:hover .ux-card-inner{transform:rotateY(180deg) translateY(-3px)}
+.ux-card-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);
+  padding:var(--s-md) var(--s-lg);display:flex;flex-direction:column;
+  transition:box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast);
+}
+.ux-card:hover .ux-card-face{box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.ux-card-face-back{transform:rotateY(180deg);border-color:rgba(59,130,246,.2)}
+.ux-card-name{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--on-surface);margin-bottom:6px;display:block}
+.ux-card-def{font-size:13px;color:var(--on-surface-muted);line-height:1.5;display:block;flex:1}
+.ux-card-rule{font-size:13px;color:var(--on-surface);line-height:1.5;padding-top:9px;border-top:1px solid var(--outline);display:block;flex:1}
+.ux-card-rule b{color:var(--signal);font-weight:600}
+.ux-card-flip-hint{font:500 10px/1 var(--font-mono);letter-spacing:.03em;color:var(--primary);opacity:0;transition:opacity var(--dur-fast);margin-top:10px}
+.ux-card:hover .ux-card-flip-hint,.ux-card:focus-visible .ux-card-flip-hint{opacity:.8}
+@media(hover:none){.ux-card-flip-hint{opacity:.6}}
+
+/* ─── MOTION ─── */
+.motion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+.motion-card{
+  background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-xl);padding:var(--s-lg);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast);
+}
+.motion-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.motion-track{position:relative;height:32px;margin-bottom:14px;overflow:hidden;background:var(--surface-high);border-radius:var(--r-full)}
+.motion-dot{position:absolute;top:5px;left:5px;width:22px;height:22px;border-radius:50%;background:var(--primary-solid)}
+.dot-ease-out{animation:motion-slide 2.0s var(--ease-out) infinite alternate}
+.dot-ease-spring{animation:motion-slide 2.0s var(--ease-spring) infinite alternate}
+@keyframes motion-slide{to{left:calc(100% - 27px)}}
+.motion-name{font:700 12px/1 var(--font-mono);color:var(--primary);margin-bottom:7px}
+.motion-card code{
+  display:inline-block;margin-bottom:9px;
+  font:400 11px/1.4 var(--font-mono);color:var(--signal);
+  background:var(--surface-high);padding:4px 7px;border-radius:4px;border:1px solid var(--outline);
+}
+.motion-card p{font-size:13px;color:var(--on-surface-muted);line-height:1.5}
+.motion-durations{display:flex;flex-wrap:wrap;gap:7px;align-items:center;min-height:32px;margin-bottom:14px}
+@media(max-width:1023px){.motion-grid{grid-template-columns:1fr}}
+
+/* ─── CLOSING ─── */
+section.closing-band{
+  background:var(--bg-dim);padding:88px 0;text-align:center;
+  border-top:1px solid var(--outline);position:relative;overflow:hidden;
+}
+/* Closing: horizontal-stripe background, same as hero -- consistent world */
+section.closing-band::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 48px,var(--outline) 48px,var(--outline) 49px);
+  opacity:.25;
+}
+section.closing-band h2{
+  font-family:var(--font-display);font-size:clamp(24px,3.5vw,38px);font-weight:800;
+  color:var(--on-surface);letter-spacing:-0.02em;margin-bottom:var(--s-md);position:relative;
+}
+/* Big mono number as visual anchor in the closing */
+.closing-num{
+  font-family:var(--font-mono);font-size:clamp(56px,10vw,120px);font-weight:500;
+  color:var(--primary);letter-spacing:-.04em;line-height:1;
+  display:block;margin-bottom:var(--s-md);opacity:.12;
+  position:absolute;left:50%;transform:translateX(-50%);
+  pointer-events:none;top:16px;
+}
+.site-footer{
+  background:var(--bg-dim);border-top:1px solid var(--outline);
+  padding:var(--s-lg) 0;text-align:center;font-size:13px;color:var(--on-surface-muted);
+}
+.site-footer a{color:var(--signal);font-weight:500}
+
+/* ─── LIFE LAYER ─── */
+[data-reveal]{opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out);transition-delay:var(--d,0s)}
+[data-reveal].revealed{opacity:1;transform:none}
+.btn:focus-visible,.color-swatch:focus-visible{outline:2px solid var(--primary-solid);outline-offset:2px}
+.toast{
+  position:fixed;bottom:24px;left:50%;z-index:600;
+  transform:translateX(-50%) translateY(14px);
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface-highest);color:var(--on-surface);
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  padding:9px 16px;font:500 12px/1 var(--font-mono);
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:opacity var(--dur-med) var(--ease-out),transform var(--dur-med) var(--ease-spring);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast .t-dot{width:6px;height:6px;border-radius:50%;background:var(--positive);flex-shrink:0}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  [data-reveal]{opacity:1;transform:none;transition:none}
+  .motion-dot{animation:none}
+  .board-live .pulse{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="t-dot"></span><span id="toastMsg">Copied</span></div>
+<div class="scroll-progress" aria-hidden="true"><span class="bar" id="scrollBar"></span></div>
+
+<header class="topbar" role="banner">
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="nav-logo" style="font-size:16px">Queue<span class="signal">.</span></div>
+  <button class="theme-toggle" id="themeToggle2" aria-label="Toggle theme"><svg id="themeIcon2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="Design system navigation">
+  <div class="sidebar-header">
+    <div class="nav-logomark">Ln</div>
+    <a href="#" class="nav-logo">Queue<span class="signal">.</span></a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Sections">
+    <div class="nav-indicator" id="navIndicator" aria-hidden="true"></div>
+    <div class="nav-group" style="--i:0">
+      <div class="nav-group-label">Identity</div>
+      <a href="#hero" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Overview</span></a>
+      <a href="#colors" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg><span>Color Palette</span></a>
+      <a href="#typography" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span>Typography</span></a>
+    </div>
+    <div class="nav-group" style="--i:1">
+      <div class="nav-group-label">Tokens</div>
+      <a href="#spacing" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg><span>Spacing + Radius</span></a>
+      <a href="#elevation" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>Elevation</span></a>
+      <a href="#motion" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 4 19 12 5 20 5 4"/></svg><span>Motion</span></a>
+    </div>
+    <div class="nav-group" style="--i:2">
+      <div class="nav-group-label">Components</div>
+      <a href="#components" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span>Buttons</span></a>
+      <a href="#chips" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><span>Status Chips</span></a>
+      <a href="#cards" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span>Cards + Tickets</span></a>
+      <a href="#forms" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>Forms</span></a>
+      <a href="#pricing" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg><span>Pricing</span></a>
+    </div>
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Patterns</div>
+      <a href="#responsive" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><span>Responsive</span></a>
+      <a href="#touch" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg><span>Touch Targets</span></a>
+      <a href="#ux-principles" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>UX Principles</span></a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="collapse-toggle" id="collapseToggle" aria-expanded="true" aria-label="Collapse sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg><span>Collapse</span>
+    </button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+  </div>
+</aside>
+
+<div class="nav-tooltip" id="navTooltip" role="tooltip"></div>
+
+<main class="page">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-num-badge">
+      <span class="hero-num-digit">DS 1.0</span>
+      <span class="hero-num-label">Queue &amp; Appointments Design System</span>
+    </div>
+    <h1>The queue,<br><span class="h1-blue">precisely</span><br><span class="h1-signal">designed.</span></h1>
+    <p>Visual tokens, components, and engineering principles for queue and appointment products. Built for the person calling the next number and the person waiting to hear it.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary">Get tokens</button>
+      <button class="btn-hero-secondary">Read principles</button>
+    </div>
+
+    <!-- Departures-board demo -->
+    <div class="board" data-reveal style="max-width:680px">
+      <div class="board-header">
+        <div class="board-title">Salon Karim — File d'attente</div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div class="board-meta">09:34</div>
+          <div class="board-live"><span class="pulse"></span>EN DIRECT</div>
+        </div>
+      </div>
+      <div class="board-rows">
+        <div class="board-row done">
+          <div class="board-num">05</div>
+          <div><div class="board-name">Mourad B.</div><div class="board-service">Coupe + Barbe</div></div>
+          <div class="board-eta">Terminé</div>
+          <div class="board-status"><span class="status-pill sp-done"><span class="d"></span>Terminé</span></div>
+        </div>
+        <div class="board-row called">
+          <div class="board-num">06</div>
+          <div><div class="board-name">Sara M.</div><div class="board-service">Coupe femme</div></div>
+          <div class="board-eta">Maintenant</div>
+          <div class="board-status"><span class="status-pill sp-called"><span class="d"></span>Appelée</span></div>
+        </div>
+        <div class="board-row serving">
+          <div class="board-num">07</div>
+          <div><div class="board-name">Amine R.</div><div class="board-service">Rasage</div></div>
+          <div class="board-eta">~8 min</div>
+          <div class="board-status"><span class="status-pill sp-serving"><span class="d"></span>En service</span></div>
+        </div>
+        <div class="board-row waiting">
+          <div class="board-num">08</div>
+          <div><div class="board-name">Khaled D.</div><div class="board-service">Coupe homme</div></div>
+          <div class="board-eta">~20 min</div>
+          <div class="board-status"><span class="status-pill sp-waiting"><span class="d"></span>Attente</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLORS -->
+<section id="colors">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Palette</div>
+        <h2>Color Palette</h2>
+        <p>Deep navy base. Not warm brown, not indigo-tinted. The signal red is not decorative -- it is the "your turn" color, reserved exclusively for that moment.</p>
+      </div>
+    </div>
+    <div class="color-grid" data-reveal>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#2563EB"><div class="color-swatch-fill" style="background:#2563EB"></div><div class="color-swatch-info"><div class="hex">#2563EB</div><div class="name">Primary Blue (light)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#3B82F6"><div class="color-swatch-fill" style="background:#3B82F6"></div><div class="color-swatch-info"><div class="hex">#3B82F6</div><div class="name">Primary Blue (dark)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#E63A1E"><div class="color-swatch-fill" style="background:#E63A1E"></div><div class="color-swatch-info"><div class="hex">#E63A1E</div><div class="name">Signal Red (light)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#FF4D2E"><div class="color-swatch-fill" style="background:#FF4D2E"></div><div class="color-swatch-info"><div class="hex">#FF4D2E</div><div class="name">Signal Red (dark)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#059669"><div class="color-swatch-fill" style="background:#059669"></div><div class="color-swatch-info"><div class="hex">#059669</div><div class="name">Positive Green (light)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#10B981"><div class="color-swatch-fill" style="background:#10B981"></div><div class="color-swatch-info"><div class="hex">#10B981</div><div class="name">Positive Green (dark)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#D97706"><div class="color-swatch-fill" style="background:#D97706"></div><div class="color-swatch-info"><div class="hex">#D97706</div><div class="name">Warning Amber</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#DC2626"><div class="color-swatch-fill" style="background:#DC2626"></div><div class="color-swatch-info"><div class="hex">#DC2626</div><div class="name">Error Red</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#0F1623"><div class="color-swatch-fill" style="background:#0F1623;border-bottom:1px solid #263044"></div><div class="color-swatch-info"><div class="hex">#0F1623</div><div class="name">Base Dark (navy)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#F0F4FF"><div class="color-swatch-fill" style="background:#F0F4FF;border-bottom:1px solid #D4DCEF"></div><div class="color-swatch-info"><div class="hex">#F0F4FF</div><div class="name">Base Light (blue-white)</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#1A2235"><div class="color-swatch-fill" style="background:#1A2235"></div><div class="color-swatch-info"><div class="hex">#1A2235</div><div class="name">Surface Dark</div></div></div>
+      <div class="color-swatch" tabindex="0" role="button" data-hex="#FFFFFF"><div class="color-swatch-fill" style="background:#FFFFFF;border-bottom:1px solid #D4DCEF"></div><div class="color-swatch-info"><div class="hex">#FFFFFF</div><div class="name">Surface Light</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPOGRAPHY -->
+<section id="typography">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Type</div>
+        <h2>Typography</h2>
+        <p>Three roles, deliberately distinct. Queue numbers get a monospace face. UI text gets Noto Sans (trilingual). Headings get Outfit. These three never swap roles.</p>
+      </div>
+    </div>
+    <div class="type-list" data-reveal>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">Hero / Display</div><div class="spec">Outfit 800, -0.025em</div></div>
+        <div class="specimen" style="font-family:'Outfit',system-ui;font-size:clamp(26px,3.5vw,48px);font-weight:800;letter-spacing:-0.025em;color:var(--on-surface);line-height:1.05">Votre file arrive.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">Queue Number</div><div class="spec">DM Mono 500, tabular, -0.02em</div></div>
+        <div class="specimen" style="font-family:'DM Mono',monospace;font-size:60px;font-weight:500;letter-spacing:-0.02em;color:var(--on-surface);line-height:1;font-variant-numeric:tabular-nums">07</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">Card / Section Title</div><div class="spec">Outfit 700, -0.015em</div></div>
+        <div class="specimen" style="font-family:'Outfit',system-ui;font-size:20px;font-weight:700;letter-spacing:-0.015em;color:var(--on-surface)">Dentiste Sidi Yahia</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">Body / UI text</div><div class="spec">Noto Sans 400, 15px, 1.55</div></div>
+        <div class="specimen" style="font-family:'Noto Sans',system-ui;font-size:15px;color:var(--on-surface-muted);line-height:1.55;max-width:380px">Rejoignez la file sans téléphone. Scannez, entrez votre nom, attendez le message.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">Status Label / Meta</div><div class="spec">DM Mono 500, 10px, uppercase</div></div>
+        <div class="specimen" style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.10em;text-transform:uppercase;color:var(--signal)">EN SERVICE</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">Timer / ETA</div><div class="spec">DM Mono 400, 14px, tabular</div></div>
+        <div class="specimen" style="font-family:'DM Mono',monospace;font-size:20px;font-weight:400;color:var(--on-surface-muted);font-variant-numeric:tabular-nums">~12 min</div>
+      </div>
+      <div class="type-row arabic">
+        <div class="meta"><div class="token-name">Arabic Body</div><div class="spec">Noto Sans Arabic 400, RTL</div></div>
+        <div class="specimen" style="font-family:'Noto Sans Arabic',system-ui;font-size:15px;color:var(--on-surface-muted);line-height:1.7;direction:rtl;text-align:right">انضم إلى الطابور بدون انتظار طويل. أدخل اسمك وانتظر رسالتك.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPACING -->
+<section id="spacing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Tokens</div>
+        <h2>Spacing + Radius</h2>
+        <p>4px base unit. Radius stays tight -- this is operational software, not a consumer lifestyle app. Corners exist to soften, not to define personality.</p>
+      </div>
+    </div>
+    <div class="spacing-ruler" data-reveal>
+      <div class="spacing-block" style="flex:1"><span class="lbl">4px</span></div>
+      <div class="spacing-block" style="flex:2"><span class="lbl">8px</span></div>
+      <div class="spacing-block" style="flex:4"><span class="lbl">16px</span></div>
+      <div class="spacing-block" style="flex:6"><span class="lbl">24px</span></div>
+      <div class="spacing-block" style="flex:12"><span class="lbl">48px</span></div>
+      <div class="spacing-block" style="flex:20"><span class="lbl">80px</span></div>
+    </div>
+    <div class="spacing-labels"><span>xs 4</span><span>sm 8</span><span>md 16</span><span>lg 24</span><span>xl 48</span><span>2xl 80</span></div>
+    <div class="radius-grid" style="margin-top:var(--s-xl)" data-reveal>
+      <div class="radius-item"><div class="radius-box" style="width:32px;height:32px;border-radius:var(--r-xs)"></div><div class="r-name">--r-xs</div><div class="r-value">2px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:38px;height:38px;border-radius:var(--r-sm)"></div><div class="r-name">--r-sm</div><div class="r-value">5px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:48px;height:48px;border-radius:var(--r-md)"></div><div class="r-name">--r-md</div><div class="r-value">8px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:58px;height:58px;border-radius:var(--r-lg)"></div><div class="r-name">--r-lg</div><div class="r-value">12px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:72px;height:72px;border-radius:var(--r-xl)"></div><div class="r-name">--r-xl</div><div class="r-value">16px</div></div>
+      <div class="radius-item"><div class="radius-box" style="width:72px;height:32px;border-radius:var(--r-full)"></div><div class="r-name">--r-full</div><div class="r-value">9999px</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ELEVATION -->
+<section id="elevation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Depth</div>
+        <h2>Elevation</h2>
+        <p>Cool shadows on a navy base. Depth signals hierarchy -- not decoration. The modal level gets a primary-colored border to signal it is operating on its own layer.</p>
+      </div>
+    </div>
+    <div class="elevation-grid" data-reveal>
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Flat</div><div class="e-sub">rows, cells</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Raised</div><div class="e-sub">cards, inputs</div></div>
+      <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Floating</div><div class="e-sub">dropdowns</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Modal</div><div class="e-sub">dialogs, sheets</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MOTION -->
+<section id="motion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Animation</div>
+        <h2>Motion</h2>
+        <p>Everything moves like a departures board: sharp start, precise landing. The spring is reserved for the status-line indicator -- the one element that physically tracks a state change.</p>
+      </div>
+    </div>
+    <div class="motion-grid" data-reveal>
+      <div class="motion-card">
+        <div class="motion-track"><div class="motion-dot dot-ease-out"></div></div>
+        <div class="motion-name">--ease-out</div>
+        <code>cubic-bezier(.22,1,.36,1)</code>
+        <p>The primary curve. Fast attack, precise settle. Used on page transitions, the board row state change, card reveals, and drawer open/close.</p>
+      </div>
+      <div class="motion-card">
+        <div class="motion-track"><div class="motion-dot dot-ease-spring" style="background:var(--signal-solid)"></div></div>
+        <div class="motion-name">--ease-spring</div>
+        <code>cubic-bezier(.34,1.22,.64,1)</code>
+        <p>Light overshoot for micro-feedback. The nav indicator, chip dismiss, and the board status-line sliding to its new row. Never use on anything that moves more than 80px.</p>
+      </div>
+      <div class="motion-card">
+        <div class="motion-durations">
+          <span style="display:inline-block;height:6px;border-radius:var(--r-full);background:var(--primary-dim);border:1.5px solid var(--primary-solid);width:20px"></span>
+          <span style="display:inline-block;height:6px;border-radius:var(--r-full);background:var(--signal-dim);border:1.5px solid var(--signal-solid);width:36px"></span>
+          <span style="display:inline-block;height:6px;border-radius:var(--r-full);background:var(--positive-dim);border:1.5px solid var(--positive);width:60px"></span>
+        </div>
+        <div class="motion-name">Durations</div>
+        <code>--dur-fast: .15s</code>
+        <p><strong style="color:var(--on-surface)">Fast (.15s)</strong> -- hover, icon switch, chip dismiss. <strong style="color:var(--on-surface)">Med (.26s)</strong> -- card lift, focus ring, form validation. <strong style="color:var(--on-surface)">Slow (.48s)</strong> -- page slide, sidebar collapse, board row transition.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUTTONS -->
+<section id="components">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Actions</div>
+        <h2>Buttons</h2>
+        <p>Signal red is only ever used for "your turn" moments -- calling a customer, checking in. Never as a generic accent button. Blue handles all standard primary actions.</p>
+      </div>
+    </div>
+    <div class="button-grid" data-reveal>
+      <div class="button-item"><button class="btn btn-primary">Rejoindre la file</button><span class="btn-label">Primary</span></div>
+      <div class="button-item"><button class="btn btn-signal">Appeler maintenant</button><span class="btn-label">Signal (call moment)</span></div>
+      <div class="button-item"><button class="btn btn-outline">Voir les créneaux</button><span class="btn-label">Outline</span></div>
+      <div class="button-item"><button class="btn btn-outline-signal">Je suis là</button><span class="btn-label">Outline signal</span></div>
+      <div class="button-item"><button class="btn btn-ghost">Annuler</button><span class="btn-label">Ghost</span></div>
+      <div class="button-item"><button class="btn btn-danger">Supprimer</button><span class="btn-label">Destructive</span></div>
+      <div class="button-item"><button class="btn btn-pill-primary">Réserver</button><span class="btn-label">Pill primary</span></div>
+      <div class="button-item"><button class="btn btn-pill-signal">Terminé</button><span class="btn-label">Pill signal</span></div>
+      <div class="button-item"><button class="btn-icon" aria-label="Settings"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><span class="btn-label">Icon</span></div>
+      <div class="button-item"><button class="btn btn-disabled" disabled>Indisponible</button><span class="btn-label">Disabled</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHIPS -->
+<section id="chips">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Status</div>
+        <h2>Status Chips</h2>
+        <p>Mono font on every chip. These are system states, not marketing labels -- monospace makes them feel like data, not copy. One color per state, zero exceptions.</p>
+      </div>
+    </div>
+    <div data-reveal>
+      <p style="font:500 10px/1 var(--font-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--on-surface-muted);margin-bottom:var(--s-sm)">Queue states</p>
+      <div class="chips-row">
+        <span class="chip chip-waiting"><span class="d"></span>ATTENTE</span>
+        <span class="chip chip-called"><span class="d"></span>APPELÉ</span>
+        <span class="chip chip-serving"><span class="d"></span>EN SERVICE</span>
+        <span class="chip chip-done"><span class="d"></span>TERMINÉ</span>
+        <span class="chip chip-noshow"><span class="d"></span>ABSENT</span>
+        <span class="chip chip-paused"><span class="d"></span>PAUSÉE</span>
+      </div>
+      <p style="font:500 10px/1 var(--font-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--on-surface-muted);margin-top:var(--s-lg);margin-bottom:var(--s-sm)">Booking states</p>
+      <div class="chips-row">
+        <span class="chip chip-waiting"><span class="d"></span>PENDING</span>
+        <span class="chip chip-called"><span class="d"></span>CONFIRMED</span>
+        <span class="chip chip-serving"><span class="d"></span>ARRIVED</span>
+        <span class="chip chip-done"><span class="d"></span>COMPLETED</span>
+        <span class="chip chip-noshow"><span class="d"></span>CANCELLED</span>
+        <span class="chip chip-noshow"><span class="d"></span>NO-SHOW</span>
+      </div>
+      <p style="font:500 10px/1 var(--font-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--on-surface-muted);margin-top:var(--s-lg);margin-bottom:var(--s-sm)">Plans</p>
+      <div class="chips-row" id="chipRow">
+        <span class="chip chip-free">FREE</span>
+        <span class="chip chip-pro">PRO <span class="chip-x" onclick="dismissChip(this)" aria-label="Dismiss">×</span></span>
+        <span class="chip chip-paused"><span class="d"></span>ESSAI 30J</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARDS -->
+<section id="cards">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Surfaces</div>
+        <h2>Cards + Tickets</h2>
+        <p>The ticket card's 2px left line is the only decorative element. It answers the status question before any chip or label is read. The called state inverts to blue -- one moment of maximum contrast.</p>
+      </div>
+    </div>
+    <div class="cards-grid" data-reveal>
+      <div class="card-ticket called-state primary-line">
+        <div class="card-tag">TICKET APPELÉ</div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+          <span style="font-family:'DM Mono',monospace;font-size:44px;font-weight:500;color:var(--primary);letter-spacing:-.02em;line-height:1">06</span>
+          <span class="chip chip-called"><span class="d"></span>APPELÉE</span>
+        </div>
+        <div style="font:500 15px/1 'Noto Sans',system-ui;color:var(--on-surface);margin-bottom:4px">Sara M.</div>
+        <div style="font-size:13px;color:var(--on-surface-muted)">Coupe femme -- Karim</div>
+      </div>
+
+      <div class="card-ticket signal-line">
+        <div class="card-tag">EN SERVICE</div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+          <span style="font-family:'DM Mono',monospace;font-size:44px;font-weight:500;color:var(--signal);letter-spacing:-.02em;line-height:1">07</span>
+          <span class="chip chip-serving"><span class="d"></span>SERVICE</span>
+        </div>
+        <div style="font:500 15px/1 'Noto Sans',system-ui;color:var(--on-surface);margin-bottom:4px">Amine R.</div>
+        <div style="font-size:13px;color:var(--on-surface-muted)">Rasage -- ~8 min restants</div>
+      </div>
+
+      <div class="card-demo">
+        <div class="card-tag">ANALYTICS</div>
+        <div class="card-stat-label">Tickets traités aujourd'hui</div>
+        <div class="card-stat-value">38 <span>tickets</span></div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font:500 12px/1 'DM Mono',monospace;color:var(--positive)">+12%</span>
+          <span style="font-size:12px;color:var(--on-surface-muted)">vs hier</span>
+        </div>
+      </div>
+
+      <div class="card-demo">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="card-title">Equipe active</div>
+        <div class="card-text">3 agents. Karim, Lylia, Mourad. Charge normale.</div>
+        <a href="#" class="card-link">Voir l'equipe</a>
+      </div>
+
+      <div class="card-ticket positive-line">
+        <div class="card-tag">TERMINÉ</div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+          <span style="font-family:'DM Mono',monospace;font-size:44px;font-weight:500;color:var(--positive);opacity:.6;letter-spacing:-.02em;line-height:1">05</span>
+          <span class="chip chip-done"><span class="d"></span>DONE</span>
+        </div>
+        <div style="font:500 15px/1 'Noto Sans',system-ui;color:var(--on-surface);margin-bottom:4px">Mourad B.</div>
+        <div style="font-size:13px;color:var(--on-surface-muted)">Durée 14 min -- Note 5/5</div>
+      </div>
+
+      <div class="card-ticket warning-line">
+        <div class="card-tag">ALERTE</div>
+        <div class="card-title" style="margin-bottom:8px">Attente longue</div>
+        <div class="card-text">14 personnes en attente. Temps moyen: 32 min.</div>
+        <div style="margin-top:12px"><span class="chip chip-paused"><span class="d"></span>SURCHARGE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMS -->
+<section id="forms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Inputs</div>
+        <h2>Form Elements</h2>
+        <p>44px height across all inputs. Algerian phone hint on every number field. Accept loose input -- 0698 34 21 07 is as valid as +213698342107. Normalize silently.</p>
+      </div>
+    </div>
+    <div class="form-grid" data-reveal>
+      <div class="form-group"><label for="n1">Votre nom</label><input type="text" id="n1" class="form-input" value="Khaled Bensalem" placeholder="Prénom et nom"></div>
+      <div class="form-group"><label for="p1">Téléphone</label><input type="tel" id="p1" class="form-input focused" value="0698 34 21 07" placeholder="05, 06 ou 07..."><span class="form-hint">Commence par 05, 06 ou 07</span></div>
+      <div class="form-group"><label for="s1">Service souhaité</label><select id="s1" class="form-select"><option>Coupe homme</option><option>Rasage</option><option>Coupe + Barbe</option></select></div>
+      <div class="form-group"><label for="e1">Email (erreur)</label><input type="email" id="e1" class="form-input error" value="khaled@"><span class="form-hint" style="color:var(--error)">Format invalide</span></div>
+      <div class="form-group" style="grid-column:1/-1"><label for="t1">Notes</label><textarea id="t1" class="form-textarea" placeholder="Précisions pour le personnel..."></textarea></div>
+    </div>
+  </div>
+</section>
+
+<!-- RESPONSIVE -->
+<section id="responsive">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Adaptability</div>
+        <h2>Responsive Behavior</h2>
+        <p>Mobile-first. Most customers join from a phone. The departures board collapses to show number, name, and status only -- ETA disappears below 640px.</p>
+      </div>
+    </div>
+    <table class="responsive-table" data-reveal>
+      <thead><tr><th>Breakpoint</th><th>Width</th><th>Key behavior</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mobile</strong></td><td>&lt; 640px</td><td>Board drops ETA column; single column layout; 16px margins; bottom-sheet modals</td></tr>
+        <tr><td><strong>Tablet</strong></td><td>640-1023px</td><td>Sidebar becomes off-canvas drawer; 2-col card grid collapses to 1</td></tr>
+        <tr><td><strong>Desktop</strong></td><td>1024-1440px</td><td>Full sidebar; board at 680px max-width; queue + booking side by side</td></tr>
+        <tr><td><strong>Wide</strong></td><td>&gt; 1440px</td><td>Content capped at 1080px; sidebar collapses to icon rail</td></tr>
+      </tbody>
+    </table>
+    <ul class="responsive-notes" data-reveal style="--d:.12s">
+      <li>Queue numbers are always the largest element on screen, any breakpoint</li>
+      <li>RTL is layout-level: status line flips to the right edge in Arabic mode</li>
+      <li>TV display mode: queue number at 120px, board fills viewport, no sidebar</li>
+      <li>Safe area insets applied via <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--signal)">env(safe-area-inset-*)</code> on all fixed elements</li>
+    </ul>
+  </div>
+</section>
+
+<!-- TOUCH -->
+<section id="touch">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Accessibility</div>
+        <h2>Touch Targets</h2>
+        <p>44x44px minimum. A staff member calling 40 customers a day needs precision taps. A customer checking in from a waiting room needs the same.</p>
+      </div>
+    </div>
+    <div class="touch-grid" data-reveal>
+      <div class="touch-item"><div class="touch-target">44</div><span class="touch-label">Min (44px)</span></div>
+      <div class="touch-item"><button class="btn btn-primary" style="min-height:44px">Appeler</button><span class="touch-label">Primary action</span></div>
+      <div class="touch-item"><button class="btn btn-signal" style="min-height:44px">Je suis là</button><span class="touch-label">Signal action</span></div>
+      <div class="touch-item"><input type="tel" class="touch-input" placeholder="Votre numéro..."><span class="touch-label">Field (44px)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Plans</div>
+        <h2>Pricing</h2>
+        <p>Two tiers. The price uses DM Mono -- same treatment as queue numbers. Cost is data, not marketing copy.</p>
+      </div>
+    </div>
+    <div class="pricing-grid" data-reveal>
+      <div class="pricing-card">
+        <div class="tier">Gratuit</div>
+        <div class="price">0 <span class="price-sub">DZD / toujours</span></div>
+        <ul class="pricing-features">
+          <li>100 rendez-vous / mois</li>
+          <li>300 tickets de file / mois</li>
+          <li>3 agents max</li>
+          <li>Page publique + WhatsApp</li>
+          <li>3 langues (fr, ar, en)</li>
+        </ul>
+        <button class="btn btn-outline pricing-cta-margin" style="width:100%;height:44px">Commencer</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Populaire</div>
+        <div class="tier">Pro</div>
+        <div class="price">1 990 <span class="price-sub">DZD / mois</span></div>
+        <ul class="pricing-features">
+          <li>Tout du Gratuit</li>
+          <li>Rendez-vous illimités</li>
+          <li>Agents illimités</li>
+          <li>Analytiques avancées</li>
+          <li>Templates WhatsApp custom</li>
+        </ul>
+        <button class="btn btn-primary pricing-cta-margin" style="width:100%;height:44px">Passer au Pro</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UX PRINCIPLES -->
+<section id="ux-principles">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-text">
+        <div class="section-label"><span class="dot"></span>Principles</div>
+        <h2>UX Principles</h2>
+        <p>Tap any card to flip it. Front: the law. Back: the system rule that follows from it -- specific to queues and appointments in Algeria.</p>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Perception + Hierarchy</div>
+      <div class="ux-grid" data-reveal>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Von Restorff Effect</span><span class="ux-card-def">The one item that looks different is the one people remember and click.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Von Restorff Effect</span><span class="ux-card-rule"><b>Rule:</b> "Called" is the only board row with a blue filled background. One visually distinct state. Staff eyes go there first, instantly, on a screen with 10 rows.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Law of Similarity</span><span class="ux-card-def">Elements that look alike are read as belonging to the same group.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Law of Similarity</span><span class="ux-card-rule"><b>Rule:</b> all status chips use DM Mono. All body text uses Noto Sans. The moment a font changes, the user reads it as a different kind of information.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Pre-attentive Attributes</span><span class="ux-card-def">Color, position, and size are processed before conscious reading begins.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Pre-attentive Attributes</span><span class="ux-card-rule"><b>Rule:</b> the 2px status line is read before the chip, the chip is read before the name. Status is answered before any text is scanned. Never reverse this hierarchy.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Interaction + Speed</div>
+      <div class="ux-grid" data-reveal style="--d:.1s">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Fitts's Law</span><span class="ux-card-def">Time to reach a target depends on its size and distance from the thumb.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Fitts's Law</span><span class="ux-card-rule"><b>Rule:</b> "Appeler" and "Terminé" live in the bottom third of the staff view. A barber calling 40 customers a day needs a tap, not a reach.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Doherty Threshold</span><span class="ux-card-def">Interfaces feel instant below 400ms. Above it, users disengage.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Doherty Threshold</span><span class="ux-card-rule"><b>Rule:</b> queue position is updated optimistically. The board moves on screen before the server confirms. Realtime catches up; the staff member never waits on a visual.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Hick's Law</span><span class="ux-card-def">More choices means longer decision time, non-linearly.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Hick's Law</span><span class="ux-card-rule"><b>Rule:</b> the staff view shows two actions at a time: the one to do next and the one to undo. Every other action is one tap deeper behind "more".</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Postel's Law</span><span class="ux-card-def">Be liberal in what you accept, strict in what you output.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Postel's Law</span><span class="ux-card-rule"><b>Rule:</b> phone inputs accept any spacing, any format, with or without +213. The DB stores E.164. The user never sees that. Algeria has exactly 3 valid prefixes -- validate one thing, silently.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Algeria-Specific</div>
+      <div class="ux-grid" data-reveal style="--d:.15s">
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">WhatsApp-First</span><span class="ux-card-def">WhatsApp is the default business communication channel in Algeria.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">WhatsApp-First</span><span class="ux-card-rule"><b>Rule:</b> every confirmation, reminder, and "your turn" notification has a WhatsApp path. Email is secondary and optional. Never assume email is checked.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">RTL is Layout</span><span class="ux-card-def">Arabic reads right-to-left. Half the user base may use it.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">RTL is Layout</span><span class="ux-card-rule"><b>Rule:</b> when Arabic is active, the 2px status line flips to the right edge of every card and board row. It is never just text-align:right. It is a structural flip.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+        <button type="button" class="ux-card" aria-expanded="false"><span class="ux-card-inner"><span class="ux-card-face ux-card-face-front"><span class="ux-card-name">Data Frugality</span><span class="ux-card-def">Not all users are on fast data. Bandwidth is a real constraint.</span><span class="ux-card-flip-hint">Tap for the rule</span></span><span class="ux-card-face ux-card-face-back"><span class="ux-card-name">Data Frugality</span><span class="ux-card-rule"><b>Rule:</b> the customer queue-tracker page runs on one Supabase Realtime channel. No polling. Bundle stays under 310 kB gzip. No animation libraries on public pages. Queue numbers load instantly.</span><span class="ux-card-flip-hint">Tap back</span></span></span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing-band">
+  <div class="container" style="position:relative">
+    <span class="closing-num" aria-hidden="true">01</span>
+    <h2 style="position:relative">Every number is a person.<br>Build every screen like they're watching.</h2>
+    <p style="font-size:15px;color:var(--on-surface-muted);margin-bottom:var(--s-lg);position:relative">Ship UI that makes the wait feel shorter, even when it isn't.</p>
+    <button class="btn btn-pill-primary" style="font-size:14px;padding:13px 28px;position:relative">Start building</button>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    Queue &amp; Appointments Design System &middot; Built for Algerian service businesses
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var html=document.documentElement,sidebar=document.getElementById('sidebar'),
+  backdrop=document.getElementById('sidebarBackdrop'),menuToggle=document.getElementById('menuToggle'),
+  sidebarClose=document.getElementById('sidebarClose'),collapseToggle=document.getElementById('collapseToggle'),
+  indicator=document.getElementById('navIndicator'),progressBar=document.getElementById('scrollBar'),
+  toastEl=document.getElementById('toast'),toastMsg=document.getElementById('toastMsg'),
+  navItems=Array.prototype.slice.call(document.querySelectorAll('.nav-item')),
+  mobileQuery=window.matchMedia('(max-width:1023px)'),toastTimer,currentActive=null;
+
+  function showToast(m){toastMsg.textContent=m;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toastEl.classList.remove('show');},2000);}
+
+  function openNav(){sidebar.classList.add('open');backdrop.classList.add('show');document.body.classList.add('nav-locked');if(menuToggle)menuToggle.setAttribute('aria-expanded','true');}
+  function closeNav(){sidebar.classList.remove('open');backdrop.classList.remove('show');document.body.classList.remove('nav-locked');if(menuToggle)menuToggle.setAttribute('aria-expanded','false');}
+  if(menuToggle)menuToggle.addEventListener('click',function(){sidebar.classList.contains('open')?closeNav():openNav();});
+  if(sidebarClose)sidebarClose.addEventListener('click',closeNav);
+  if(backdrop)backdrop.addEventListener('click',closeNav);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav();});
+  var bpCh=function(e){if(!e.matches)closeNav();};
+  if(mobileQuery.addEventListener)mobileQuery.addEventListener('change',bpCh);
+  else if(mobileQuery.addListener)mobileQuery.addListener(bpCh);
+
+  var colTimer=null;
+  function setCollapsed(c){html.classList.toggle('nav-collapsed',c);try{localStorage.setItem('queue-nav',c?'1':'0');}catch(e){}if(collapseToggle)collapseToggle.setAttribute('aria-expanded',String(!c));clearTimeout(colTimer);colTimer=setTimeout(function(){if(currentActive)moveIndicator(currentActive,true);},460);}
+  var sv=null;try{sv=localStorage.getItem('queue-nav');}catch(e){}
+  if(sv==='1')html.classList.add('nav-collapsed');
+  if(collapseToggle){collapseToggle.setAttribute('aria-expanded',String(!html.classList.contains('nav-collapsed')));collapseToggle.addEventListener('click',function(){setCollapsed(!html.classList.contains('nav-collapsed'));});}
+
+  function moveIndicator(link,instant){
+    if(!link){indicator.style.opacity='0';currentActive=null;return;}
+    currentActive=link;
+    if(instant)indicator.style.transition='none';
+    indicator.style.top=link.offsetTop+'px';indicator.style.height=link.offsetHeight+'px';indicator.style.opacity='1';
+    if(instant){void indicator.offsetWidth;indicator.style.transition='';}
+  }
+  window.addEventListener('resize',function(){if(currentActive)moveIndicator(currentActive,true);});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(currentActive)moveIndicator(currentActive,true);});
+
+  var scrollSuppress=false,seTimer=null;
+  function armSuppress(){scrollSuppress=true;clearTimeout(seTimer);seTimer=setTimeout(function(){scrollSuppress=false;},1000);}
+  window.addEventListener('scroll',function(){if(scrollSuppress){clearTimeout(seTimer);seTimer=setTimeout(function(){scrollSuppress=false;},180);}},{passive:true});
+
+  var sections=document.querySelectorAll('section[id]'),byHash={};
+  navItems.forEach(function(a){byHash[a.getAttribute('href')]=a;});
+  if(sections.length&&navItems.length){
+    var obs=new IntersectionObserver(function(entries){
+      if(scrollSuppress)return;
+      entries.forEach(function(e){if(e.isIntersecting){var l=byHash['#'+e.target.id];if(!l)return;navItems.forEach(function(a){a.classList.toggle('active',a===l);});moveIndicator(l);}});
+    },{rootMargin:'-40% 0px -55% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+
+  navItems.forEach(function(a){
+    a.addEventListener('click',function(){navItems.forEach(function(x){x.classList.remove('active');});a.classList.add('active');moveIndicator(a,true);armSuppress();if(mobileQuery.matches)closeNav();});
+  });
+
+  var tip=document.getElementById('navTooltip');
+  navItems.forEach(function(a){
+    a.addEventListener('mouseenter',function(){if(!html.classList.contains('nav-collapsed')||mobileQuery.matches)return;var span=a.querySelector('span');if(!span)return;var r=a.getBoundingClientRect();tip.textContent=span.textContent;tip.style.top=(r.top+r.height/2)+'px';tip.style.left=(r.right+10)+'px';tip.classList.add('show');});
+    a.addEventListener('mouseleave',function(){tip.classList.remove('show');});
+  });
+
+  if(progressBar){var ticking=false,updateBar=function(){var max=html.scrollHeight-html.clientHeight;progressBar.style.width=(max>0?(html.scrollTop/max)*100:0)+'%';ticking=false;};window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(updateBar);ticking=true;}},{passive:true});}
+
+  function applyTheme(dark){
+    html.setAttribute('data-theme',dark?'dark':'light');
+    var sun='<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    var moon='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    ['themeIcon','themeIcon2'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=dark?sun:moon;});
+    try{localStorage.setItem('queue-theme',dark?'dark':'light');}catch(e){}
+  }
+  var st=null;try{st=localStorage.getItem('queue-theme');}catch(e){}
+  var pd=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(st==='dark'||(st===null&&pd));
+  function onTheme(){applyTheme(html.getAttribute('data-theme')!=='dark');}
+  ['themeToggle','themeToggle2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',onTheme);});
+
+  document.querySelectorAll('.color-swatch[data-hex]').forEach(function(sw){
+    sw.addEventListener('click',function(){var h=sw.getAttribute('data-hex');if(!h)return;navigator.clipboard.writeText(h).then(function(){sw.classList.add('copied');showToast('Copied '+h);setTimeout(function(){sw.classList.remove('copied');},2000);}).catch(function(){showToast('Could not copy');});});
+    sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();sw.click();}});
+  });
+
+  document.querySelectorAll('.ux-card').forEach(function(c){c.addEventListener('click',function(){c.setAttribute('aria-expanded',c.getAttribute('aria-expanded')!=='true');});});
+
+  window.dismissChip=function(btn){var c=btn.parentElement;c.classList.add('removing');c.addEventListener('transitionend',function(){c.remove();},{once:true});};
+
+  var rObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('revealed');rObs.unobserve(e.target);}});},{rootMargin:'0px 0px -70px 0px'});
+  document.querySelectorAll('[data-reveal]').forEach(function(el){rObs.observe(el);});
+})();
+</script>
+</body>
+</html>

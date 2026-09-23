@@ -34,9 +34,15 @@
 │   ├── 09-enterprise-console/
 │   │   ├── index.html
 │   │   └── README.md
-│   └── 10-expressive-brand/
-│       ├── index.html
-│       └── README.md
+│   ├── 10-expressive-brand/
+│   │   ├── index.html
+│   │   └── README.md
+│   ├── 11-algeria-green/
+│   │   └── index.html
+│   ├── 12-queue-appointments/
+│   │   └── index.html
+│   └── 13-food-pickup/
+│       └── index.html
 └── docs/
     ├── PROJECT_STRUCTURE.md           # This file
     ├── TEMPLATE-ANALYSIS.md           # Complete template extraction

@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Green Algeria Design System — Canopy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   GREEN ALGERIA · CANOPY — TOKEN SYSTEM
+   Accent:    #2F6B3F  Canopy Green (light) · #6ED08A Fresh Sprout (dark)
+   Brand:     #4A90A4  Wadi Blue (support — care/watering system)
+   Secondary: #B5652E  Terracotta / Algerian clay soil
+   Tertiary:  #E8622C  Wildfire Amber (fire-report system — functional, not decorative)
+   Base:      #14100D  Night Soil (near-black, warm charcoal — not purple)
+   Motion:    --ease-out (signature expo) · --ease-spring (soft overshoot)
+              --dur-fast .18s · --dur-med .3s · --dur-slow .55s
+   Inherited verbatim from the Printazix template per its own re-theme guide:
+   motion tokens, type scale, spacing/radius scale, component structure.
+   Only the color identity and hero/copy language changed — this file IS
+   that re-theme, applied to a crowdsourced tree-planting/fire-safety platform.
+═══════════════════════════════════════════
+   WHY THESE COLORS (not generic "eco green")
+   - Canopy Green reads as living tree cover, not NGO-brochure mint.
+   - Terracotta is Algeria's actual soil/clay tone — the warm complement
+     to green, standing in for "the land" the way plum stood for Printazix's
+     brand identity. It's structural, not just an accent.
+   - Wildfire Amber is reserved ONLY for the fire-reporting system — a real
+     product decision, not palette decoration. Never use it for anything else.
+   - Wadi Blue (a wadi is a seasonal Algerian riverbed) is the care/watering
+     system's color — water, not sky.
+   - Base is near-black charcoal/soil, not tinted purple — it reads as
+     night-satellite-map, which matches the dark hero SVG map already built.
+═══════════════════════════════════════════ */
+:root {
+  /* ── DARK MODE (canonical) ── night-soil base, sprout-green accent ── */
+  --bg:               #100d0a;
+  --bg-dim:           #0a0807;
+  --surface:          #17130f;
+  --surface-mid:      #1c1712;
+  --surface-high:     #241d16;
+  --surface-highest:  #2e251a;
+  --on-surface:       #f2ede4;
+  --on-surface-muted: #a89c8a;
+  --outline:          #2e2519;
+  --outline-hi:       #52432c;
+
+  /* Primary — Fresh Sprout Green (the one accent, constant across both modes) */
+  --primary:          #6ED08A;
+  --primary-solid:    #6ED08A;
+  --on-primary:       #062712;
+  --primary-glow:     rgba(110,208,138,0.22);
+  --primary-glow-sm:  rgba(110,208,138,0.10);
+
+  /* Wadi Blue — support (care/watering system) */
+  --brand-blue:       #6FB8CC;
+
+  /* Secondary — Terracotta / clay soil, used for supporting UI (less emphasis than primary) */
+  --secondary:        #D99B6C;
+  --secondary-dim:    #BD8258;
+  --on-secondary:     #2e1608;
+
+  /* Tertiary — Wildfire Amber (fire-report system ONLY — functional color, not decoration) */
+  --tertiary:         #E8622C;
+  --on-tertiary:      #2b0d02;
+
+  /* Quaternary — Warm sand highlight, a supporting note within the earth family */
+  --quaternary:       #E0B65C;
+  --on-quaternary:    #2e1e00;
+
+  /* Positive — Fresh Sprout Green */
+  --positive:         #6ED08A;
+  --on-positive:      #062712;
+
+  /* Error — independent red, not reused from wildfire amber */
+  --error:            #ff6b6b;
+
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:        0 8px 24px rgba(0,0,0,0.55);
+  --shadow-lg:        0 20px 40px rgba(0,0,0,0.65);
+  --nav-bg:           #0a0807;
+  --scroll-track:     #17130f;
+  --scroll-thumb:     #332a1c;
+  --scroll-thumb-hi:  #6ED08A;
+  --toggle-bg:        rgba(110,208,138,0.08);
+  --toggle-border:    rgba(110,208,138,0.25);
+  --table-header-bg:  #1c1712;
+  --table-header-fg:  #6ED08A;
+  --table-row-bg:     #100d0a;
+  --table-row-hover:  #17130f;
+  --table-border:     #2e2519;
+  --section-alt:      #100d0a;
+
+  /* Type */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* Radius */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   24px;
+  --r-full: 9999px;
+
+  /* Space */
+  --s-xs:   4px;
+  --s-sm:   8px;
+  --s-md:   16px;
+  --s-lg:   24px;
+  --s-xl:   48px;
+  --s-2xl:  80px;
+
+  --content-max: 1100px;
+  --transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+}
+
+[data-theme="light"] {
+  /* ── LIGHT MODE (derived from dark) ── warm paper base, same green accent ── */
+  --bg:               #fdfbf8;
+  --bg-dim:           #f6f2eb;
+  --surface:          #ffffff;
+  --surface-mid:      #faf7f1;
+  --surface-high:     #f0ebe0;
+  --surface-highest:  #e3dac8;
+  --on-surface:       #211c14;
+  --on-surface-muted: #6e6353;
+  --outline:          #e2d9c8;
+  --outline-hi:       #b3a488;
+
+  /* Primary — Canopy Green, darkened for AA text contrast on white; fills use full green */
+  --primary:          #2F6B3F;
+  --primary-solid:    #2F6B3F;
+  --on-primary:       #ffffff;
+  --primary-glow:     rgba(47,107,63,0.14);
+  --primary-glow-sm:  rgba(47,107,63,0.07);
+
+  /* Wadi Blue — support (care/watering system) */
+  --brand-blue:       #206E86;
+
+  /* Secondary — Terracotta, the base identity color surfacing as supporting UI */
+  --secondary:        #B5652E;
+  --secondary-dim:    #955225;
+  --on-secondary:     #ffffff;
+
+  /* Tertiary — Wildfire Amber, darkened for contrast, same hue as dark mode (fire-report ONLY) */
+  --tertiary:         #C24A1C;
+  --on-tertiary:      #ffffff;
+
+  /* Quaternary — Sand, darkened for contrast */
+  --quaternary:       #96751F;
+  --on-quaternary:    #ffffff;
+
+  /* Positive — Canopy Green */
+  --positive:         #2F6B3F;
+  --on-positive:      #ffffff;
+
+  /* Error — independent red, not reused from wildfire amber */
+  --error:            #d13438;
+
+  --shadow-sm:        0 1px 3px rgba(47,35,20,0.06);
+  --shadow-md:        0 8px 24px rgba(47,35,20,0.08);
+  --shadow-lg:        0 20px 40px rgba(47,35,20,0.11);
+  --nav-bg:           #ffffff;
+  --scroll-track:     #f0ebe0;
+  --scroll-thumb:     #e2d9c8;
+  --scroll-thumb-hi:  #2F6B3F;
+  --toggle-bg:        rgba(47,107,63,0.06);
+  --toggle-border:    rgba(47,107,63,0.22);
+  --table-header-bg:  #f0ebe0;
+  --table-header-fg:  #2F6B3F;
+  --table-row-bg:     #ffffff;
+  --table-row-hover:  #faf7f1;
+  --table-border:     #e3dac8;
+  --section-alt:      #fdfbf8;
+}
+
+/* ── Light theme overrides: none needed for color identity —
+   --primary/--secondary/--tertiary already carry correct values
+   through the token system above. Kept empty on purpose: if a
+   component-specific override becomes necessary, add it here
+   rather than reintroducing hardcoded hex swaps. ── */
+
+/* ═══════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:16px;line-height:1.5;color:var(--on-surface);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:var(--transition)}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:var(--scroll-track)}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+
+::selection{background:var(--primary-solid);color:var(--on-primary)}
+
+.container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 var(--s-lg)}
+@media(max-width:767px){.container{padding:0 var(--s-md)}}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR NAVIGATION
+═══════════════════════════════════════════ */
+:root{
+  --sidebar-w:280px;--topbar-h:64px;
+  /* ── Motion tokens — the Green Algeria animation personality (inherited verbatim from Printazix template) ── */
+  --ease-out:    cubic-bezier(.22,1,.36,1);   /* signature expo-out: fast attack, silky settle */
+  --ease-spring: cubic-bezier(.34,1.3,.64,1); /* soft overshoot for micro-UI (bars, toggles) */
+  --dur-fast:    .18s;
+  --dur-med:     .3s;
+  --dur-slow:    .55s;
+}
+
+/* ── Scroll progress ── */
+.scroll-progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:3px;z-index:400;pointer-events:none;transition:left .45s var(--ease-out)}
+.scroll-progress .bar{display:block;height:100%;width:0;background:var(--primary-solid);border-radius:0 var(--r-full) var(--r-full) 0}
+
+/* ── Mobile top bar (hidden on desktop) ── */
+.topbar{display:none}
+.menu-toggle{display:none}
+
+/* ── Sidebar shell ── */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:220;
+  display:flex;flex-direction:column;
+  background:var(--nav-bg);
+  border-right:1px solid var(--outline);
+  transition:transform var(--dur-slow) var(--ease-out),width .45s var(--ease-out),background .3s,border-color .3s;
+}
+.sidebar-header{display:flex;align-items:center;gap:10px;padding:20px 20px 14px}
+.nav-logo{
+  font-family:var(--font-display);font-size:20px;font-weight:800;
+  color:var(--on-surface);letter-spacing:-0.02em;white-space:nowrap;
+  transition:opacity var(--dur-fast) var(--ease-out);
+}
+.nav-logo:hover{opacity:.7}
+.sidebar-close{
+  display:none;margin-left:auto;width:34px;height:34px;flex-shrink:0;
+  align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--outline);border-radius:var(--r-md);
+  color:var(--on-surface-muted);cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.sidebar-close:hover{color:var(--primary);border-color:var(--primary-solid)}
+.sidebar-close svg{width:16px;height:16px}
+
+/* ── Nav list ── */
+.sidebar-nav{
+  flex:1;overflow-y:auto;overflow-x:hidden;position:relative;
+  padding:8px 12px 20px;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent;
+}
+.sidebar-nav::-webkit-scrollbar{width:5px}
+.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:var(--r-full)}
+.sidebar-nav::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hi)}
+
+/* Active state: a slim accent bar at the sidebar edge — no tinted pills */
+.nav-indicator{
+  position:absolute;left:0;top:0;width:3px;height:0;opacity:0;z-index:0;
+  background:var(--primary-solid);
+  border-radius:0 var(--r-full) var(--r-full) 0;
+  transition:top .5s var(--ease-spring),height .5s var(--ease-spring),opacity .2s var(--ease-out);
+  pointer-events:none;
+}
+.nav-group{padding-top:16px}
+.nav-indicator+.nav-group{padding-top:6px}
+.nav-group-label{
+  font:600 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--outline-hi);padding:0 12px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:11px;position:relative;z-index:1;
+  padding:9px 12px;margin-bottom:2px;border-radius:var(--r-md);
+  font:600 13.5px/1.3 var(--font-body);color:var(--on-surface-muted);
+  -webkit-tap-highlight-color:transparent;
+  transition:color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.65;transition:opacity var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.nav-item:hover{color:var(--on-surface);transform:translateX(3px)}
+.nav-item:hover svg{opacity:1}
+.nav-item.active{color:var(--primary);transform:translateX(3px)}
+.nav-item.active svg{opacity:1;color:var(--primary)}
+.nav-item:focus-visible{outline:2px solid var(--primary-solid);outline-offset:-2px}
+
+/* ── Sidebar footer ── */
+.sidebar-footer{display:flex;align-items:center;gap:10px;padding:14px 16px;border-top:1px solid var(--outline)}
+.collapse-toggle{
+  display:none;flex:1;align-items:center;justify-content:center;gap:8px;
+  padding:11px 18px;
+  background:transparent;color:var(--on-surface-muted);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 13px/1 var(--font-body);cursor:pointer;white-space:nowrap;
+  transition:color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.collapse-toggle:hover{color:var(--primary);border-color:var(--primary-solid)}
+.collapse-toggle:active{transform:scale(.97)}
+.collapse-toggle svg{width:15px;height:15px;transition:transform .4s var(--ease-out)}
+@media(min-width:1024px){.collapse-toggle{display:flex}}
+html.nav-collapsed .collapse-toggle svg{transform:rotate(180deg)}
+.theme-toggle{
+  background:transparent;border:1px solid var(--toggle-border);
+  color:var(--primary);border-radius:var(--r-full);
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  transition:border-color var(--dur-fast) var(--ease-out),transform var(--dur-med) var(--ease-spring);
+}
+.theme-toggle:hover{border-color:var(--primary-solid);transform:scale(1.1) rotate(14deg)}
+.theme-toggle svg{width:16px;height:16px}
+
+/* ── Backdrop (mobile only) ── */
+.sidebar-backdrop{display:none}
+
+/* ── Page offset ── */
+.page{margin-left:var(--sidebar-w);transition:margin-left .45s var(--ease-out)}
+section[id]{scroll-margin-top:24px}
+
+/* ── Floating tooltip for collapsed rail ── */
+.nav-tooltip{
+  position:fixed;z-index:500;pointer-events:none;
+  transform:translateY(-50%) translateX(-6px);opacity:0;
+  background:var(--surface-highest);color:var(--on-surface);
+  border:1px solid var(--outline);border-radius:var(--r-sm);
+  font:600 12px/1 var(--font-body);padding:8px 11px;white-space:nowrap;
+  box-shadow:var(--shadow-md);
+  transition:opacity .18s,transform .18s;
+}
+.nav-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0)}
+
+/* ── Collapsed icon rail (desktop only) ── */
+@media(min-width:1024px){
+  html.nav-collapsed{--sidebar-w:78px}
+  html.nav-collapsed .sidebar-header{flex-direction:column;gap:12px;padding:18px 12px 12px}
+  html.nav-collapsed .nav-logo{font-size:0}
+  html.nav-collapsed .nav-logo::before{content:'g';font-size:22px;font-weight:800;color:var(--on-surface)}
+  html.nav-collapsed .sidebar-nav{padding:8px 10px 20px}
+  html.nav-collapsed .nav-group{padding-top:10px;margin-top:10px;border-top:1px solid var(--outline)}
+  html.nav-collapsed .nav-indicator+.nav-group{padding-top:6px;margin-top:0;border-top:none}
+  html.nav-collapsed .nav-group-label{display:none}
+  html.nav-collapsed .nav-item{justify-content:center;padding:10px 0;gap:0}
+  html.nav-collapsed .nav-item:hover,html.nav-collapsed .nav-item.active{transform:none}
+  html.nav-collapsed .nav-item span{display:none}
+  html.nav-collapsed .nav-item svg{width:18px;height:18px;opacity:.8}
+  html.nav-collapsed .sidebar-footer{flex-direction:column;padding:12px}
+  html.nav-collapsed .collapse-toggle{width:100%;padding:11px 0}
+  html.nav-collapsed .collapse-toggle span{display:none}
+}
+
+/* ── Mobile / tablet: off-canvas drawer ── */
+@media(max-width:1023px){
+  .page{margin-left:0}
+  section[id]{scroll-margin-top:calc(var(--topbar-h) + 16px)}
+  section.hero{padding:calc(var(--topbar-h) + 52px) 0 64px}
+  .scroll-progress{left:0}
+
+  .topbar{
+    display:flex;align-items:center;gap:12px;
+    position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:160;
+    padding:0 16px;
+    background:var(--nav-bg);
+    border-bottom:1px solid var(--outline);
+  }
+  .topbar .theme-toggle{margin-left:auto}
+  .menu-toggle{
+    display:flex;align-items:center;justify-content:center;
+    width:40px;height:40px;border-radius:var(--r-md);
+    background:transparent;border:1px solid var(--toggle-border);
+    color:var(--primary);cursor:pointer;
+    transition:border-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-spring);
+  }
+  .menu-toggle:hover{border-color:var(--primary-solid)}
+  .menu-toggle:active{transform:scale(.9)}
+  .menu-toggle svg{width:20px;height:20px}
+
+  .sidebar{width:min(320px,86vw);transform:translateX(-105%);box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .sidebar-footer{display:none}
+
+  .sidebar-backdrop{
+    display:block;position:fixed;inset:0;z-index:190;
+    background:rgba(8,4,14,.6);
+    opacity:0;visibility:hidden;
+    transition:opacity var(--dur-med) var(--ease-out),visibility 0s linear var(--dur-med);
+  }
+  .sidebar-backdrop.show{opacity:1;visibility:visible;transition:opacity var(--dur-med) var(--ease-out)}
+  body.nav-locked{overflow:hidden}
+
+  /* staggered reveal of groups when drawer opens */
+  .sidebar .nav-group{opacity:0;transform:translateX(-18px);transition:opacity .2s,transform .2s}
+  .sidebar.open .nav-group{
+    opacity:1;transform:none;
+    transition:opacity .5s var(--ease-out),transform .5s var(--ease-out);
+    transition-delay:calc(.1s + var(--i,0)*60ms);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .sidebar,.sidebar-backdrop,.nav-indicator,.nav-item,.nav-group{transition:none!important}
+}
+
+/* ═══════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════ */
+section{padding:var(--s-xl) 0;transition:background .3s;background:var(--bg)}
+
+
+.section-label{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--secondary);margin-bottom:10px;
+}
+.section-label .dot{width:6px;height:6px;border-radius:50%;background:var(--secondary);flex-shrink:0}
+.section-header{margin-bottom:var(--s-lg)}
+.section-header h2{
+  font-family:var(--font-display);font-size:32px;font-weight:700;
+  color:var(--primary);letter-spacing:-0.01em;line-height:1.2;
+  margin-bottom:10px;
+}
+.section-header p{font-size:15px;color:var(--on-surface-muted);max-width:580px;line-height:1.6}
+@media(max-width:767px){.section-header h2{font-size:26px}}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+section.hero{
+  background:var(--bg-dim);padding:80px 0;
+  border-bottom:1px solid var(--outline);
+}
+section.hero .container{position:relative;z-index:1}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  font-size:12px;font-weight:600;font-family:var(--font-body);
+  color:var(--tertiary);background:var(--surface);
+  margin-bottom:var(--s-lg);letter-spacing:0.04em;
+}
+.hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--tertiary);flex-shrink:0}
+section.hero h1{
+  font-family:var(--font-display);font-size:clamp(40px,6vw,72px);
+  font-weight:700;line-height:0.96;letter-spacing:-0.02em;
+  color:var(--on-surface);margin-bottom:var(--s-lg);
+}
+section.hero h1 .gradient{color:var(--primary)}
+section.hero p{
+  font-size:17px;color:var(--on-surface-muted);
+  max-width:560px;line-height:1.65;margin-bottom:var(--s-lg);
+}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero-primary{
+  padding:14px 28px;background:var(--primary-solid);color:var(--on-primary);
+  border:none;border-radius:var(--r-sm);font:600 15px/1 var(--font-body);
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-hero-primary:active{transform:scale(.97)}
+.btn-hero-secondary:active{transform:scale(.97)}
+.btn-hero-secondary{
+  padding:14px 28px;background:transparent;
+  color:var(--on-surface);border:1px solid var(--outline);
+  border-radius:var(--r-sm);font:600 15px/1 var(--font-body);
+  cursor:pointer;transition:background .2s,transform .2s,border-color .2s;
+}
+.btn-hero-secondary:hover{background:var(--toggle-bg);transform:translateY(-2px);border-color:var(--outline-hi)}
+
+/* ═══════════════════════════════════════════
+   COLORS
+═══════════════════════════════════════════ */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.color-swatch{
+  position:relative;cursor:pointer;
+  border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--outline);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.color-swatch:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.color-swatch:active{transform:translateY(-2px) scale(.98)}
+.color-swatch-fill{height:72px}
+.color-swatch-info{padding:10px 14px;background:var(--surface)}
+.color-swatch-info .hex{font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--on-surface-muted);margin-bottom:3px;letter-spacing:0.05em}
+.color-swatch-info .name{font-size:12px;color:var(--on-surface)}
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════════ */
+.type-list{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline)}
+.type-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--s-lg) var(--s-lg);gap:var(--s-lg);
+  border-bottom:1px solid var(--outline);
+  box-shadow:inset 0 0 0 0 var(--primary-solid);
+  transition:background var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
+}
+.type-row:last-child{border-bottom:none}
+.type-row:nth-child(even){background:var(--surface-mid)}
+.type-row:nth-child(odd){background:var(--surface)}
+.type-row:hover{background:var(--surface-high);box-shadow:inset 3px 0 0 0 var(--primary-solid)}
+.type-row .meta{flex:0 0 200px}
+.type-row .meta .token-name{font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--secondary);margin-bottom:4px;letter-spacing:0.08em;text-transform:uppercase}
+.type-row .meta .spec{font-size:12px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.type-row .specimen{flex:1;text-align:right;word-break:break-word}
+@media(max-width:767px){
+  .type-row{flex-direction:column;align-items:flex-start}
+  .type-row .meta{flex:unset}
+  .type-row .specimen{text-align:left;margin-top:var(--s-sm)}
+}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════ */
+.button-grid{display:flex;flex-wrap:wrap;gap:var(--s-lg);align-items:flex-end}
+.button-item{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.button-item .btn-label{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font:600 14px/1 var(--font-body);padding:10px 20px;
+  border:none;border-radius:var(--r-sm);cursor:pointer;white-space:nowrap;
+  transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out),opacity var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.btn:active{transform:scale(.96)!important}
+.btn-primary{background:var(--primary-solid);color:var(--on-primary)}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-secondary{background:transparent;color:var(--secondary);border:1.5px solid var(--secondary)}
+.btn-secondary:hover{background:rgba(217,155,108,0.10);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--on-surface-muted)}
+.btn-ghost:hover{background:var(--surface-high);color:var(--on-surface)}
+.btn-pill-primary{background:var(--primary-solid);color:var(--on-primary);border-radius:var(--r-full)}
+.btn-pill-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-pill-accent{background:var(--secondary);color:var(--on-secondary);border-radius:var(--r-full)}
+.btn-pill-accent:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-outline-pill{background:transparent;color:var(--primary);border:1.5px solid var(--primary);border-radius:var(--r-full)}
+.btn-outline-pill:hover{background:var(--primary-glow-sm);transform:translateY(-1px)}
+.btn-disabled{background:var(--outline);color:var(--on-surface-muted);cursor:not-allowed;opacity:.5}
+
+/* ═══════════════════════════════════════════
+   CARDS (GLASSMORPHIC)
+═══════════════════════════════════════════ */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+.pricing-card{
+  background:var(--surface);
+  border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  display:flex;flex-direction:column;
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+  position:relative;
+}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.pricing-card.featured{border-color:var(--primary-solid)}
+.pricing-card.featured:hover{box-shadow:var(--shadow-md);border-color:var(--primary-solid)}
+.pricing-badge{
+  display:inline-block;padding:5px 12px;
+  background:var(--secondary);color:var(--on-secondary);
+  border-radius:var(--r-full);font:600 11px/1 var(--font-body);
+  margin-bottom:var(--s-md);align-self:flex-start;letter-spacing:0.04em;
+}
+.pricing-card .tier{font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--primary);margin-bottom:6px}
+.pricing-card .price{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--on-surface);margin-bottom:var(--s-lg);line-height:1.1}
+.pricing-card.featured .price{color:var(--secondary)}
+.pricing-card .price-sub{font-size:13px;color:var(--on-surface-muted);font-family:var(--font-body);font-weight:400}
+.pricing-features{list-style:none;margin-bottom:var(--s-lg);flex:1}
+.pricing-features li{
+  font-size:14px;padding:8px 0;
+  border-bottom:1px solid var(--outline);
+  display:flex;align-items:center;gap:8px;color:var(--on-surface-muted);
+}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:'✓';color:var(--secondary);font-weight:700;flex-shrink:0;font-size:12px}
+.pricing-cta-margin{margin-top:auto}
+@media(max-width:1023px){
+  .pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .pricing-card.featured{order:-1}
+}
+
+/* ═══════════════════════════════════════════
+   CARD VARIANTS
+═══════════════════════════════════════════ */
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-md)}
+.card-demo{
+  background:var(--surface);
+  border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.card-demo:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.card-tag{display:inline-block;font:600 10px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);margin-bottom:14px}
+.card-title{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--on-surface);margin-bottom:8px}
+.card-text{font-size:14px;color:var(--on-surface-muted);line-height:1.6}
+.card-link{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;color:var(--primary)}
+.card-link:hover{text-decoration:underline}
+.card-stat-label{font-size:12px;color:var(--on-surface-muted);margin-bottom:6px}
+.card-stat-value{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--on-surface);margin-bottom:12px;line-height:1.1}
+.card-stat-value span{font-size:14px;font-weight:600;color:var(--on-surface-muted)}
+.card-cover{
+  height:110px;border-radius:var(--r-lg);margin-bottom:14px;padding:10px;
+  background:var(--primary-solid);
+  display:flex;align-items:flex-start;justify-content:flex-end;
+}
+.card-product-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.card-price{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--primary)}
+.card-icon{
+  width:44px;height:44px;border-radius:var(--r-md);margin-bottom:14px;
+  background:var(--primary-glow-sm);border:1px solid var(--toggle-border);
+  display:flex;align-items:center;justify-content:center;color:var(--primary);
+}
+.card-icon svg{width:20px;height:20px}
+.card-feature:hover{border-color:var(--primary-solid);box-shadow:var(--shadow-md)}
+@media(max-width:1023px){.cards-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+
+/* ── UX principle cards: same card-demo shell, 3-up grid, grouped ── */
+.ux-group{margin-bottom:var(--s-xl)}
+.ux-group:last-child{margin-bottom:0}
+.ux-group-title{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--s-md)}
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+@media(max-width:1023px){.ux-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ux-grid{grid-template-columns:1fr}}
+.ux-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-lg);padding:var(--s-md) var(--s-lg);transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out)}
+.ux-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.ux-card-name{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.ux-card-def{font-size:13px;color:var(--on-surface-muted);line-height:1.5;margin-bottom:10px}
+.ux-card-rule{font-size:13px;color:var(--on-surface);line-height:1.5;padding-top:10px;border-top:1px solid var(--outline)}
+.ux-card-rule b{color:var(--primary);font-weight:600}
+
+/* ═══════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════ */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-lg)}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group label{font:600 12px/1 var(--font-body);color:var(--on-surface-muted);letter-spacing:0.04em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{
+  padding:11px 14px;border:1px solid var(--outline);
+  border-radius:var(--r-sm);font:14px/1.4 var(--font-body);
+  color:var(--on-surface);background:var(--surface);
+  transition:border-color var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
+  height:44px;outline:none;
+}
+.form-textarea{height:100px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--primary-solid);
+  box-shadow:0 0 0 4px var(--primary-glow-sm);
+}
+.form-input.focused{border-color:var(--primary-solid);box-shadow:0 0 0 4px var(--primary-glow-sm)}
+.form-select{
+  -webkit-appearance:none;appearance:none;
+  background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23958da1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+  padding-right:36px;
+}
+@media(max-width:767px){.form-grid{grid-template-columns:1fr}}
+
+/* ═══════════════════════════════════════════
+   SPACING + RADIUS
+═══════════════════════════════════════════ */
+.spacing-ruler{
+  display:flex;align-items:stretch;gap:4px;height:52px;
+  background:var(--surface-high);border-radius:var(--r-sm);padding:4px;
+}
+.spacing-block{
+  display:flex;align-items:center;justify-content:center;
+  background:var(--primary-solid);border-radius:var(--r-xs);
+  font:600 10px/1 var(--font-body);color:var(--on-primary);
+  transition:flex .45s var(--ease-out);min-width:8px;overflow:hidden;
+}
+.spacing-block .lbl{opacity:0;transition:opacity .2s;white-space:nowrap}
+.spacing-block:hover{flex:3!important}.spacing-block:hover .lbl{opacity:1}
+.spacing-labels{
+  display:flex;justify-content:space-between;margin-top:8px;
+  font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body);
+}
+
+.radius-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.radius-box{
+  background:var(--surface-high);
+  border:2px solid var(--primary-solid);
+  transition:background .3s,transform var(--dur-med) var(--ease-spring);
+}
+.radius-box:hover{transform:scale(1.08) rotate(-2deg)}
+.r-name{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body);font-weight:600}
+.r-value{font-size:11px;color:var(--outline-hi);font-family:var(--font-body)}
+
+/* ═══════════════════════════════════════════
+   ELEVATION
+═══════════════════════════════════════════ */
+.elevation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-md)}
+.elevation-card{
+  background:var(--surface);border-radius:var(--r-lg);
+  padding:var(--s-lg);text-align:center;
+  border:1px solid var(--outline);
+  transition:transform var(--dur-med) var(--ease-out),background .3s,box-shadow var(--dur-med) var(--ease-out);
+}
+.elevation-card:hover{transform:translateY(-5px)}
+.elevation-card .e-num{
+  width:44px;height:44px;margin:0 auto;
+  border-radius:var(--r-sm);background:var(--surface-high);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:18px;font-weight:700;
+  color:var(--primary);
+}
+.elevation-card .e-label{font-size:12px;color:var(--on-surface-muted);margin-top:12px;font-family:var(--font-body)}
+.elevation-card .e-sub{font-size:11px;color:var(--outline-hi);margin-top:4px;font-family:var(--font-body)}
+.el-0{box-shadow:none}
+.el-1{box-shadow:var(--shadow-sm)}
+.el-2{box-shadow:var(--shadow-md)}
+.el-3{box-shadow:var(--shadow-lg);border-color:var(--primary-solid)}
+@media(max-width:767px){.elevation-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ═══════════════════════════════════════════
+   CHIPS & TAGS
+═══════════════════════════════════════════ */
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--s-md)}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:var(--r-xs);
+  font:600 11px/1 var(--font-body);letter-spacing:0.04em;
+  transition:transform var(--dur-fast) var(--ease-out),opacity var(--dur-fast) var(--ease-out);
+}
+.chip:hover{transform:translateY(-1px)}
+.chip-primary{background:rgba(74,144,164,0.12);color:var(--brand-blue);border:1px solid rgba(74,144,164,0.3)}
+.chip-active{background:var(--primary-glow-sm);color:var(--positive);border:1px solid var(--primary-glow)}
+.chip-tertiary{background:rgba(224,182,92,0.14);color:var(--quaternary);border:1px solid rgba(224,182,92,0.32)}
+.chip-error{background:rgba(232,98,44,0.12);color:var(--tertiary);border:1px solid rgba(232,98,44,0.3)}
+.chip .dot-xs{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* ═══════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════ */
+.responsive-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--outline)}
+.responsive-table th,.responsive-table td{padding:14px var(--s-lg);text-align:left;border-bottom:1px solid var(--outline);transition:background var(--dur-fast) var(--ease-out)}
+.responsive-table th{background:var(--table-header-bg);color:var(--table-header-fg);font:600 11px/1 var(--font-body);text-transform:uppercase;letter-spacing:0.08em}
+.responsive-table td{font-size:14px;background:var(--table-row-bg);color:var(--on-surface)}
+.responsive-table tr:last-child td{border-bottom:none}
+.responsive-table tr:hover td{background:var(--table-row-hover)}
+.responsive-notes{margin-top:var(--s-lg);display:grid;gap:10px}
+.responsive-notes li{
+  font-size:14px;color:var(--on-surface-muted);
+  display:flex;align-items:flex-start;gap:8px;list-style:none;
+}
+.responsive-notes li::before{content:'→';color:var(--secondary);font-weight:700;flex-shrink:0}
+
+/* ═══════════════════════════════════════════
+   TOUCH TARGETS
+═══════════════════════════════════════════ */
+.touch-grid{display:flex;gap:var(--s-lg);flex-wrap:wrap;align-items:flex-end}
+.touch-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.touch-target{
+  width:44px;height:44px;background:var(--secondary);border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;color:var(--on-secondary);
+  font:700 10px/1 var(--font-body);position:relative;
+}
+.touch-target::after{content:'';position:absolute;inset:-5px;border:1px dashed var(--secondary);border-radius:calc(var(--r-sm) + 3px);opacity:.35}
+.touch-label{font-size:11px;color:var(--on-surface-muted);font-family:var(--font-body)}
+.touch-input{height:44px;padding:11px 14px;border:1px solid var(--outline);border-radius:var(--r-sm);font:14px/1 var(--font-body);width:220px;outline:none;background:var(--surface);color:var(--on-surface)}
+
+/* ═══════════════════════════════════════════
+   CLOSING + FOOTER
+═══════════════════════════════════════════ */
+section.closing-band{
+  background:var(--bg-dim);padding:96px 0;text-align:center;
+  border-top:1px solid var(--outline);
+}
+section.closing-band h2{
+  font-family:var(--font-display);font-size:clamp(28px,4vw,42px);font-weight:700;
+  color:var(--on-surface);letter-spacing:-0.01em;margin-bottom:var(--s-lg);
+}
+section.closing-band h2 span{color:var(--primary)}
+.site-footer{
+  background:var(--bg-dim);border-top:1px solid var(--outline);
+  padding:var(--s-lg) 0;text-align:center;
+  font-size:13px;color:var(--on-surface-muted);
+}
+.site-footer a{color:var(--secondary);font-weight:600}
+
+/* ═══════════════════════════════════════════
+   LIFE LAYER — reveals, draw accents, micro-UI
+═══════════════════════════════════════════ */
+
+/* ── Scroll reveal (JS-tagged) ── */
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out);transition-delay:var(--d,0s)}
+[data-reveal].revealed{opacity:1;transform:none}
+
+/* ── Hand-drawn accent underline (hero + closing) ── */
+.draw-target{position:relative;display:inline-block}
+.draw-target::after{
+  content:'';position:absolute;left:-2px;right:-2px;bottom:2px;height:4px;
+  background:var(--primary-solid);border-radius:var(--r-full);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .7s var(--ease-out) .4s;
+}
+.draw-target.drawn::after{transform:scaleX(1)}
+
+/* ── Focus visible (keyboard users) ── */
+.btn:focus-visible,.color-swatch:focus-visible{outline:2px solid var(--primary-solid);outline-offset:2px}
+
+/* ── Color swatch copy badge ── */
+.color-swatch::after{
+  content:'Copy';position:absolute;top:8px;right:8px;z-index:2;
+  font:600 10px/1 var(--font-body);letter-spacing:.06em;
+  background:rgba(12,6,20,.55);color:#fff;padding:5px 9px;border-radius:var(--r-full);
+  opacity:0;transform:translateY(-4px);
+  transition:opacity var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+  pointer-events:none;
+}
+.color-swatch:hover::after,.color-swatch:focus-visible::after{opacity:1;transform:none}
+.color-swatch.copied::after{content:'Copied ✓';background:var(--primary-solid);color:var(--on-primary);opacity:1;transform:none}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;z-index:600;
+  transform:translateX(-50%) translateY(16px);
+  display:flex;align-items:center;gap:9px;
+  background:var(--surface-highest);color:var(--on-surface);
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  padding:11px 20px;font:600 13px/1 var(--font-body);
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:opacity var(--dur-med) var(--ease-out),transform var(--dur-med) var(--ease-spring);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast .t-dot{width:7px;height:7px;border-radius:50%;background:var(--positive);flex-shrink:0}
+
+/* ── Dismissible chip ── */
+.chip-x{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;margin-left:2px;border-radius:50%;
+  background:transparent;color:inherit;border:none;
+  font:700 11px/1 var(--font-body);cursor:pointer;opacity:.65;
+  transition:opacity var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out);
+}
+.chip-x:hover{opacity:1;background:rgba(0,0,0,.15)}
+.chip.removing{opacity:0;transform:scale(.85)}
+
+/* ═══════════════════════════════════════════
+   MOTION SECTION
+═══════════════════════════════════════════ */
+.motion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-md)}
+.motion-card{
+  background:var(--surface);border:1px solid var(--outline);
+  border-radius:var(--r-xl);padding:var(--s-lg);
+  transition:transform var(--dur-med) var(--ease-out),box-shadow var(--dur-med) var(--ease-out),border-color var(--dur-fast) var(--ease-out);
+}
+.motion-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--outline-hi)}
+.motion-track{
+  position:relative;height:36px;margin-bottom:16px;overflow:hidden;
+  background:var(--surface-high);border-radius:var(--r-full);
+}
+.motion-dot{
+  position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;
+  background:var(--primary-solid);
+}
+.dot-ease-out{animation:motion-slide 2.2s var(--ease-out) infinite alternate}
+.dot-ease-spring{animation:motion-slide 2.2s var(--ease-spring) infinite alternate}
+@keyframes motion-slide{to{left:calc(100% - 30px)}}
+.motion-name{font:700 13px/1 var(--font-body);color:var(--primary);margin-bottom:8px}
+.motion-card code{
+  display:inline-block;margin-bottom:12px;
+  font:12px/1.4 ui-monospace,'Cascadia Code',monospace;
+  color:var(--tertiary);background:var(--surface-high);
+  padding:5px 9px;border-radius:6px;border:1px solid var(--outline);
+}
+.motion-card p{font-size:13px;color:var(--on-surface-muted);line-height:1.55}
+.motion-durations{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:36px;margin-bottom:16px}
+@media(max-width:1023px){.motion-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion: reduce){
+  [data-reveal]{opacity:1;transform:none;transition:none}
+  .motion-dot{animation:none}
+  .draw-target::after{transition:none;transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ SCROLL PROGRESS ════════════════════ -->
+<div class="scroll-progress"><span class="bar" id="scrollBar"></span></div>
+
+<!-- ════════════════════ MOBILE TOP BAR ════════════════════ -->
+<header class="topbar">
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <a class="nav-logo" href="#hero">green algeria</a>
+  <button class="theme-toggle" aria-label="Toggle theme">
+    <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  </button>
+</header>
+
+<!-- ════════════════════ BACKDROP ════════════════════ -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- ════════════════════ SIDEBAR ════════════════════ -->
+<aside class="sidebar" id="sidebar" aria-label="Design system navigation">
+  <div class="sidebar-header">
+    <a class="nav-logo" href="#hero">green algeria</a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="nav-indicator" id="navIndicator"></div>
+
+    <div class="nav-group" style="--i:0">
+      <div class="nav-group-label">Getting Started</div>
+      <a href="#hero" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:1">
+      <div class="nav-group-label">Foundations</div>
+      <a href="#colors" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+        <span>Colors</span>
+      </a>
+      <a href="#typography" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        <span>Typography</span>
+      </a>
+      <a href="#spacing" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+        <span>Spacing</span>
+      </a>
+      <a href="#radius" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="6"/></svg>
+        <span>Radius</span>
+      </a>
+      <a href="#elevation" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span>Elevation</span>
+      </a>
+      <a href="#motion" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Motion</span>
+      </a>
+      <a href="#ux-principles" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>UX Principles</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:2">
+      <div class="nav-group-label">Components</div>
+      <a href="#components" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.04a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>
+        <span>Buttons</span>
+      </a>
+      <a href="#chips" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <span>Chips &amp; Tags</span>
+      </a>
+      <a href="#cards" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Cards</span>
+      </a>
+      <a href="#forms" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Forms</span>
+      </a>
+    </div>
+
+    <div class="nav-group" style="--i:3">
+      <div class="nav-group-label">Patterns</div>
+      <a href="#responsive" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span>Responsive</span>
+      </a>
+      <a href="#touch" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+        <span>Touch Targets</span>
+      </a>
+      <a href="#pricing" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Submission States</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="theme-toggle" aria-label="Toggle theme">
+      <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <button class="collapse-toggle" id="collapseToggle" aria-label="Collapse sidebar" aria-expanded="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Collapse</span>
+    </button>
+  </div>
+</aside>
+
+<main class="page">
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-badge">Canopy · v1.0</div>
+    <h1>The Green Algeria<br><span class="gradient draw-target">Design System</span></h1>
+    <p>An implementation of Green Algeria's design language. Night-soil canvas — living canopy green as the one accent in both themes. Terracotta clay as secondary, wildfire amber reserved for fire reports, wadi blue for the care system. Built for a crowdsourced movement, not a storefront — trust and clarity over spectacle.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary">Get started</button>
+      <button class="btn-hero-secondary">View on GitHub</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ COLORS ════════════════════ -->
+<section id="colors">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Visual Identity</div>
+      <h2>Color Palette</h2>
+      <p>Canopy palette. Night-soil canvas — canopy green is the one accent, constant in both themes. Terracotta clay is the brand's structural second color; wildfire amber is reserved for fire reports only. Wadi blue support, warm sand highlight.</p>
+    </div>
+    <div class="color-grid">
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#6ED08A"></div><div class="color-swatch-info"><div class="hex">#6ED08A</div><div class="name">Primary · Dark (Sprout Green)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#2F6B3F"></div><div class="color-swatch-info"><div class="hex">#2F6B3F</div><div class="name">Primary · Light (Canopy, AA-safe)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#B5652E"></div><div class="color-swatch-info"><div class="hex">#B5652E</div><div class="name">Secondary · Light (Terracotta)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#D99B6C"></div><div class="color-swatch-info"><div class="hex">#D99B6C</div><div class="name">Secondary · Dark (Clay)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#4A90A4"></div><div class="color-swatch-info"><div class="hex">#4A90A4</div><div class="name">Wadi Blue (care system)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#E8622C"></div><div class="color-swatch-info"><div class="hex">#E8622C</div><div class="name">Tertiary · Dark (Wildfire Amber)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#C24A1C"></div><div class="color-swatch-info"><div class="hex">#C24A1C</div><div class="name">Tertiary · Light (Wildfire Amber)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#E0B65C"></div><div class="color-swatch-info"><div class="hex">#E0B65C</div><div class="name">Quaternary · Dark (Sand)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#100d0a"></div><div class="color-swatch-info"><div class="hex">#100d0a</div><div class="name">Background Dark (Night Soil)</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#241d16"></div><div class="color-swatch-info"><div class="hex">#241d16</div><div class="name">Surface High Dark</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#f0ebe0"></div><div class="color-swatch-info"><div class="hex">#f0ebe0</div><div class="name">Surface High Light</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#ff6b6b"></div><div class="color-swatch-info"><div class="hex">#ff6b6b</div><div class="name">Error · Dark</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-fill" style="background:#d13438"></div><div class="color-swatch-info"><div class="hex">#d13438</div><div class="name">Error · Light</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ TYPOGRAPHY ════════════════════ -->
+<section id="typography">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Language</div>
+      <h2>Typography Scale</h2>
+      <p>Sora for headlines — geometric, futuristic. DM Sans for body — clean precision at any size.</p>
+    </div>
+    <div class="type-list">
+      <div class="type-row">
+        <div class="meta"><div class="token-name">headline-xl</div><div class="spec">Sora · 700 · 48px · -0.02em</div></div>
+        <div class="specimen" style="font-family:'Sora',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:700;line-height:1.1;letter-spacing:-0.02em;color:var(--primary)">The Green Algeria</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">headline-lg</div><div class="spec">Sora · 600 · 32px · -0.01em</div></div>
+        <div class="specimen" style="font-family:'Sora',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:600;line-height:1.2;letter-spacing:-0.01em;color:var(--primary)">The Green Algeria System</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">headline-lg-mobile</div><div class="spec">Sora · 600 · 28px</div></div>
+        <div class="specimen" style="font-family:'Sora',sans-serif;font-size:28px;font-weight:600;line-height:1.2;color:var(--primary)">The Green Algeria Design System</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">body-md</div><div class="spec">DM Sans · 400 · 16px · 1.5lh</div></div>
+        <div class="specimen" style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:400;line-height:1.5;color:var(--on-surface)">A crowdsourced platform for tracking trees planted, care given, and fires reported across Algeria.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">body-sm</div><div class="spec">DM Sans · 400 · 14px · 1.43lh</div></div>
+        <div class="specimen" style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;line-height:1.43;color:var(--on-surface-muted)">A crowdsourced platform for tracking trees planted, care given, and fires reported across Algeria.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">label-md</div><div class="spec">DM Sans · 600 · 12px · 0.04em ls</div></div>
+        <div class="specimen" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--secondary)">VISUAL IDENTITY · COMPONENTS</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><div class="token-name">code</div><div class="spec">DM Sans · 400 · 14px · mono</div></div>
+        <div class="specimen" style="font-family:ui-monospace,'Cascadia Code',monospace;font-size:13px;background:var(--surface-high);padding:8px 12px;border-radius:6px;color:var(--tertiary);border:1px solid var(--outline)">--primary-solid: #6ED08A;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ SPACING ════════════════════ -->
+<section id="spacing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Grid</div>
+      <h2>Spacing Scale</h2>
+      <p>8px base linear scale. Hover any block to expand and see its token name.</p>
+    </div>
+    <div class="spacing-ruler">
+      <div class="spacing-block" style="flex:4;min-width:4px"><span class="lbl">xs·4</span></div>
+      <div class="spacing-block" style="flex:8;min-width:8px"><span class="lbl">sm·8</span></div>
+      <div class="spacing-block" style="flex:16;min-width:16px"><span class="lbl">md·16</span></div>
+      <div class="spacing-block" style="flex:24;min-width:24px"><span class="lbl">lg·24</span></div>
+      <div class="spacing-block" style="flex:48;min-width:40px"><span class="lbl">xl·48</span></div>
+      <div class="spacing-block" style="flex:80;min-width:56px"><span class="lbl">2xl·80</span></div>
+    </div>
+    <div class="spacing-labels"><span>4px</span><span>8px</span><span>16px</span><span>24px</span><span>48px</span><span>80px</span></div>
+  </div>
+</section>
+
+<!-- ════════════════════ RADIUS ════════════════════ -->
+<section id="radius">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Shape</div>
+      <h2>Border Radius Scale</h2>
+      <p>From sharp 4px tags to fully rounded pills. Primary 2px border on all radius demos.</p>
+    </div>
+    <div class="radius-grid">
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:4px"></div><span class="r-name">r-xs</span><span class="r-value">4px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:8px"></div><span class="r-name">r-sm</span><span class="r-value">8px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:12px"></div><span class="r-name">r-md</span><span class="r-value">12px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:16px"></div><span class="r-name">r-lg</span><span class="r-value">16px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:24px"></div><span class="r-name">r-xl</span><span class="r-value">24px</span></div>
+      <div class="radius-item"><div class="radius-box" style="width:60px;height:60px;border-radius:9999px"></div><span class="r-name">r-full</span><span class="r-value">9999px</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ ELEVATION ════════════════════ -->
+<section id="elevation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Depth</div>
+      <h2>Elevation &amp; Depth</h2>
+      <p>Four levels of depth. Soft neutral shadows; L3 adds a primary stroke for emphasis.</p>
+    </div>
+    <div class="elevation-grid">
+      <div class="elevation-card el-0"><div class="e-num">0</div><div class="e-label">Level 0</div><div class="e-sub">Flat · No shadow</div></div>
+      <div class="elevation-card el-1"><div class="e-num">1</div><div class="e-label">Level 1</div><div class="e-sub">Subtle shadow</div></div>
+      <div class="elevation-card el-2"><div class="e-num">2</div><div class="e-label">Level 2</div><div class="e-sub">Float · Soft shadow</div></div>
+      <div class="elevation-card el-3"><div class="e-num">3</div><div class="e-label">Level 3</div><div class="e-sub">Overlay · Primary stroke</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ MOTION ════════════════════ -->
+<section id="motion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Animation</div>
+      <h2>Motion &amp; Transitions</h2>
+      <p>The Green Algeria animation personality — two signature curves and three durations, inherited verbatim from the base template. Apply them to every interactive element.</p>
+    </div>
+    <div class="motion-grid">
+      <div class="motion-card">
+        <div class="motion-track"><span class="motion-dot dot-ease-out"></span></div>
+        <div class="motion-name">--ease-out</div>
+        <code>cubic-bezier(.22, 1, .36, 1)</code>
+        <p>Signature expo-out — fast attack, silky settle. Entrances, drawers, reveals, hovers.</p>
+      </div>
+      <div class="motion-card">
+        <div class="motion-track"><span class="motion-dot dot-ease-spring"></span></div>
+        <div class="motion-name">--ease-spring</div>
+        <code>cubic-bezier(.34, 1.3, .64, 1)</code>
+        <p>Soft overshoot for micro-UI — the active bar, toggles, and anything that should feel alive.</p>
+      </div>
+      <div class="motion-card">
+        <div class="motion-durations">
+          <span class="chip chip-primary">--dur-fast · .18s</span>
+          <span class="chip chip-primary">--dur-med · .3s</span>
+          <span class="chip chip-primary">--dur-slow · .55s</span>
+        </div>
+        <div class="motion-name">Durations</div>
+        <p>Fast for micro-UI, medium for cards and panels, slow for drawers and page-level moves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ UX PRINCIPLES ════════════════════ -->
+<section id="ux-principles">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Behavior</div>
+      <h2>UX Principles</h2>
+      <p>Tokens control how Green Algeria looks. This section controls how it behaves — the cognitive/interaction rules that stop AI-generated screens from reading as generic. Feed these verbatim into any build prompt alongside the tokens above.</p>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Perception &amp; Visual Hierarchy</div>
+      <div class="ux-grid">
+        <div class="ux-card"><div class="ux-card-name">Jakob's Law</div><div class="ux-card-def">Users expect your product to work like every other product they already know.</div><div class="ux-card-rule"><b>Rule:</b> don't invent novel patterns for cart, nav, or settings icons. Match convention; save originality for brand moments, not navigation.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Law of Proximity</div><div class="ux-card-def">Items placed close together are perceived as related.</div><div class="ux-card-rule"><b>Rule:</b> group related fields/actions with tight spacing (--s-xs/--s-sm), separate unrelated groups with --s-lg or more. Spacing IS the hierarchy.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Law of Similarity</div><div class="ux-card-def">Elements that look alike are read as belonging to the same category.</div><div class="ux-card-rule"><b>Rule:</b> one visual style per action-type across the whole app (all destructive actions look alike, all primary CTAs look alike). Never reuse a style for two different meanings.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Law of Prägnanz</div><div class="ux-card-def">People simplify complex shapes into the simplest form they can.</div><div class="ux-card-rule"><b>Rule:</b> default to the simplest layout that communicates the hierarchy. If a screen needs a legend to explain itself, simplify it instead.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Von Restorff Effect</div><div class="ux-card-def">The one item that looks different is the one people remember and click.</div><div class="ux-card-rule"><b>Rule:</b> exactly one visually distinct element per screen — the primary CTA. If everything is emphasized, nothing is.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Uniform Connectedness</div><div class="ux-card-def">Elements visually connected (shared border, background, or line) read as one unit.</div><div class="ux-card-rule"><b>Rule:</b> wrap related inputs/actions in a shared card-demo container rather than relying on spacing alone when the relationship needs to be unmistakable.</div></div>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Interaction &amp; Motor Effort</div>
+      <div class="ux-grid">
+        <div class="ux-card"><div class="ux-card-name">Fitts's Law</div><div class="ux-card-def">Time to reach a target depends on its size and distance from the cursor/thumb.</div><div class="ux-card-rule"><b>Rule:</b> primary actions get the largest tap target and sit within thumb reach on mobile (bottom third). Never shrink a frequent action to fit visual balance.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Hick's Law</div><div class="ux-card-def">More choices = longer decision time, non-linearly.</div><div class="ux-card-rule"><b>Rule:</b> cap visible primary choices at 5-7. Beyond that, group into categories or progressively disclose — don't just list everything flat.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Doherty Threshold</div><div class="ux-card-def">Interfaces feel "instant" below ~400ms response; above it, users disengage.</div><div class="ux-card-rule"><b>Rule:</b> any action over 400ms gets immediate optimistic UI or a skeleton/spinner using --dur-fast, not a frozen screen.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Tesler's Law</div><div class="ux-card-def">Every process has inherent complexity that can't be removed, only relocated.</div><div class="ux-card-rule"><b>Rule:</b> when a flow feels complex, the question is who absorbs it — the system (better defaults, smart validation) or the user (more fields). Default to absorbing it yourself.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Postel's Law</div><div class="ux-card-def">Be liberal in what you accept from users, strict in what you output.</div><div class="ux-card-rule"><b>Rule:</b> forms should accept loose input (phone formats, spacing, casing) and normalize it silently, not reject and blame the user.</div></div>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Memory &amp; Information Load</div>
+      <div class="ux-grid">
+        <div class="ux-card"><div class="ux-card-name">Miller's Law</div><div class="ux-card-def">Working memory holds about 7 (±2) items at once.</div><div class="ux-card-rule"><b>Rule:</b> chunk long lists/nav into groups of 5-7 with labels (exactly what this file's sidebar already does with nav-group).</div></div>
+        <div class="ux-card"><div class="ux-card-name">Serial Position Effect</div><div class="ux-card-def">Users remember the first and last items in a list best; the middle gets lost.</div><div class="ux-card-rule"><b>Rule:</b> put the most important nav item or CTA first or last, never buried mid-list.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Peak-End Rule</div><div class="ux-card-def">People judge an experience mainly by its most intense moment and how it ends.</div><div class="ux-card-rule"><b>Rule:</b> invest polish in the single most emotional moment of a flow (checkout success, order placed) and the final screen — not equally everywhere.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Zeigarnik Effect</div><div class="ux-card-def">Unfinished tasks stay top-of-mind more than completed ones.</div><div class="ux-card-rule"><b>Rule:</b> show progress indicators (step 2 of 4, % complete) on multi-step flows — the visible incompleteness is what drives completion.</div></div>
+      </div>
+    </div>
+
+    <div class="ux-group">
+      <div class="ux-group-title">Trust, Errors &amp; Constraints</div>
+      <div class="ux-grid">
+        <div class="ux-card"><div class="ux-card-name">Parkinson's Law</div><div class="ux-card-def">A task expands to fill the time/space allotted to it.</div><div class="ux-card-rule"><b>Rule:</b> constrain input fields to the length you actually need (short bio field stays short) — generous space invites bloated, unusable content.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Occam's Razor</div><div class="ux-card-def">The simplest solution that solves the problem is usually the right one.</div><div class="ux-card-rule"><b>Rule:</b> before adding a setting, modal, or extra step, ask if removing something gets the same result. Default to fewer screens.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Pareto Principle</div><div class="ux-card-def">Roughly 80% of usage comes from 20% of features.</div><div class="ux-card-rule"><b>Rule:</b> that 20% gets the polish, the fast path, and the largest tap targets. Everything else can be one tap deeper.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Error Prevention</div><div class="ux-card-def">A well-designed system stops mistakes before they happen rather than explaining them after.</div><div class="ux-card-rule"><b>Rule:</b> disable submit until required fields are valid, confirm destructive actions, use --error color the instant a field goes invalid — not only on submit.</div></div>
+        <div class="ux-card"><div class="ux-card-name">Visibility of System Status</div><div class="ux-card-def">Users need to always know what's happening — loading, saved, failed, empty.</div><div class="ux-card-rule"><b>Rule:</b> every async action gets a state for loading, success (use .toast), error, and empty. Never leave a screen ambiguous about what just happened.</div></div>
+        <div class="ux-card"><div class="ux-card-name">WCAG Contrast</div><div class="ux-card-def">Text needs sufficient contrast against its background to be legible for all users.</div><div class="ux-card-rule"><b>Rule:</b> body text ≥4.5:1 contrast, large text ≥3:1. --on-surface-muted is already tuned for this in both themes — don't introduce new lighter grays.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ COMPONENTS ════════════════════ -->
+<section id="components">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>UI Elements</div>
+      <h2>Button Variants</h2>
+      <p>Primary solid, secondary outlined, ghost, pill shapes, and disabled state.</p>
+    </div>
+    <div class="button-grid">
+      <div class="button-item"><button class="btn btn-primary">Primary</button><span class="btn-label">btn-primary</span></div>
+      <div class="button-item"><button class="btn btn-secondary">Secondary</button><span class="btn-label">btn-secondary</span></div>
+      <div class="button-item"><button class="btn btn-ghost">Ghost</button><span class="btn-label">btn-ghost</span></div>
+      <div class="button-item"><button class="btn btn-pill-primary">Pill Primary</button><span class="btn-label">btn-pill-primary</span></div>
+      <div class="button-item"><button class="btn btn-pill-accent">Pill Accent</button><span class="btn-label">btn-pill-accent</span></div>
+      <div class="button-item"><button class="btn btn-outline-pill">Pill Outline</button><span class="btn-label">btn-outline-pill</span></div>
+      <div class="button-item"><button class="btn btn-disabled" disabled>Disabled</button><span class="btn-label">btn-disabled</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CHIPS ════════════════════ -->
+<section id="chips">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Labels</div>
+      <h2>Chips &amp; Tags</h2>
+      <p>4px radius elements. Green for active/approved, wadi blue for category, sand for info, wildfire amber reserved strictly for fire-report status.</p>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-primary"><span class="dot-xs"></span>Category</span>
+      <span class="chip chip-primary">Tree planting</span>
+      <span class="chip chip-primary">Care log</span>
+      <span class="chip chip-primary">Dismissible<button class="chip-x" aria-label="Remove tag">×</button></span>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-active"><span class="dot-xs"></span>Active</span>
+      <span class="chip chip-active">Approved</span>
+      <span class="chip chip-active">Verified planting</span>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-tertiary"><span class="dot-xs"></span>Info</span>
+      <span class="chip chip-tertiary">58 wilayas</span>
+    </div>
+    <div class="chips-row">
+      <span class="chip chip-error"><span class="dot-xs"></span>Fire reported</span>
+      <span class="chip chip-error">Awaiting verification</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CARDS ════════════════════ -->
+<section id="cards">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Layout</div>
+      <h2>Card Examples</h2>
+      <p>Base, stat, site and feature cards — solid surfaces, tonal borders, clean shadows over the night-soil canvas. Hover to lift.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card-demo">
+        <div class="card-tag">Base</div>
+        <div class="card-title">Base card</div>
+        <p class="card-text">Solid surface with a tonal border and subtle shadow over the night-soil canvas.</p>
+        <a class="card-link" href="#cards">Learn more →</a>
+      </div>
+      <div class="card-demo">
+        <div class="card-tag">Stat</div>
+        <div class="card-stat-label">Trees planted this month</div>
+        <div class="card-stat-value">1,240 <span>trees</span></div>
+        <span class="chip chip-active"><span class="dot-xs"></span>+18.2% vs last month</span>
+      </div>
+      <div class="card-demo">
+        <div class="card-cover"><span class="chip" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)">New</span></div>
+        <div class="card-title">Aleppo pine grove — Blida</div>
+        <div class="card-product-row">
+          <span class="card-price">42 trees · Wilaya 09</span>
+          <button class="btn btn-primary" style="padding:8px 16px;font-size:12px">View site</button>
+        </div>
+      </div>
+      <div class="card-demo card-feature">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-7l-2-2"/><path d="M17 8v.8A6 6 0 0 1 13.8 20H10A6.5 6.5 0 0 1 7 8h0a5 5 0 0 1 10 0Z"/></svg>
+        </div>
+        <div class="card-title">Care timeline</div>
+        <p class="card-text">Open, no-queue watering logs across every reported site — a visible history anyone can add to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FORMS ════════════════════ -->
+<section id="forms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Inputs</div>
+      <h2>Form Elements</h2>
+      <p>Dark fill inputs with a green focus glow. 44px height for WCAG touch compliance.</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="text-default">Text Input (Default)</label>
+        <input type="text" id="text-default" class="form-input" value="Default state" placeholder="Site name...">
+      </div>
+      <div class="form-group">
+        <label for="text-focus">Text Input (Focus)</label>
+        <input type="text" id="text-focus" class="form-input focused" value="Focused state" placeholder="Site name...">
+      </div>
+      <div class="form-group">
+        <label for="select-demo">Select Dropdown</label>
+        <select id="select-demo" class="form-select">
+          <option>Tree planting</option>
+          <option>Care log</option>
+          <option>Fire report</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="textarea-demo">Textarea</label>
+        <textarea id="textarea-demo" class="form-textarea" placeholder="Describe what you observed..."></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ RESPONSIVE ════════════════════ -->
+<section id="responsive">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Adaptability</div>
+      <h2>Responsive Behavior</h2>
+      <p>12-col fluid grid on desktop, 4-col on mobile. 8px base spacing rhythm.</p>
+    </div>
+    <table class="responsive-table">
+      <thead>
+        <tr><th>Breakpoint</th><th>Width</th><th>Key Behavior</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Wide</strong></td><td>&gt; 1440px</td><td>Full content max; pricing 3-up; max whitespace</td></tr>
+        <tr><td><strong>Desktop</strong></td><td>1024–1440px</td><td>Default layout; 32px side margins; 24px gutters</td></tr>
+        <tr><td><strong>Tablet</strong></td><td>768–1023px</td><td>Pricing collapses 1-up; sidebar becomes a drawer</td></tr>
+        <tr><td><strong>Mobile</strong></td><td>&lt; 768px</td><td>Single column; off-canvas drawer nav; 16px margins</td></tr>
+      </tbody>
+    </table>
+    <ul class="responsive-notes">
+      <li>Display tiers stair-step 48 → 36 → 28px across breakpoints</li>
+      <li>Pricing tiers collapse 3-up → 1-up below 1024px</li>
+      <li>Sidebar collapses to an off-canvas drawer below 1024px</li>
+      <li>Section padding reduces from 48px to 32px on mobile</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════════ TOUCH ════════════════════ -->
+<section id="touch">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Usability</div>
+      <h2>Touch Targets</h2>
+      <p>Minimum 44×44px interactive targets for WCAG AAA compliance.</p>
+    </div>
+    <div class="touch-grid">
+      <div class="touch-item"><div class="touch-target">44</div><span class="touch-label">Min target</span></div>
+      <div class="touch-item"><button class="btn btn-primary" style="min-height:44px">Button</button><span class="touch-label">Primary button</span></div>
+      <div class="touch-item"><input type="text" class="touch-input" placeholder="44px height form field"><span class="touch-label">Form field</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ SUBMISSION STATES ════════════════════ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><span class="dot"></span>Moderation</div>
+      <h2>Submission States</h2>
+      <p>Full-width component demo. Plantings queue for approval; care logs and fire reports go live immediately — the states below reflect that split, not a payment flow.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="tier">Pending review</div>
+        <div class="price" style="font-size:20px">Planting submission</div>
+        <ul class="pricing-features">
+          <li>Awaiting moderator approval</li>
+          <li>Not yet visible on public map</li>
+          <li>Photo + GPS pin attached</li>
+          <li>Submitter notified on decision</li>
+        </ul>
+        <button class="btn btn-secondary pricing-cta-margin">Review queue</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Live immediately</div>
+        <div class="tier">Care log</div>
+        <div class="price" style="font-size:20px">No queue</div>
+        <ul class="pricing-features">
+          <li>No ownership required</li>
+          <li>Visible on the site's timeline instantly</li>
+          <li>Anyone can add a watering entry</li>
+          <li>Builds the emotional care history</li>
+        </ul>
+        <button class="btn btn-pill-accent pricing-cta-margin">View timeline</button>
+      </div>
+      <div class="pricing-card">
+        <div class="tier">Safety-critical</div>
+        <div class="price" style="font-size:20px">Fire report</div>
+        <ul class="pricing-features">
+          <li>No queue — goes live instantly</li>
+          <li>Shown on public map immediately</li>
+          <li>Wildfire amber used only here</li>
+          <li>Alert-contact routing planned (v2)</li>
+        </ul>
+        <button class="btn btn-primary pricing-cta-margin">Report a fire</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CLOSING ════════════════════ -->
+<section class="closing-band">
+  <div class="container">
+    <h2>Ready to help Algeria <span class="draw-target">grow</span>?</h2>
+    <button class="btn btn-pill-accent" style="font-size:16px;padding:16px 36px">Start with Green Algeria →</button>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    Green Algeria Design System · Canopy · Built in Algiers
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var html = document.documentElement;
+  var sidebar = document.getElementById('sidebar');
+  var backdrop = document.getElementById('sidebarBackdrop');
+  var menuToggle = document.getElementById('menuToggle');
+  var sidebarClose = document.getElementById('sidebarClose');
+  var collapseToggle = document.getElementById('collapseToggle');
+  var indicator = document.getElementById('navIndicator');
+  var progressBar = document.getElementById('scrollBar');
+  var navItems = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+  var mobileQuery = window.matchMedia('(max-width:1023px)');
+
+  /* ── Drawer (mobile) ── */
+  function openNav(){
+    sidebar.classList.add('open');
+    backdrop.classList.add('show');
+    document.body.classList.add('nav-locked');
+    menuToggle.setAttribute('aria-expanded','true');
+  }
+  function closeNav(){
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('show');
+    document.body.classList.remove('nav-locked');
+    if(menuToggle) menuToggle.setAttribute('aria-expanded','false');
+  }
+  if(menuToggle){
+    menuToggle.addEventListener('click',function(){
+      sidebar.classList.contains('open') ? closeNav() : openNav();
+    });
+  }
+  if(sidebarClose) sidebarClose.addEventListener('click',closeNav);
+  if(backdrop) backdrop.addEventListener('click',closeNav);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') closeNav();
+  });
+  var onBreakpoint = function(e){ if(!e.matches) closeNav(); };
+  if(mobileQuery.addEventListener) mobileQuery.addEventListener('change',onBreakpoint);
+  else if(mobileQuery.addListener) mobileQuery.addListener(onBreakpoint);
+
+  /* ── Collapse (desktop icon rail) ── */
+  var collapseTimer = null;
+  function setCollapsed(c){
+    html.classList.toggle('nav-collapsed',c);
+    try{ localStorage.setItem('pz-nav-collapsed', c ? '1' : '0'); }catch(e){}
+    if(collapseToggle) collapseToggle.setAttribute('aria-expanded',String(!c));
+    clearTimeout(collapseTimer);
+    collapseTimer = setTimeout(function(){ if(currentActive) moveIndicator(currentActive,true); },460);
+  }
+  var savedCollapsed = null;
+  try{ savedCollapsed = localStorage.getItem('pz-nav-collapsed'); }catch(e){}
+  if(savedCollapsed === '1') html.classList.add('nav-collapsed');
+  if(collapseToggle){
+    collapseToggle.setAttribute('aria-expanded',String(!html.classList.contains('nav-collapsed')));
+    collapseToggle.addEventListener('click',function(){
+      setCollapsed(!html.classList.contains('nav-collapsed'));
+    });
+  }
+
+  /* ── Sliding active indicator ── */
+  var currentActive = null;
+  function moveIndicator(link,instant){
+    if(!link){ indicator.style.opacity='0'; currentActive=null; return; }
+    currentActive = link;
+    if(instant) indicator.style.transition = 'none';
+    indicator.style.top = link.offsetTop + 'px';
+    indicator.style.height = link.offsetHeight + 'px';
+    indicator.style.opacity = '1';
+    if(instant){ void indicator.offsetWidth; indicator.style.transition = ''; }
+  }
+  window.addEventListener('resize',function(){ if(currentActive) moveIndicator(currentActive,true); });
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ if(currentActive) moveIndicator(currentActive,true); });
+  }
+
+  /* ── Scroll suppression: stops the indicator from stepping
+        through intermediate sections during click smooth-scroll ── */
+  var scrollSuppress = false, scrollEndTimer = null;
+  function armScrollSuppress(){
+    scrollSuppress = true;
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(function(){ scrollSuppress = false; },1000);
+  }
+  window.addEventListener('scroll',function(){
+    if(scrollSuppress){
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(function(){ scrollSuppress = false; },180);
+    }
+  },{passive:true});
+
+  /* ── Active link on scroll ── */
+  var sections = document.querySelectorAll('section[id]');
+  var byHash = {};
+  navItems.forEach(function(a){ byHash[a.getAttribute('href')] = a; });
+  if(sections.length && navItems.length){
+    var obs = new IntersectionObserver(function(entries){
+      if(scrollSuppress) return;
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var link = byHash['#' + e.target.id];
+          if(!link) return;
+          navItems.forEach(function(a){ a.classList.toggle('active', a===link); });
+          moveIndicator(link);
+        }
+      });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+
+  /* ── Link clicks: indicator lands instantly on the target ── */
+  navItems.forEach(function(a){
+    a.addEventListener('click',function(){
+      navItems.forEach(function(x){ x.classList.remove('active'); });
+      a.classList.add('active');
+      moveIndicator(a,true);
+      armScrollSuppress();
+      if(mobileQuery.matches) closeNav();
+    });
+  });
+
+  /* ── Tooltips for collapsed rail ── */
+  var tip = document.createElement('div');
+  tip.className = 'nav-tooltip';
+  tip.setAttribute('role','tooltip');
+  document.body.appendChild(tip);
+  navItems.forEach(function(a){
+    a.addEventListener('mouseenter',function(){
+      if(!html.classList.contains('nav-collapsed') || mobileQuery.matches) return;
+      var label = a.querySelector('span');
+      if(!label) return;
+      var r = a.getBoundingClientRect();
+      tip.textContent = label.textContent;
+      tip.style.top = (r.top + r.height / 2) + 'px';
+      tip.style.left = (r.right + 12) + 'px';
+      tip.classList.add('show');
+    });
+    a.addEventListener('mouseleave',function(){ tip.classList.remove('show'); });
+  });
+
+  /* ── Scroll progress ── */
+  if(progressBar){
+    var ticking = false;
+    var updateBar = function(){
+      var max = html.scrollHeight - html.clientHeight;
+      progressBar.style.width = (max > 0 ? (html.scrollTop / max) * 100 : 0) + '%';
+      ticking = false;
+    };
+    window.addEventListener('scroll',function(){
+      if(!ticking){ requestAnimationFrame(updateBar); ticking = true; }
+    },{passive:true});
+    updateBar();
+  }
+
+  /* ── Scroll reveal (auto-tagged) ── */
+  (function(){
+    var tags = '.section-header,.color-grid,.type-list,.button-grid,.chips-row,.cards-grid,.pricing-grid,.form-grid,.spacing-ruler,.radius-grid,.elevation-grid,.responsive-table,.responsive-notes,.touch-grid,.motion-grid,.ux-grid,.closing-band .container';
+    var els = Array.prototype.slice.call(document.querySelectorAll(tags));
+    // hero children animate on load with a stagger
+    Array.prototype.slice.call(document.querySelectorAll('.hero .container > *')).forEach(function(el,i){
+      el.setAttribute('data-reveal','');
+      el.style.setProperty('--d',(i * .08) + 's');
+    });
+    els.forEach(function(el){ el.setAttribute('data-reveal',''); });
+    var all = document.querySelectorAll('[data-reveal]');
+    function markDrawn(target){
+      target.querySelectorAll('.draw-target').forEach(function(dt){ dt.classList.add('drawn'); });
+    }
+    if('IntersectionObserver' in window){
+      var ro = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            e.target.classList.add('revealed');
+            markDrawn(e.target);
+            ro.unobserve(e.target);
+          }
+        });
+      },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+      all.forEach(function(el){ ro.observe(el); });
+    } else {
+      all.forEach(function(el){ el.classList.add('revealed'); markDrawn(el); });
+    }
+  })();
+
+  /* ── Toast ── */
+  var toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.setAttribute('role','status');
+  toast.innerHTML = '<span class="t-dot"></span><span class="t-msg"></span>';
+  document.body.appendChild(toast);
+  var toastTimer = null;
+  function showToast(msg){
+    toast.querySelector('.t-msg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); },2200);
+  }
+
+  /* ── Color swatch: click to copy hex ── */
+  function copyText(text, done){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, function(){ legacyCopy(text, done); });
+    } else { legacyCopy(text, done); }
+  }
+  function legacyCopy(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    done();
+  }
+  document.querySelectorAll('.color-swatch').forEach(function(sw){
+    sw.setAttribute('tabindex','0');
+    sw.setAttribute('role','button');
+    var hexEl = sw.querySelector('.hex');
+    if(!hexEl) return;
+    var hex = hexEl.textContent.trim();
+    sw.setAttribute('title','Copy ' + hex);
+    function doCopy(){
+      copyText(hex, function(){
+        sw.classList.add('copied');
+        showToast(hex + ' copied to clipboard');
+        setTimeout(function(){ sw.classList.remove('copied'); },1400);
+      });
+    }
+    sw.addEventListener('click', doCopy);
+    sw.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); doCopy(); }
+    });
+  });
+
+  /* ── Dismissible chips ── */
+  document.querySelectorAll('.chip-x').forEach(function(x){
+    x.addEventListener('click', function(){
+      var chip = x.closest('.chip');
+      if(!chip) return;
+      chip.classList.add('removing');
+      setTimeout(function(){ chip.remove(); },220);
+    });
+  });
+
+  /* ── Theme (supports multiple toggles) ── */
+  var SUN = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  var MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  var themeIcons = document.querySelectorAll('.theme-icon');
+
+  var themeInitialized = false;
+  function setTheme(t){
+    html.setAttribute('data-theme',t);
+    try{ localStorage.setItem('pz-theme',t); }catch(e){}
+    themeIcons.forEach(function(icon){
+      if(!themeInitialized){
+        icon.innerHTML = (t==='dark') ? SUN : MOON;
+        return;
+      }
+      // animated swap: spin out, swap glyph, spring back
+      icon.style.transition = 'transform .18s var(--ease-out),opacity .18s var(--ease-out)';
+      icon.style.transform = 'rotate(-90deg) scale(.5)';
+      icon.style.opacity = '0';
+      setTimeout(function(){
+        icon.innerHTML = (t==='dark') ? SUN : MOON;
+        icon.style.transition = 'transform .4s var(--ease-spring),opacity .25s var(--ease-out)';
+        icon.style.transform = 'none';
+        icon.style.opacity = '1';
+      },180);
+    });
+    themeInitialized = true;
+  }
+
+  var saved = null;
+  try{ saved = localStorage.getItem('pz-theme'); }catch(e){}
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(saved || (prefersDark ? 'dark' : 'light'));
+
+  document.querySelectorAll('.theme-toggle').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      setTheme(html.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+    });
+  });
+})();
+</script>
+</body>
+</html>

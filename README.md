@@ -1,12 +1,12 @@
-![palette](https://img.shields.io/badge/3B82F6-3B82F6?style=flat-square&labelColor=3B82F6) ![palette](https://img.shields.io/badge/D9480F-D9480F?style=flat-square&labelColor=D9480F) ![palette](https://img.shields.io/badge/047857-047857?style=flat-square&labelColor=047857) ![palette](https://img.shields.io/badge/0E7490-0E7490?style=flat-square&labelColor=0E7490) ![palette](https://img.shields.io/badge/818CF8-818CF8?style=flat-square&labelColor=818CF8) ![palette](https://img.shields.io/badge/FBBF24-FBBF24?style=flat-square&labelColor=FBBF24) ![palette](https://img.shields.io/badge/22C55E-22C55E?style=flat-square&labelColor=22C55E) ![palette](https://img.shields.io/badge/1C1917-1C1917?style=flat-square&labelColor=1C1917) ![palette](https://img.shields.io/badge/A855F7-A855F7?style=flat-square&labelColor=A855F7) ![palette](https://img.shields.io/badge/E04FA4-E04FA4?style=flat-square&labelColor=E04FA4)
+![palette](https://img.shields.io/badge/3B82F6-3B82F6?style=flat-square&labelColor=3B82F6) ![palette](https://img.shields.io/badge/D9480F-D9480F?style=flat-square&labelColor=D9480F) ![palette](https://img.shields.io/badge/047857-047857?style=flat-square&labelColor=047857) ![palette](https://img.shields.io/badge/0E7490-0E7490?style=flat-square&labelColor=0E7490) ![palette](https://img.shields.io/badge/818CF8-818CF8?style=flat-square&labelColor=818CF8) ![palette](https://img.shields.io/badge/FBBF24-FBBF24?style=flat-square&labelColor=FBBF24) ![palette](https://img.shields.io/badge/22C55E-22C55E?style=flat-square&labelColor=22C55E) ![palette](https://img.shields.io/badge/1C1917-1C1917?style=flat-square&labelColor=1C1917) ![palette](https://img.shields.io/badge/A855F7-A855F7?style=flat-square&labelColor=A855F7) ![palette](https://img.shields.io/badge/E04FA4-E04FA4?style=flat-square&labelColor=E04FA4) ![palette](https://img.shields.io/badge/6ED08A-6ED08A?style=flat-square&labelColor=6ED08A) ![palette](https://img.shields.io/badge/2563EB-2563EB?style=flat-square&labelColor=2563EB) ![palette](https://img.shields.io/badge/F5A623-F5A623?style=flat-square&labelColor=F5A623)
 
-# Ten design systems. Ten files.
+# Thirteen design systems. Thirteen files.
 
 No build step, no framework, nothing to install.
 
 **Open one in your browser. Copy the tokens. Ship something that looks like yours.**
 
-Most design systems look the same. These ten refuse to. Each one is built for a different kind of product, and every choice inside it — colors, fonts, radius, spacing, motion — serves that product. No two systems share a palette, a font pairing, a radius scale, or a spacing scale.
+Most design systems look the same. These thirteen refuse to. Each one is built for a different kind of product, and every choice inside it — colors, fonts, radius, spacing, motion — serves that product. No two systems share a palette, a font pairing, a radius scale, or a spacing scale.
 
 ## Pick your world
 
@@ -22,6 +22,9 @@ Most design systems look the same. These ten refuse to. Each one is built for a 
 | [📰 **08 · Editorial Longform**](systems/08-editorial-longform/index.html) | Magazines, essays, reading | ![ink](https://img.shields.io/badge/ink-1C1917?style=flat-square&labelColor=1C1917) ![gold](https://img.shields.io/badge/gold-A16207?style=flat-square&labelColor=A16207) | Typography carries the brand. The chrome disappears. |
 | [🖥️ **09 · Enterprise Console**](systems/09-enterprise-console/index.html) | Ops consoles, fleet control | ![electric violet](https://img.shields.io/badge/electric%20violet-A855F7?style=flat-square&labelColor=A855F7) ![cyan](https://img.shields.io/badge/cyan-67E8F9?style=flat-square&labelColor=67E8F9) | Built for teams on-call, not for demos. |
 | [🎨 **10 · Expressive Brand**](systems/10-expressive-brand/index.html) | Brands that take risks | ![hot magenta](https://img.shields.io/badge/hot%20magenta-E04FA4?style=flat-square&labelColor=E04FA4) ![lime](https://img.shields.io/badge/lime-BEF264?style=flat-square&labelColor=BEF264) | Loud on purpose. Corporate-safe is banned. |
+| [🌱 **11 · Algeria Green**](systems/11-algeria-green/index.html) | Tree planting, fire safety | ![canopy green](https://img.shields.io/badge/canopy%20green-6ED08A?style=flat-square&labelColor=6ED08A) ![terracotta](https://img.shields.io/badge/terracotta-D99B6C?style=flat-square&labelColor=D99B6C) | Colors from the land itself — clay soil under living tree cover. |
+| [🎟️ **12 · Queue & Appointments**](systems/12-queue-appointments/index.html) | Waiting rooms, bookings | ![electric blue](https://img.shields.io/badge/electric%20blue-3B82F6?style=flat-square&labelColor=3B82F6) ![deep navy](https://img.shields.io/badge/deep%20navy-0F1623?style=flat-square&labelColor=0F1623) | The number is king. The queue is a machine. |
+| [🍗 **13 · Food Pickup**](systems/13-food-pickup/index.html) | Kitchens, counters, food trucks | ![amber](https://img.shields.io/badge/amber-F5A623?style=flat-square&labelColor=F5A623) ![teal](https://img.shields.io/badge/teal-34D8B8?style=flat-square&labelColor=34D8B8) | Amber like the kitchen rail — "your order's coming up." |
 
 Every system also has its own [README](systems/01-saas-analytics/README.md) — thesis, full token table, fonts, signature components, and an audit log of everything that was checked and fixed.
 
@@ -45,6 +48,6 @@ Everything runs on CSS variables. Change a token, watch the whole system follow.
 
 ## What else is in the repo
 
-- `systems/` — the ten systems, one folder each (`index.html` + `README.md`)
+- `systems/` — the thirteen systems, one folder each (`index.html` + `README.md` where noted)
 - `design-system-whitelabel.html` — the shared reference build every system is measured against (read-only)
 - `docs/` — the rules: template analysis, the uniqueness matrix (the collision rules that keep the ten systems distinct), and project structure
