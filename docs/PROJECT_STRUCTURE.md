@@ -41,8 +41,11 @@
 │   │   └── index.html
 │   ├── 12-queue-appointments/
 │   │   └── index.html
-│   └── 13-food-pickup/
-│       └── index.html
+│   ├── 13-food-pickup/
+│   │   └── index.html
+│   └── 14-receipts-local-first/
+│       ├── index.html
+│       └── README.md
 └── docs/
     ├── PROJECT_STRUCTURE.md           # This file
     ├── TEMPLATE-ANALYSIS.md           # Complete template extraction
